@@ -15,8 +15,12 @@ ENV HOME=/home/user
 ENV VIRTUAL_ENV=/opt/venv
 
 ENV UV_TOOL_BIN_DIR=/home/user/.local/bin
-ENV PATH=$VIRTUAL_ENV/bin:$UV_TOOL_BIN_DIR:$PATH
+ENV CARGO_HOME=/home/user/.cargo
+ENV RUSTUP_HOME=/home/user/.rustup
+
+ENV PATH=$CARGO_HOME/bin:$VIRTUAL_ENV/bin:$UV_TOOL_BIN_DIR:$PATH
 ENV UV_PROJECT_ENVIRONMENT=$VIRTUAL_ENV
+
 
 ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
@@ -30,19 +34,25 @@ RUN --mount=type=cache,target=/var/cache/apt/ \
       ca-certificates \
       curl \
       git \
+      libclang-dev \
+      libz3-dev \
       graphviz \
       locales \
+      maven \
       sqlite3 \
       ssh \
       sudo \
       vim \
       tmux \
-      wget && \
+      wget \
+      z3 \
+      cvc5 \
+      unzip && \
+    # Set up user
     groupadd --gid $USER_GID user && \
     useradd --create-home --no-log-init --gid $USER_GID --uid $USER_UID --shell /usr/bin/bash user && \
     mkdir -p /opt/venv && chown user:user /opt/venv && \
     echo 'user ALL=(root) NOPASSWD:ALL' > /etc/sudoers.d/user && chmod 0440 /etc/sudoers.d/user
-
 
 RUN git config --system --add safe.directory '*'
 RUN sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- --yes
@@ -52,12 +62,22 @@ SHELL ["/bin/bash", "-c"]
 
 USER user
 
-RUN mkdir -p "$HOME/.local/bin" "$HOME/.local/share"
+RUN mkdir -p "$HOME/.local/bin" "$HOME/.local/share" "$CARGO_HOME" "$RUSTUP_HOME"
 
 
+ARG RUST_VERSION="nightly"
 RUN uv venv "${VIRTUAL_ENV}"
 
 
+RUN --mount=type=cache,target=/home/user/.cargo/registry \
+    --mount=type=cache,target=/home/user/.cargo/git \
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
+      --default-toolchain ${RUST_VERSION} \
+      --profile default \
+      --no-modify-path && \
+    cargo --version && \
+    rustc --version && \
+    rustup component add rust-analyzer clippy rustfmt
 
 ARG NODE_VERSION="24"
 ARG NVM_VERSION="0.40.3"
@@ -76,6 +96,7 @@ RUN mkdir -p "$NVM_DIR" \
 
 
 
+
 RUN mkdir -p "$HOME/.history" && \
     echo 'export HISTFILE=$HOME/.history/.bash_history' >> "$HOME/.bashrc" && \
     echo 'export HISTSIZE=10000'                        >> "$HOME/.bashrc" && \
@@ -84,12 +105,13 @@ RUN mkdir -p "$HOME/.history" && \
     echo 'shopt -s histappend'                          >> "$HOME/.bashrc" && \
     echo 'PROMPT_COMMAND="history -a; history -c; history -r"' >> "$HOME/.bashrc" && \
     echo 'export PATH=$VIRTUAL_ENV/bin:$UV_TOOL_BIN_DIR:$PATH' >> "$HOME/.bashrc" && \
-    
     echo '[[ $- == *i* ]] && bind "\e[A":history-search-backward' >> "$HOME/.bashrc" && \
     echo '[[ $- == *i* ]] && bind "\e[B":history-search-forward'  >> "$HOME/.bashrc" && \
     echo 'if [ -f "$HOME/.bashrc" ]; then . "$HOME/.bashrc"; fi'  > "$HOME/.bash_profile" && \
     echo 'export NVM_DIR=/home/user/.nvm'                          >> "$HOME/.bashrc" && \
-    echo 'export PATH=$VIRTUAL_ENV/bin:$UV_TOOL_BIN_DIR:$NVM_DIR/current/bin:$PATH' >> "$HOME/.bashrc" && \
+    echo 'export CARGO_HOME=/home/user/.cargo'                    >> "$HOME/.bashrc" && \
+    echo 'export RUSTUP_HOME=/home/user/.rustup'                  >> "$HOME/.bashrc" && \
+    echo 'export PATH=$CARGO_HOME/bin:$VIRTUAL_ENV/bin:$UV_TOOL_BIN_DIR:$NVM_DIR/current/bin:$PATH' >> "$HOME/.bashrc" && \
     echo '[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"'          >> "$HOME/.bashrc" && \
     echo '[ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"' >> "$HOME/.bashrc"
 
