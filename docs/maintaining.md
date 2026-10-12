@@ -68,7 +68,9 @@ The post appears on the homepage, its topic page and its tag pages automatically
 
 1. Preview while editing: `npm run dev`, then open the address it prints.
 2. Check everything: `npm run verify`. It type-checks, builds the site and checks every page: titles, links, menus, all three languages and the sitemap. GitHub runs the same check on every push.
-3. Deploy: `npm run cf:deploy`. It runs the checks first and stops if any fail. The first time, sign in with `npm run cf:login`. Production builds need `SITE_URL` set (see `.env.example`).
+3. Publish: push your branch to GitHub and merge it into `main` with a pull request. Cloudflare then builds and deploys the site on its own, running the same checks first; a failed check leaves the live site unchanged. Follow the build under Workers & Pages → `faraday-fieldbook` → Deployments.
+
+Site settings that are not in the repository (the site address `SITE_URL`, the AdSense and comment IDs) are set in Cloudflare under Settings → Build → Variables and secrets, and take effect from the next build.
 
 ### When a check fails
 

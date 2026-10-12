@@ -99,7 +99,8 @@ Reading pages should teach a concept by letting the reader change it, not only b
 ## Cloudflare deployment
 
 - Deployment is Workers Static Assets serving `dist/` (configured in `wrangler.jsonc`). Add server rendering or runtime bindings only when a feature requires them.
-- Use the pinned local Wrangler through the `cf:*` npm scripts. `npm run cf:login` uses device authorization.
+- Deploys run on Cloudflare Workers Builds: every push to `main` runs `npm run verify` and `npx wrangler deploy`. Build-time settings (`SITE_URL`, `PUBLIC_GOOGLE_ADSENSE_*`, `GISCUS_*`) live in the Worker's build variables, not in the repository; when a change needs a new variable, say so, since `.env` only affects local builds.
+- Use the pinned local Wrangler through the `cf:*` npm scripts for local checks. `npm run cf:login` uses device authorization.
 - Cloudflare MCP authentication is separate from Wrangler. Verify the account and environment before any remote change, and keep credentials out of the repository.
 - With a configured `SITE_URL`, also check canonical URLs, `robots.txt` and the sitemap.
 - Stop any test server you start before handing the terminal back.
