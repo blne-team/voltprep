@@ -1,0 +1,12 @@
+---
+// Topic pages for every language other than English (/fr/topics/…, /zh/topics/…).
+import TaxonomyRoute from '../../../components/TaxonomyRoute.astro';
+import { defaultLocale, localeKeys, type SiteLocale } from '../../../config/locales';
+import { topicPaths } from '../../../lib/taxonomy-routes';
+
+export function getStaticPaths() {
+  return topicPaths(localeKeys.filter((key) => key !== defaultLocale)).map((params) => ({ params }));
+}
+---
+
+<TaxonomyRoute locale={Astro.params.locale as SiteLocale} kind="topic" topic={Astro.params.topic} />

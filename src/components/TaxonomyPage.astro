@@ -1,0 +1,120 @@
+---
+import AsciiRule from './ascii/AsciiRule.astro';
+import PcbBackground from './PcbBackground.astro';
+import PostList from './PostList.astro';
+import { getLocalizedSiteConfig, getSiteLocale, siteConfig } from '../config/site';
+import { tagHref, tags, topics, type TagKey, type TopicKey } from '../config/taxonomy';
+import { getPosts } from '../lib/posts';
+
+type Props = { kind: 'topic'; topic: TopicKey } | { kind: 'tag'; tag: TagKey };
+
+const props = Astro.props;
+const locale = getSiteLocale(Astro.url.pathname);
+const { home } = getLocalizedSiteConfig(Astro.url.pathname);
+const homeHref = siteConfig.locales[locale].homeHref;
+const all = await getPosts(locale);
+const posts = props.kind === 'topic' ? all.filter((post) => post.topic === props.topic) : all.filter((post) => post.tags.includes(props.tag));
+const heading = props.kind === 'topic' ? topics[props.topic].name[locale] : `#${tags[props.tag][locale]}`;
+const summary = props.kind === 'topic' ? topics[props.topic].summary[locale] : home.tagDescription(tags[props.tag][locale]);
+const crumb = props.kind === 'topic' ? home.topicPath : home.tagPath;
+const slug = props.kind === 'topic' ? props.topic : props.tag;
+const topicTags = props.kind === 'topic' ? [...new Set(posts.flatMap((post) => post.tags))] : [];
+---
+
+<div class="taxonomy home-shell not-content">
+  <PcbBackground />
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href={homeHref}>{siteConfig.brand.shortName.toLowerCase()}</a><span aria-hidden="true">/</span><span>{crumb}</span><span aria-hidden="true">/</span><span aria-current="page">{slug}</span>
+  </nav>
+
+  <header>
+    <h1>{heading}</h1>
+    <p>{summary}</p>
+    <span class="count">{home.count(posts.length)}</span>
+  </header>
+  <AsciiRule variant="double" class="header-rule" />
+
+  {topicTags.length > 0 && (
+    <nav class="tag-filter" aria-label={home.topicsInTag}>
+      {topicTags.map((tag) => <a href={tagHref(tag, locale)}>#{tags[tag][locale]}</a>)}
+    </nav>
+  )}
+
+  <PostList posts={posts} showTopic={props.kind === 'tag'} />
+</div>
+
+<style>
+  .taxonomy {
+    position: relative;
+    isolation: isolate;
+    width: min(100% - 3rem, 82rem);
+    margin-inline: auto;
+    padding-block: clamp(2rem, 5vw, 3.5rem) clamp(3rem, 7vw, 5rem);
+  }
+
+  .crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    color: var(--sl-color-gray-3);
+    font-family: var(--ff-font-mono);
+    font-size: 0.75rem;
+  }
+
+  .crumbs a { color: var(--sl-color-text-accent); text-underline-offset: 0.2em; }
+  .crumbs [aria-current] { color: var(--sl-color-white); }
+
+  header {
+    display: grid;
+    gap: 0.9rem;
+    margin-block: 1.25rem 1.5rem;
+  }
+
+  h1 {
+    margin: 0;
+    color: var(--sl-color-white);
+    font-size: clamp(2.4rem, 1.6rem + 3vw, 4rem);
+    font-weight: 760;
+    line-height: 1;
+    letter-spacing: -0.045em;
+  }
+
+  header p {
+    max-width: 44rem;
+    margin: 0;
+    color: var(--sl-color-gray-2);
+    font-family: var(--ff-font-quote);
+    font-size: 1.12rem;
+    line-height: 1.6;
+  }
+
+  .count { color: var(--sl-color-gray-3); font-family: var(--ff-font-mono); font-size: 0.75rem; }
+
+  :global(.header-rule) { margin-bottom: 2rem; }
+
+  .tag-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .tag-filter a {
+    padding: 0.3rem 0.2rem;
+    color: var(--sl-color-gray-2);
+    font-family: var(--ff-font-mono);
+    font-size: 0.74rem;
+    text-decoration: none;
+  }
+
+  .tag-filter a::before { color: var(--sl-color-gray-4); content: '['; font-family: var(--ff-font-box); }
+  .tag-filter a::after { color: var(--sl-color-gray-4); content: ']'; font-family: var(--ff-font-box); }
+  .tag-filter a:hover { color: var(--sl-color-text-accent); }
+  .tag-filter a:hover::before,
+  .tag-filter a:hover::after { color: var(--sl-color-text-accent); }
+  .tag-filter a:focus-visible { outline: 2px solid var(--sl-color-accent); outline-offset: 2px; }
+
+  @media (max-width: 34rem) {
+    .taxonomy { width: min(100% - 2rem, 82rem); }
+  }
+</style>

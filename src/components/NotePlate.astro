@@ -1,0 +1,99 @@
+---
+// The homepage hero: a flat, front-on drawing of one notebook page. A series LED circuit is
+// sketched on the left and its current worked out on the right, in pencil on ruled paper.
+// Hand-placed SVG, no script and no filters, so it costs almost nothing to load or paint.
+
+interface Props {
+  copy: { label: string; notes: readonly string[] };
+}
+
+const { copy } = Astro.props;
+
+// Spiral binding along the top edge of the page.
+const rings = Array.from({ length: 21 }, (_, i) => 58 + i * 18);
+// "Vf" in a note is written with a subscript f.
+const writtenLine = (line: string) => line.split('Vf');
+---
+
+<figure class="note-plate">
+  <svg viewBox="30 22 428 232" role="img" aria-label={copy.label}>
+    <g transform="rotate(-1.5 240 138)">
+      <rect class="shadow" x="48" y="48" width="400" height="196" />
+      <rect class="paper" x="40" y="40" width="400" height="196" />
+      <path class="rule" d={Array.from({ length: 9 }, (_, i) => `M40 ${78 + i * 18}H440`).join('')} />
+      <path class="margin" d="M68 40V236" />
+
+      <!-- The circuit: battery, resistor, LED and an ammeter in series. -->
+      <g class="ink" transform="translate(14 12)">
+        <path d="M90 101V76H126l4-5 8 10 8-10 8 10 8-10 8 10 4-5H210V100M202 100H218L210 112ZM202 112H218M210 112V140H160M136 140H90V109M80 101H100M85 109H95M222 101l6-5M222 108l6-5" />
+        <circle cx="148" cy="140" r="12" />
+        <text class="ammeter" x="148" y="144.5">A</text>
+      </g>
+
+      <!-- The prediction, worked beside it. -->
+      {copy.notes.map((line, i) => {
+        const [before, after] = writtenLine(line);
+        return (
+          <text class:list={['note', { answer: i === copy.notes.length - 1 }]} x="270" y={112 + i * 28}>
+            {before}{after !== undefined && <>V<tspan class="sub" dy="3">f</tspan><tspan dx="1.5" dy="-3">{after}</tspan></>}
+          </text>
+        );
+      })}
+      <path class="check" d="M358 158l6 6 12-15" />
+
+      <path class="spiral" d={rings.map((x) => `M${x} 54C${x} 28 ${x + 9} 28 ${x + 9} 40`).join('')} />
+      <g class="holes">{rings.map((x) => <circle cx={x} cy="55" r="2.4" />)}</g>
+
+      <!-- Pencil resting across the lower corner. -->
+      <g class="pencil" transform="translate(350 210) rotate(-10)">
+        <rect class="eraser" x="-62" y="-5" width="10" height="10" />
+        <rect class="ferrule" x="-52" y="-5.5" width="9" height="11" />
+        <rect class="body" x="-43" y="-5" width="78" height="10" />
+        <path class="facet" d="M-43 0H35" />
+        <path class="wood" d="M35-5L50-1.6V1.6L35 5Z" />
+        <path class="lead" d="M50-1.6L56 0 50 1.6Z" />
+      </g>
+    </g>
+  </svg>
+</figure>
+
+<style>
+  .note-plate {
+    --np-paper: color-mix(in srgb, var(--ff-ink) 14%, var(--field-ground));
+    --np-shadow: color-mix(in srgb, #000 35%, var(--field-ground));
+    --np-line: var(--sl-color-gray-3);
+    --np-ink: var(--sl-color-gray-1);
+    --np-dark: color-mix(in srgb, #000 40%, var(--field-ground));
+    margin: 0;
+  }
+
+  :global(:root[data-theme='light']) .note-plate {
+    --np-paper: #fff;
+    --np-shadow: var(--ff-line);
+    --np-dark: color-mix(in srgb, var(--ff-green-dark) 75%, #fff);
+  }
+
+  svg { display: block; width: 100%; height: auto; }
+  path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+
+  .shadow { fill: var(--np-shadow); }
+  .paper { fill: var(--np-paper); stroke: var(--np-line); stroke-width: 1; }
+  .rule { stroke: color-mix(in srgb, var(--ff-lime) 35%, var(--np-paper)); stroke-width: 0.8; }
+  .margin { stroke: color-mix(in srgb, var(--ff-copper) 55%, var(--np-paper)); stroke-width: 0.8; }
+  .ink path, .ink circle { fill: none; stroke: var(--np-ink); stroke-width: 1.4; }
+  .ammeter { fill: var(--np-ink); font-family: var(--sl-font); font-size: 13px; text-anchor: middle; }
+  .note { fill: var(--np-ink); font-family: var(--ff-font-quote); font-style: italic; font-size: 15px; }
+  .note .sub { font-size: 10px; }
+  .answer { font-weight: 650; }
+  .check { stroke: var(--ff-copper); stroke-width: 2.2; }
+  .spiral { stroke: var(--sl-color-gray-2); stroke-width: 2; }
+  .holes circle { fill: var(--np-shadow); }
+
+  .pencil rect, .pencil .wood, .pencil .lead { stroke: var(--np-line); stroke-width: 0.8; }
+  .eraser { fill: color-mix(in srgb, var(--ff-copper) 60%, var(--np-paper)); }
+  .ferrule { fill: var(--sl-color-gray-3); }
+  .body { fill: color-mix(in srgb, var(--ff-lime) 60%, var(--np-dark)); }
+  .facet { stroke: color-mix(in srgb, var(--ff-lime) 35%, var(--np-dark)); stroke-width: 1; }
+  .wood { fill: color-mix(in srgb, var(--ff-copper) 25%, var(--np-paper)); }
+  .lead { fill: var(--np-dark); }
+</style>

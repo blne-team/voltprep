@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Site menus",
+  "description": "Header menu and footer links for each language. `root` is English, `fr` French, `zh` Simplified Chinese; keep every list in the same order as English, with matching links.",
+  "type": "object",
+  "required": [
+    "header",
+    "footer"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "header": {
+      "description": "Top-row header menu, left to right.",
+      "type": "object",
+      "required": [
+        "root",
+        "fr",
+        "zh"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "root": {
+          "$ref": "#/$defs/headerItems"
+        },
+        "fr": {
+          "$ref": "#/$defs/headerItems"
+        },
+        "zh": {
+          "$ref": "#/$defs/headerItems"
+        }
+      }
+    },
+    "footer": {
+      "description": "Links in the footer's site column (the language switch is added automatically).",
+      "type": "object",
+      "required": [
+        "root",
+        "fr",
+        "zh"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "root": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/link"
+          }
+        },
+        "fr": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/link"
+          }
+        },
+        "zh": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/link"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "href": {
+      "description": "A site path starting and ending with /, or a full https:// URL. Paths in another language start with its prefix, such as /fr/ or /zh/.",
+      "type": "string",
+      "pattern": "^(/([^\\s]*/)?|https://\\S+)$"
+    },
+    "link": {
+      "description": "A plain link.",
+      "type": "object",
+      "required": [
+        "label",
+        "href"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "href": {
+          "$ref": "#/$defs/href"
+        },
+        "description": {
+          "description": "Short line shown under the label inside a dropdown.",
+          "type": "string"
+        },
+        "external": {
+          "description": "Open in a new tab. Use for other sites.",
+          "type": "boolean"
+        }
+      }
+    },
+    "group": {
+      "description": "A dropdown with its own links.",
+      "type": "object",
+      "required": [
+        "label",
+        "children"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "children": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/link"
+          }
+        },
+        "href": {
+          "description": "Optional overview page, listed first in the dropdown.",
+          "$ref": "#/$defs/href"
+        },
+        "overview": {
+          "description": "Label for the overview link (required with href).",
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "dependentRequired": {
+        "href": [
+          "overview"
+        ],
+        "overview": [
+          "href"
+        ]
+      }
+    },
+    "topics": {
+      "description": "A dropdown filled automatically with every topic in src/config/taxonomy.json.",
+      "type": "object",
+      "required": [
+        "label",
+        "topics"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "topics": {
+          "const": true
+        }
+      }
+    },
+    "headerItems": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "$ref": "#/$defs/topics"
+          },
+          {
+            "$ref": "#/$defs/group"
+          },
+          {
+            "$ref": "#/$defs/link"
+          }
+        ]
+      }
+    }
+  }
+}

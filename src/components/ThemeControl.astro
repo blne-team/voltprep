@@ -1,0 +1,245 @@
+---
+import { Icon } from '@astrojs/starlight/components';
+
+interface Props {
+  label: string;
+  night: string;
+  system: string;
+  day: string;
+}
+
+const { label, night, system, day } = Astro.props;
+---
+
+<faraday-theme-control data-active-theme="auto">
+  <details>
+    <summary aria-label={label} title={label}>
+      <span class="summary-icon summary-dark"><Icon name="moon" /></span>
+      <span class="summary-icon summary-auto"><Icon name="laptop" /></span>
+      <span class="summary-icon summary-light"><Icon name="sun" /></span>
+      <Icon name="down-caret" class="caret" />
+    </summary>
+
+    <div class="theme-options" role="group" aria-label={label}>
+      <button type="button" data-theme-choice="dark" aria-pressed="false">
+        <span class="option-icon"><Icon name="moon" /></span>
+        <span>{night}</span>
+        <span class="current-mark" aria-hidden="true">✓</span>
+      </button>
+      <button type="button" data-theme-choice="auto" aria-pressed="true">
+        <span class="option-icon"><Icon name="laptop" /></span>
+        <span>{system}</span>
+        <span class="current-mark" aria-hidden="true">✓</span>
+      </button>
+      <button type="button" data-theme-choice="light" aria-pressed="false">
+        <span class="option-icon"><Icon name="sun" /></span>
+        <span>{day}</span>
+        <span class="current-mark" aria-hidden="true">✓</span>
+      </button>
+    </div>
+  </details>
+</faraday-theme-control>
+
+<script>
+  type Theme = 'auto' | 'dark' | 'light';
+
+  const storageKey = 'starlight-theme';
+  const parseTheme = (theme: unknown): Theme => (
+    theme === 'dark' || theme === 'light' || theme === 'auto' ? theme : 'auto'
+  );
+  const loadTheme = (): Theme => parseTheme(localStorage.getItem(storageKey) || 'auto');
+  const systemTheme = (): Exclude<Theme, 'auto'> => (
+    matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
+  );
+
+  function applyTheme(theme: Theme): void {
+    document.documentElement.dataset.theme = theme === 'auto' ? systemTheme() : theme;
+    localStorage.setItem(storageKey, theme === 'auto' ? '' : theme);
+    document.querySelectorAll<HTMLElement>('faraday-theme-control').forEach((control) => {
+      control.dataset.activeTheme = theme;
+      control.querySelectorAll<HTMLButtonElement>('[data-theme-choice]').forEach((button) => {
+        const active = button.dataset.themeChoice === theme;
+        button.setAttribute('aria-pressed', String(active));
+      });
+    });
+  }
+
+  class FaradayThemeControl extends HTMLElement {
+    connectedCallback(): void {
+      if (this.dataset.ready === 'true') return;
+      this.dataset.ready = 'true';
+      const details = this.querySelector('details');
+
+      details?.addEventListener('toggle', () => {
+        if (!details.open) return;
+        document.querySelectorAll<HTMLDetailsElement>(
+          'faraday-language-menu details[open], faraday-theme-control details[open]',
+        ).forEach((menu) => {
+          if (menu !== details) menu.open = false;
+        });
+      });
+
+      document.addEventListener('click', (event) => {
+        if (event.target instanceof Node && !this.contains(event.target) && details) details.open = false;
+      });
+
+      this.addEventListener('click', (event) => {
+        const button = (event.target as Element).closest<HTMLButtonElement>('[data-theme-choice]');
+        if (button) {
+          applyTheme(parseTheme(button.dataset.themeChoice));
+          this.querySelector('details')?.removeAttribute('open');
+          this.querySelector('summary')?.focus();
+        }
+      });
+      this.addEventListener('keydown', (event) => {
+        if (!(event instanceof KeyboardEvent) || event.key !== 'Escape') return;
+        const details = this.querySelector('details');
+        if (!details?.open) return;
+        event.preventDefault();
+        details.open = false;
+        details.querySelector('summary')?.focus();
+      });
+      applyTheme(loadTheme());
+    }
+  }
+
+  if (!customElements.get('faraday-theme-control')) {
+    customElements.define('faraday-theme-control', FaradayThemeControl);
+  }
+
+  matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => {
+    if (loadTheme() === 'auto') applyTheme('auto');
+  });
+</script>
+
+<style>
+  faraday-theme-control {
+    position: relative;
+    display: block;
+  }
+
+  details { position: relative; }
+
+  summary {
+    position: relative;
+    display: grid;
+    width: 2.65rem;
+    height: 2.25rem;
+    place-items: center;
+    padding: 0;
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 0.55rem;
+    background: color-mix(in srgb, var(--sl-color-bg-nav) 84%, var(--ff-visual));
+    color: var(--sl-color-text);
+    cursor: pointer;
+    list-style: none;
+    transition: border-color 140ms ease, background-color 140ms ease, transform 140ms ease;
+  }
+
+  summary::-webkit-details-marker { display: none; }
+
+  summary:hover {
+    border-color: color-mix(in srgb, var(--sl-color-accent) 65%, var(--sl-color-hairline));
+    background: var(--sl-color-accent-low);
+  }
+
+  summary:active { transform: translateY(1px); }
+
+  details[open] summary {
+    border-color: var(--sl-color-accent);
+    background: var(--sl-color-accent-low);
+  }
+
+  .summary-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--sl-color-accent);
+    line-height: 0;
+  }
+
+  .summary-dark,
+  .summary-light { display: none; }
+
+  faraday-theme-control[data-active-theme='dark'] .summary-dark,
+  faraday-theme-control[data-active-theme='light'] .summary-light { display: inline-flex; }
+
+  faraday-theme-control[data-active-theme='dark'] .summary-auto,
+  faraday-theme-control[data-active-theme='light'] .summary-auto { display: none; }
+
+  .caret {
+    position: absolute;
+    right: 0.35rem;
+    width: 0.55rem;
+    transition: transform 140ms ease;
+  }
+
+  details[open] .caret { transform: rotate(180deg); }
+
+  .theme-options {
+    position: absolute;
+    z-index: 40;
+    top: calc(100% + 0.55rem);
+    right: 0;
+    display: grid;
+    width: 9rem;
+    padding: 0.3rem;
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 0.7rem;
+    background: var(--sl-color-bg-nav);
+    box-shadow: 0 0.9rem 2rem color-mix(in srgb, var(--ff-ink) 16%, transparent);
+  }
+
+  .theme-options::before {
+    position: absolute;
+    top: -0.28rem;
+    right: 1.2rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-top: 1px solid var(--sl-color-hairline);
+    border-left: 1px solid var(--sl-color-hairline);
+    background: var(--sl-color-bg-nav);
+    content: '';
+    transform: rotate(45deg);
+  }
+
+  button {
+    display: grid;
+    min-height: 2.4rem;
+    grid-template-columns: 1rem 1fr 1rem;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.4rem 0.55rem;
+    border: 0;
+    border-radius: 0.42rem;
+    background: transparent;
+    color: var(--sl-color-text);
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 650;
+    text-align: left;
+  }
+
+  button:hover,
+  button:focus-visible { background: var(--sl-color-accent-low); }
+
+  .option-icon { display: inline-flex; color: var(--sl-color-gray-3); }
+  button[aria-pressed='true'] { color: var(--sl-color-accent-high); }
+  button[aria-pressed='true'] .option-icon { color: var(--sl-color-accent); }
+  .current-mark { visibility: hidden; color: var(--ff-lime); font-weight: 800; }
+  button[aria-pressed='true'] .current-mark { visibility: visible; }
+
+  @media (max-width: 38rem) {
+    summary {
+      width: 2.25rem;
+    }
+
+    summary .caret { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    summary,
+    .caret { transition: none; }
+  }
+</style>

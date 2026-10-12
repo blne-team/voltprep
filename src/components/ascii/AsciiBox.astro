@@ -1,0 +1,86 @@
+---
+// A frame drawn with box-drawing characters. Top and bottom edges are real characters;
+// the sides are hairlines on the character centreline so they stay continuous in any font.
+// Put a heading in the `label` slot and a short note in the `meta` slot.
+
+interface Props {
+  variant?: 'single' | 'double' | 'dashed';
+  tone?: 'muted' | 'accent' | 'ink';
+  class?: string;
+}
+
+const { variant = 'single', tone = 'muted', class: className } = Astro.props;
+const glyphs = {
+  single: { tl: '┌', tr: '┐', bl: '└', br: '┘', h: '─' },
+  double: { tl: '╔', tr: '╗', bl: '╚', br: '╝', h: '═' },
+  dashed: { tl: '┌', tr: '┐', bl: '└', br: '┘', h: '┄' },
+}[variant];
+const fill = glyphs.h.repeat(240);
+const hasLabel = Astro.slots.has('label');
+const hasMeta = Astro.slots.has('meta');
+---
+
+<div class:list={['ascii-box', variant, tone, className]}>
+  <div class="edge">
+    <span class="glyph" aria-hidden="true">{glyphs.tl}{glyphs.h}</span>
+    {hasLabel && <div class="label"><slot name="label" /></div>}
+    <span class="glyph fill" aria-hidden="true">{fill}</span>
+    {hasMeta && <div class="meta"><slot name="meta" /></div>}
+    <span class="glyph" aria-hidden="true">{glyphs.h}{glyphs.tr}</span>
+  </div>
+  <div class="body"><slot /></div>
+  <div class="edge" aria-hidden="true">
+    <span class="glyph">{glyphs.bl}</span>
+    <span class="glyph fill">{fill}</span>
+    <span class="glyph">{glyphs.br}</span>
+  </div>
+</div>
+
+<style>
+  .ascii-box {
+    --frame: var(--sl-color-gray-4);
+    display: flex;
+    flex-direction: column;
+    font-family: var(--ff-font-box);
+    font-size: var(--box-size, 0.95rem);
+  }
+
+  .accent { --frame: var(--sl-color-text-accent); }
+  .ink { --frame: var(--field-ink); }
+
+  .edge {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .glyph { flex: none; color: var(--frame); }
+  /* Zero intrinsic width: the long run of characters is clipped and never widens a layout. */
+  .fill { flex: 1 1 0; width: 0; min-width: 1ch; overflow: hidden; }
+  .label,
+  .meta { flex: none; min-width: 0; padding-inline: 0.6ch; }
+
+  .body { position: relative; flex: 1; padding: 0.9rem 2ch 0.85rem; }
+
+  .body::before,
+  .body::after {
+    position: absolute;
+    top: -0.5em;
+    bottom: -0.5em;
+    border-left: 1px solid var(--frame);
+    content: '';
+  }
+
+  .body::before { left: calc(0.5ch - 0.5px); }
+  .body::after { right: calc(0.5ch - 0.5px); }
+
+  .double .body::before,
+  .double .body::after { border-left: 3px double var(--frame); }
+  .double .body::before { left: calc(0.5ch - 1.5px); }
+  .double .body::after { right: calc(0.5ch - 1.5px); }
+
+  .dashed .body::before,
+  .dashed .body::after { border-left-style: dashed; }
+</style>

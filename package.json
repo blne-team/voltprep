@@ -1,0 +1,47 @@
+{
+  "name": "faraday-fieldbook",
+  "version": "1.0.0",
+  "description": "Electrician knowledge platform and Canadian Red Seal study site, built with Astro Starlight",
+  "scripts": {
+    "dev": "astro dev --host 0.0.0.0",
+    "build": "astro build",
+    "preview": "astro preview --host 0.0.0.0",
+    "check": "astro check",
+    "verify": "npm run check && npm run build && node scripts/check-build.mjs",
+    "cf:dev": "npm run build && wrangler dev --local --ip 0.0.0.0 --port 8787",
+    "cf:check": "npm run verify && wrangler deploy --dry-run",
+    "cf:deploy": "npm run verify && wrangler deploy",
+    "cf:login": "wrangler login --device --browser=false",
+    "cf:whoami": "wrangler whoami"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blne-team/voltprep.git"
+  },
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/blne-team/voltprep/issues"
+  },
+  "homepage": "https://github.com/blne-team/voltprep#readme",
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "@astrojs/starlight": "^0.42.6",
+    "@fontsource-variable/archivo": "^5.3.0",
+    "@fontsource-variable/martian-mono": "^5.3.0",
+    "@fontsource-variable/source-sans-3": "^5.3.1",
+    "@fontsource-variable/source-serif-4": "^5.3.1",
+    "astro": "^7.3.8"
+  },
+  "private": true,
+  "overrides": {
+    "postcss-selector-parser": "^7.1.6"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^6.0.3",
+    "wrangler": "4.149.0"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  }
+}

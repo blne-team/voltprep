@@ -1,0 +1,8 @@
+---
+// Replaces Starlight's viewport-pinned right sidebar. The desktop table of contents
+// is rendered inside the article grid (see MarkdownContent.astro) so that content,
+// comments and footer all share one canvas width.
+---
+
+<div class="main-pane"><slot /></div>
+<slot name="right-sidebar" />

@@ -1,0 +1,41 @@
+---
+title: Analyseur de circuit RLC série
+description: Calculez l’impédance complexe, le déphasage, le courant efficace et les puissances d’un circuit RLC série idéal avec les formules visibles.
+editUrl: false
+pageType: tool
+topic: electrical
+kind: tool
+tags: [ac-circuits]
+---
+
+import ElectricalCalculator from '../../../../components/ElectricalCalculator.astro';
+import ToolNotes from '../../../../components/ToolNotes.astro';
+
+Utilisez cet analyseur pour étudier comment la résistance, l’inductance, la capacité et la fréquence se combinent dans un circuit CA série idéal. Modifiez une seule valeur à la fois et comparez la lecture à votre prédiction.
+
+<ElectricalCalculator kind="rlc" />
+
+<ToolNotes>
+<section>
+
+## Hypothèses du modèle
+
+L’analyseur traite la résistance, l’inductance et la capacité comme des éléments idéaux en série, en régime sinusoïdal permanent à une seule fréquence. La tension et le courant sont des valeurs efficaces. Une inductance ou une capacité nulle retire cet élément du modèle.
+
+Avec cette convention, une réactance positive donne un angle positif et un courant en retard. Une réactance négative donne un angle négatif et un courant en avance. La puissance réactive suit le même signe.
+
+Le modèle ne tient pas compte des tolérances, des effets parasites, des pertes, des harmoniques, des transitoires, de la protection ou des exigences du code de l’électricité.
+
+</section>
+<section>
+
+## Vérifications théoriques à essayer
+
+- Réglez l’inductance et la capacité à zéro, puis expliquez pourquoi l’angle de phase devient nul.
+- Augmentez la fréquence avec les deux éléments réactifs et observez quelle réactance devient dominante.
+- Modifiez les valeurs jusqu’à ce que les réactances inductive et capacitive s’annulent presque, puis examinez le courant et le facteur de puissance.
+
+Ces exercices originaux ont été rédigés pour ce site.
+
+</section>
+</ToolNotes>

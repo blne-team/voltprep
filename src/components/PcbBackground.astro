@@ -1,0 +1,45 @@
+---
+// Full-bleed circuit-board backdrop for listing pages. Place it as the first child of a
+// positioned, isolated container; it sits behind the content and fades out downwards.
+import { buildPcbPattern } from '../lib/pcb-pattern';
+
+const pattern = buildPcbPattern();
+---
+
+<div class="pcb" aria-hidden="true" style={`--pcb-traces:${pattern.traces};--pcb-pads:${pattern.copper};--pcb-tile:${pattern.tile}px`}>
+  <div class="layer traces"></div>
+  <div class="layer pads"></div>
+</div>
+
+<style>
+  .pcb {
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 50%;
+    width: 100vw;
+    height: min(100%, 70rem);
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  .layer {
+    position: absolute;
+    inset: 0;
+    mask-image: var(--mask), linear-gradient(to bottom, #000 0%, #000 35%, transparent 100%);
+    mask-size: var(--pcb-tile) var(--pcb-tile), 100% 100%;
+    mask-repeat: repeat, no-repeat;
+    mask-composite: intersect;
+    -webkit-mask-image: var(--mask), linear-gradient(to bottom, #000 0%, #000 35%, transparent 100%);
+    -webkit-mask-size: var(--pcb-tile) var(--pcb-tile), 100% 100%;
+    -webkit-mask-repeat: repeat, no-repeat;
+    -webkit-mask-composite: source-in;
+  }
+
+  .traces { --mask: var(--pcb-traces); background: var(--pcb-trace); }
+  .pads { --mask: var(--pcb-pads); background: var(--pcb-copper); }
+
+  @media print {
+    .pcb { display: none; }
+  }
+</style>

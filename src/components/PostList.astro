@@ -1,0 +1,255 @@
+---
+import { getSiteLocale, getLocalizedSiteConfig, siteConfig } from '../config/site';
+import { kindLabels, postKinds, tagHref, tags as tagLabels, topicHref, topics } from '../config/taxonomy';
+import type { Post } from '../lib/posts';
+
+interface Props {
+  posts: Post[];
+  /** Hide the topic column on a topic's own page. */
+  showTopic?: boolean;
+  labelledBy?: string;
+}
+
+const { posts, showTopic = true, labelledBy } = Astro.props;
+const locale = getSiteLocale(Astro.url.pathname);
+const { home } = getLocalizedSiteConfig(Astro.url.pathname);
+const dateFormat = new Intl.DateTimeFormat(siteConfig.locales[locale].language, { dateStyle: 'medium' });
+const englishTag = siteConfig.locales[siteConfig.defaultLocale].language;
+const kindsPresent = postKinds.filter((kind) => posts.some((post) => post.kind === kind));
+const filterName = `post-filter-${Math.random().toString(36).slice(2, 8)}`;
+---
+
+{posts.length === 0 ? (
+  <p class="empty">{home.empty}</p>
+) : (
+  <div class:list={['post-list', { 'no-topic': !showTopic }]}>
+    {kindsPresent.length > 1 && (
+      <fieldset class="filter">
+        <legend>{home.filterLabel}</legend>
+        <span class="filter-label" aria-hidden="true">{home.filterLabel.toLowerCase()}:</span>
+        <label><input type="radio" name={filterName} value="all" checked />{home.filters.all}<span>{posts.length}</span></label>
+        {kindsPresent.map((kind) => (
+          <label><input type="radio" name={filterName} value={kind} />{home.filters[kind]}<span>{posts.filter((post) => post.kind === kind).length}</span></label>
+        ))}
+      </fieldset>
+    )}
+
+    <div class="list-head" aria-hidden="true">
+      <span>{home.columns.entry}</span>
+      <span>{home.columns.tags}</span>
+      {showTopic && <span>{home.columns.topic}</span>}
+      <span>{home.columns.type}</span>
+    </div>
+    <div class="head-rule" aria-hidden="true">{'─'.repeat(320)}</div>
+
+    <ol aria-labelledby={labelledBy}>
+      {posts.map((post) => (
+        <li class="row" data-kind={post.kind}>
+          <div class="main">
+            <h3>
+              <a class="title" href={post.href} lang={post.untranslated ? englishTag : undefined}>{post.title}</a>
+              {post.untranslated && <span class="untranslated">{home.untranslated}</span>}
+            </h3>
+            <p class="description" lang={post.untranslated ? englishTag : undefined}>{post.description}</p>
+          </div>
+          <p class="tags">
+            {post.published && <time datetime={post.published.toISOString()}>{dateFormat.format(post.published)}</time>}
+            {post.tags.map((tag) => <a href={tagHref(tag, locale)}>#{tagLabels[tag][locale]}</a>)}
+          </p>
+          {showTopic && <a class="topic" href={topicHref(post.topic, locale)}>{topics[post.topic].name[locale]}</a>}
+          <span class="kind">{kindLabels[post.kind][locale]}</span>
+        </li>
+      ))}
+    </ol>
+  </div>
+)}
+
+<style>
+  .post-list { --cols: minmax(0, 1fr) minmax(8rem, 13rem) minmax(6rem, 8rem) 3.5rem; }
+  .post-list.no-topic { --cols: minmax(0, 1fr) minmax(8rem, 13rem) 3.5rem; }
+
+  /* CSS-only filter by kind */
+  .filter {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
+    margin: 0 0 1rem;
+    padding: 0;
+    border: 0;
+    font-family: var(--ff-font-mono);
+    font-size: 0.74rem;
+  }
+
+  legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .filter-label { margin-right: 0.35rem; color: var(--sl-color-gray-3); }
+
+  /* ASCII radio buttons: ( ) and (•) */
+  .filter label {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    padding: 0.25rem 0.45rem;
+    color: var(--sl-color-gray-2);
+    cursor: pointer;
+  }
+
+  .filter label::before { color: var(--sl-color-gray-4); content: '( )'; font-family: var(--ff-font-box); white-space: pre; }
+  .filter label span { color: var(--sl-color-gray-3); font-size: 0.66rem; }
+  .filter input { position: absolute; opacity: 0; pointer-events: none; }
+  .filter label:hover { color: var(--sl-color-white); }
+  .filter label:has(input:checked) { color: var(--sl-color-white); font-weight: 700; }
+  .filter label:has(input:checked)::before { color: var(--sl-color-text-accent); content: '(•)'; }
+  .filter label:has(input:focus-visible) { outline: 2px solid var(--sl-color-accent); outline-offset: 2px; }
+
+  .post-list:has(input[value='guide']:checked) .row:not([data-kind='guide']),
+  .post-list:has(input[value='tool']:checked) .row:not([data-kind='tool']) { display: none; }
+
+  /* Directory-style rows */
+  ol { margin: 0; padding: 0; list-style: none; }
+
+  .list-head,
+  .row {
+    display: grid;
+    grid-template-columns: var(--cols);
+    gap: 0 1.5rem;
+    align-items: baseline;
+  }
+
+  .list-head {
+    padding: 0 0.75rem 0.4rem 4ch;
+    color: var(--sl-color-gray-3);
+    font-family: var(--ff-font-mono);
+    font-size: 0.7rem;
+  }
+
+  .list-head span:last-child,
+  .kind { text-align: right; }
+
+  .head-rule {
+    width: 0;
+    min-width: 100%;
+    overflow: hidden;
+    color: var(--sl-color-gray-4);
+    font-family: var(--ff-font-box);
+    font-size: 0.95rem;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  /* Directory tree: ├── for each entry, └── for the last, │ joining them. */
+  ol { font-family: var(--ff-font-box); font-size: 0.95rem; }
+
+  .row {
+    position: relative;
+    padding: 0.8rem 0.75rem 0.85rem 4ch;
+  }
+
+  .main { font-family: var(--sl-font); }
+
+  .row::before {
+    position: absolute;
+    top: 0.95rem;
+    left: 0;
+    color: var(--sl-color-gray-4);
+    content: '├──';
+    line-height: 1;
+  }
+
+  .row:last-child::before { content: '└──'; }
+
+  .row::after {
+    position: absolute;
+    top: calc(0.95rem + 1em);
+    bottom: -0.95rem;
+    left: calc(0.5ch - 0.5px);
+    border-left: 1px solid var(--sl-color-gray-4);
+    content: '';
+  }
+
+  .row:last-child::after { display: none; }
+
+  .row:hover,
+  .row:focus-within { background: color-mix(in srgb, var(--sl-color-accent) 7%, transparent); }
+  .row:hover::before,
+  .row:focus-within::before { color: var(--ff-copper); }
+
+  h3 { margin: 0; font-size: 1.08rem; line-height: 1.3; letter-spacing: -0.02em; }
+  .title { color: var(--sl-color-white); text-decoration: none; }
+  .row:hover .title { color: var(--sl-color-text-accent); }
+
+  /* The title link covers the row; tag and topic links sit above it. */
+  .title::after { position: absolute; inset: 0; content: ''; }
+  .title:focus-visible { outline: none; }
+  .row:has(.title:focus-visible) { outline: 2px solid var(--sl-color-accent); outline-offset: -2px; }
+
+  .description {
+    display: -webkit-box;
+    max-width: 64ch;
+    margin: 0.25rem 0 0;
+    overflow: hidden;
+    color: var(--sl-color-gray-3);
+    font-size: 0.88rem;
+    line-height: 1.5;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .tags,
+  .topic,
+  .kind { font-family: var(--ff-font-mono); font-size: 0.72rem; }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.2rem 0.75rem;
+    margin: 0;
+    color: var(--sl-color-gray-3);
+  }
+
+  .tags a,
+  .topic { position: relative; z-index: 1; text-decoration: none; }
+  .tags a { color: var(--sl-color-gray-2); }
+  .topic { color: var(--sl-color-text-accent); }
+  .tags a:hover,
+  .topic:hover { color: var(--sl-color-text-accent); text-decoration: underline; }
+  .tags a:focus-visible,
+  .topic:focus-visible { outline: 2px solid var(--sl-color-accent); outline-offset: 2px; }
+
+  .kind { color: var(--sl-color-gray-3); }
+
+  .untranslated {
+    margin-inline-start: 0.5rem;
+    color: var(--sl-color-gray-3);
+    font-family: var(--ff-font-mono);
+    font-size: 0.66rem;
+    font-weight: 400;
+    letter-spacing: 0;
+    white-space: nowrap;
+  }
+
+  .empty {
+    margin: 0;
+    padding: 1.5rem 0;
+    color: var(--sl-color-gray-3);
+    font-family: var(--ff-font-mono);
+    font-size: 0.85rem;
+  }
+
+  @media (max-width: 48rem) {
+    .list-head { display: none; }
+
+    .row,
+    .post-list.no-topic .row {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 0.35rem 1rem;
+      padding-left: 4ch;
+    }
+
+    .main { grid-column: 1 / -1; grid-row: 2; }
+    .tags { grid-column: 1 / -1; grid-row: 3; margin-top: 0.2rem; }
+    .topic { grid-row: 1; grid-column: 1; }
+    .kind { grid-row: 1; grid-column: 2; }
+    .post-list.no-topic .kind { grid-column: 1 / -1; text-align: left; }
+  }
+</style>

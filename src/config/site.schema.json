@@ -1,0 +1,421 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Site settings and text",
+  "type": "object",
+  "required": [
+    "brand",
+    "about",
+    "text"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "brand": {
+      "description": "Site name. Used in the header, footer, page titles and search metadata.",
+      "type": "object",
+      "required": [
+        "name",
+        "shortName",
+        "description"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "description": "Full site name.",
+          "type": "string",
+          "minLength": 1
+        },
+        "shortName": {
+          "description": "Shorter name for narrow screens and breadcrumbs.",
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "description": "One sentence describing the whole site, used for search engines and link previews.",
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "about": {
+      "description": "Subjects the site covers, for search-engine structured data.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "text": {
+      "description": "Interface and page text for each language. `root` is English, `fr` French, `zh` Simplified Chinese; all need the same fields.",
+      "type": "object",
+      "required": [
+        "root",
+        "fr",
+        "zh"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "root": {
+          "description": "English",
+          "$ref": "#/$defs/text"
+        },
+        "fr": {
+          "description": "French",
+          "$ref": "#/$defs/text"
+        },
+        "zh": {
+          "description": "Simplified Chinese",
+          "$ref": "#/$defs/text"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "text": {
+      "type": "object",
+      "required": [
+        "descriptor",
+        "homeLabel",
+        "menuLabel",
+        "languageLabel",
+        "theme",
+        "externalLabel",
+        "home",
+        "topicBarLabel",
+        "allEntries",
+        "community",
+        "footer"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "descriptor": {
+          "description": "Short line next to the brand.",
+          "type": "string",
+          "minLength": 1
+        },
+        "homeLabel": {
+          "type": "string",
+          "minLength": 1
+        },
+        "menuLabel": {
+          "type": "string",
+          "minLength": 1
+        },
+        "languageLabel": {
+          "type": "string",
+          "minLength": 1
+        },
+        "theme": {
+          "type": "object",
+          "required": [
+            "label",
+            "night",
+            "system",
+            "day"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "label": {
+              "type": "string",
+              "minLength": 1
+            },
+            "night": {
+              "type": "string",
+              "minLength": 1
+            },
+            "system": {
+              "type": "string",
+              "minLength": 1
+            },
+            "day": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "externalLabel": {
+          "type": "string",
+          "minLength": 1
+        },
+        "home": {
+          "description": "Homepage and listing pages.",
+          "type": "object",
+          "required": [
+            "title",
+            "summary",
+            "filterLabel",
+            "filters",
+            "entriesHeading",
+            "columns",
+            "topicsHeading",
+            "planned",
+            "plannedNote",
+            "count",
+            "empty",
+            "topicPath",
+            "tagPath",
+            "tagTitle",
+            "tagDescription",
+            "topicTitle",
+            "topicsInTag",
+            "untranslated"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "title": {
+              "description": "Homepage headline (the page h1).",
+              "type": "string",
+              "minLength": 1
+            },
+            "summary": {
+              "description": "Paragraph under the homepage headline.",
+              "type": "string",
+              "minLength": 1
+            },
+            "filterLabel": {
+              "type": "string",
+              "minLength": 1
+            },
+            "filters": {
+              "type": "object",
+              "required": [
+                "all",
+                "guide",
+                "tool"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "all": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "guide": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "tool": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "entriesHeading": {
+              "type": "string",
+              "minLength": 1
+            },
+            "columns": {
+              "type": "object",
+              "required": [
+                "topic",
+                "entry",
+                "tags",
+                "type"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "topic": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "entry": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "tags": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "type": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "topicsHeading": {
+              "type": "string",
+              "minLength": 1
+            },
+            "planned": {
+              "description": "Label for a topic with no entries yet.",
+              "type": "string",
+              "minLength": 1
+            },
+            "plannedNote": {
+              "type": "string",
+              "minLength": 1
+            },
+            "count": {
+              "description": "Entry counts. {count} is replaced by the number; `one` is used for 1 (and 0 in French).",
+              "type": "object",
+              "required": [
+                "one",
+                "other"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "one": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "other": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "empty": {
+              "type": "string",
+              "minLength": 1
+            },
+            "topicPath": {
+              "type": "string",
+              "minLength": 1
+            },
+            "tagPath": {
+              "type": "string",
+              "minLength": 1
+            },
+            "tagTitle": {
+              "description": "Title of a tag page. {tag} is the tag name.",
+              "type": "string",
+              "minLength": 1
+            },
+            "tagDescription": {
+              "description": "Description of a tag page. {tag} is the tag name, {brand} the site name.",
+              "type": "string",
+              "minLength": 1
+            },
+            "topicTitle": {
+              "description": "Title of a topic page. {topic} is the topic name.",
+              "type": "string",
+              "minLength": 1
+            },
+            "topicsInTag": {
+              "type": "string",
+              "minLength": 1
+            },
+            "untranslated": {
+              "description": "Small label on a listed entry that has no translation in this language yet (its page shows the English text).",
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "topicBarLabel": {
+          "type": "string",
+          "minLength": 1
+        },
+        "allEntries": {
+          "type": "string",
+          "minLength": 1
+        },
+        "community": {
+          "description": "The “Discuss this page” comments panel.",
+          "type": "object",
+          "required": [
+            "heading",
+            "summary",
+            "loadAction",
+            "githubAction",
+            "privacy",
+            "requiresJavaScript",
+            "joinAction",
+            "loading"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "heading": {
+              "type": "string",
+              "minLength": 1
+            },
+            "summary": {
+              "type": "string",
+              "minLength": 1
+            },
+            "loadAction": {
+              "type": "string",
+              "minLength": 1
+            },
+            "githubAction": {
+              "type": "string",
+              "minLength": 1
+            },
+            "privacy": {
+              "type": "string",
+              "minLength": 1
+            },
+            "requiresJavaScript": {
+              "type": "string",
+              "minLength": 1
+            },
+            "joinAction": {
+              "type": "string",
+              "minLength": 1
+            },
+            "loading": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "footer": {
+          "description": "Footer text (footer links are in menus.json).",
+          "type": "object",
+          "required": [
+            "tagline",
+            "columns",
+            "navigationLabel",
+            "top",
+            "statement"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "tagline": {
+              "type": "string",
+              "minLength": 1
+            },
+            "columns": {
+              "type": "object",
+              "required": [
+                "topics",
+                "tags",
+                "site"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "topics": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "tags": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "site": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "navigationLabel": {
+              "type": "string",
+              "minLength": 1
+            },
+            "top": {
+              "type": "string",
+              "minLength": 1
+            },
+            "statement": {
+              "description": "Independence statement at the bottom of every page. {brand} is the site name.",
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    }
+  }
+}

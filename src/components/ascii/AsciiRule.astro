@@ -1,0 +1,40 @@
+---
+// A horizontal rule made of box-drawing characters, optionally carrying a heading and a note:
+// ── All entries ─────────────────────── 4 entries ──
+interface Props {
+  variant?: 'single' | 'double' | 'dashed';
+  class?: string;
+}
+
+const { variant = 'single', class: className } = Astro.props;
+const h = { single: '─', double: '═', dashed: '┄' }[variant];
+const fill = h.repeat(240);
+const hasHeading = Astro.slots.has('default');
+const hasMeta = Astro.slots.has('meta');
+---
+
+<div class:list={['ascii-rule', variant, className]}>
+  {hasHeading && <span class="glyph" aria-hidden="true">{h}{h}</span>}
+  {hasHeading && <div class="heading"><slot /></div>}
+  <span class="glyph fill" aria-hidden="true">{fill}</span>
+  {hasMeta && <div class="meta"><slot name="meta" /></div>}
+  {hasMeta && <span class="glyph" aria-hidden="true">{h}{h}</span>}
+</div>
+
+<style>
+  .ascii-rule {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    font-family: var(--ff-font-box);
+    font-size: var(--rule-size, 0.95rem);
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .glyph { flex: none; color: var(--rule-color, var(--sl-color-gray-4)); }
+  /* Zero intrinsic width: the long run of characters is clipped and never widens a layout. */
+  .fill { flex: 1 1 0; width: 0; min-width: 2ch; overflow: hidden; }
+  .heading,
+  .meta { flex: none; min-width: 0; padding-inline: 0.75ch; white-space: normal; }
+</style>

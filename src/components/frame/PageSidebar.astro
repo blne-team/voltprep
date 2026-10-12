@@ -1,0 +1,9 @@
+---
+import MobileTableOfContents from '@astrojs/starlight/components/MobileTableOfContents.astro';
+---
+
+{Astro.locals.starlightRoute.toc && (
+  <div class="lg:sl-hidden print:hidden">
+    <MobileTableOfContents />
+  </div>
+)}
