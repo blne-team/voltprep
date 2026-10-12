@@ -70,6 +70,14 @@
         "fr": "Triphasé",
         "zh": "三相电"
       }
+    },
+    {
+      "id": "ohms-law",
+      "name": {
+        "root": "Ohm's law",
+        "fr": "Loi d’Ohm",
+        "zh": "欧姆定律"
+      }
     }
   ]
 }

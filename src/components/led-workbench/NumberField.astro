@@ -1,0 +1,32 @@
+---
+import type { FieldSpec } from '../../lib/led-workbench/fields';
+
+interface Props {
+  name: string;
+  label: string;
+  spec: FieldSpec;
+  note?: string;
+  presetBound?: boolean;
+}
+
+const { name, label, spec, note, presetBound } = Astro.props;
+---
+
+<label class="field">
+  <span class="field-label">{label}{note && <small>{note}</small>}</span>
+  <span class="field-input">
+    <input
+      name={name}
+      type="number"
+      inputmode="decimal"
+      min={spec.min}
+      max={spec.max}
+      step={spec.step}
+      value={spec.value ?? ''}
+      required={!spec.optional}
+      data-label={label}
+      data-preset-bound={presetBound ? '' : undefined}
+    />
+    {spec.unit && <b>{spec.unit}</b>}
+  </span>
+</label>

@@ -1,0 +1,151 @@
+---
+// LED resistor scenario workbench: three scenario tabs (LED resistor first), each solved end to end
+// and shown in four views. Fully rendered on the server; the script makes it live.
+import { getContentLocale, pick, siteConfig } from '../../config/site';
+import { createFormatter } from '../../lib/led-workbench/format';
+import { batteryFields, ledFields, wireFields } from '../../lib/led-workbench/fields';
+import { batteryPresets, ledPresets } from '../../lib/led-workbench/data';
+import { sources } from '../../lib/led-workbench/sources';
+import { eSeries } from '../../lib/led-workbench/e-series';
+import { solveLed } from '../../lib/led-workbench/led';
+import { solveWire } from '../../lib/led-workbench/wire';
+import { solveBattery } from '../../lib/led-workbench/battery';
+import { commonCopy } from './copy/common';
+import { ledCopy } from './copy/led';
+import { wireCopy } from './copy/wire';
+import { batteryCopy } from './copy/battery';
+import { batteryView, ledView, wireView } from './views';
+import { defaults, readBattery, readLed, readWire } from './scenarios';
+import NumberField from './NumberField.astro';
+import ViewPanels from './ViewPanels.astro';
+import LedSketch from './sketches/LedSketch.astro';
+import WireSketch from './sketches/WireSketch.astro';
+import BatterySketch from './sketches/BatterySketch.astro';
+import './workbench.css';
+
+const locale = getContentLocale(Astro.url.pathname, Astro.locals.starlightRoute);
+const language = siteConfig.locales[locale].language;
+const f = createFormatter(language);
+const common = pick(commonCopy, locale);
+const led = pick(ledCopy, locale);
+const wire = pick(wireCopy, locale);
+const battery = pick(batteryCopy, locale);
+
+// The defaults are valid by construction; a failure here is a bug in fields.ts and must stop the build.
+function initial<T>(read: { ok: true; input: T } | { ok: false; problem: { field: string } }): T {
+  if (!read.ok) throw new Error(`LED workbench default for "${read.problem.field}" is outside its range`);
+  return read.input;
+}
+const ledInput = initial(readLed(defaults(ledFields), 'E24'));
+const wireInput = initial(readWire(defaults(wireFields)));
+const batteryInput = initial(readBattery(defaults(batteryFields)));
+const views = {
+  led: ledView(ledInput, solveLed(ledInput), led, f),
+  wire: wireView(wireInput, solveWire(wireInput), wire, f),
+  battery: batteryView(batteryInput, solveBattery(batteryInput), battery, f),
+};
+
+const ledOptions = ledPresets.map((preset) => ({
+  id: preset.id,
+  text: led.presetOption(led.colours[preset.id], preset.part, f.volts(preset.forwardVoltageTyp), f.amps(preset.testCurrent)),
+}));
+const batteryOptions = batteryPresets.map((preset) => ({
+  id: preset.id,
+  text: battery.presetOption(preset.part, f.volts(preset.emf), f.ohms(preset.internalResistance)),
+}));
+const ledSource = sources[ledPresets[0].source];
+const batterySource = sources[batteryPresets[0].source];
+const tabs = [
+  { id: 'led', label: led.tab },
+  { id: 'wire', label: wire.tab },
+  { id: 'battery', label: battery.tab },
+];
+---
+
+<led-workbench class="not-content" data-language={language} data-copy-locale={locale} aria-label={common.workbench}>
+  <div class="tabs" role="tablist" aria-label={common.tabs} hidden data-tabs>
+    {tabs.map((tab, index) => (
+      <button type="button" role="tab" id={`lw-tab-${tab.id}`} aria-controls={`lw-panel-${tab.id}`} aria-selected={index === 0 ? 'true' : 'false'} tabindex={index === 0 ? 0 : -1} data-tab={tab.id}>
+        {tab.label}
+      </button>
+    ))}
+  </div>
+
+  <section class="scenario" id="lw-panel-led" role="tabpanel" aria-labelledby="lw-tab-led" data-scenario="led">
+    <header><h2>{led.title}</h2><p>{led.intro}</p></header>
+    <div class="bench">
+      <form class="controls" data-form="led" novalidate>
+        <h3>{common.controls}</h3>
+        <NumberField name="supplyVoltage" label={led.fields.supplyVoltage} spec={ledFields.supplyVoltage} />
+        <label class="field wide">
+          <span class="field-label">{led.fields.preset}</span>
+          <select name="preset" data-preset>
+            {ledOptions.map((option) => <option value={option.id}>{option.text}</option>)}
+            <option value="custom">{common.custom}</option>
+          </select>
+        </label>
+        <p class="source wide" data-source>{common.source}: <a href={ledSource.url} data-source-link>{ledSource.title}</a></p>
+        <NumberField name="forwardVoltageTyp" label={led.fields.forwardVoltageTyp} spec={ledFields.forwardVoltageTyp} presetBound />
+        <NumberField name="forwardVoltageMax" label={led.fields.forwardVoltageMax} spec={ledFields.forwardVoltageMax} presetBound />
+        <NumberField name="current" label={led.fields.current} spec={ledFields.current} presetBound />
+        <NumberField name="ratedCurrent" label={led.fields.ratedCurrent} spec={ledFields.ratedCurrent} presetBound />
+        <NumberField name="count" label={led.fields.count} spec={ledFields.count} />
+        <label class="field">
+          <span class="field-label">{led.fields.series}</span>
+          <select name="series">
+            {Object.keys(eSeries).reverse().map((name) => <option value={name}>{led.seriesOption[name as keyof typeof eSeries]}</option>)}
+          </select>
+        </label>
+        <p class="field-error wide" data-error role="alert" hidden></p>
+      </form>
+      <LedSketch labels={views.led.sketch} description={views.led.sketchLabel} title={common.views.sketch} />
+      <ViewPanels view={views.led} labels={led.readout} primary="resistance" common={common} />
+    </div>
+  </section>
+
+  <section class="scenario" id="lw-panel-wire" role="tabpanel" aria-labelledby="lw-tab-wire" data-scenario="wire">
+    <header><h2>{wire.title}</h2><p>{wire.intro}</p></header>
+    <div class="bench">
+      <form class="controls" data-form="wire" novalidate>
+        <h3>{common.controls}</h3>
+        {Object.entries(wireFields).map(([name, spec]) => (
+          <NumberField name={name} label={wire.fields[name as keyof typeof wireFields]} spec={spec} />
+        ))}
+        <p class="source wide">{common.source}: <a href={sources.nbsCopper.url}>{sources.nbsCopper.title}</a></p>
+        <p class="field-error wide" data-error role="alert" hidden></p>
+      </form>
+      <WireSketch labels={views.wire.sketch} description={views.wire.sketchLabel} title={common.views.sketch} />
+      <ViewPanels view={views.wire} labels={wire.readout} primary="drop" common={common} />
+    </div>
+  </section>
+
+  <section class="scenario" id="lw-panel-battery" role="tabpanel" aria-labelledby="lw-tab-battery" data-scenario="battery">
+    <header><h2>{battery.title}</h2><p>{battery.intro}</p></header>
+    <div class="bench">
+      <form class="controls" data-form="battery" novalidate>
+        <h3>{common.controls}</h3>
+        <label class="field wide">
+          <span class="field-label">{battery.fields.preset}</span>
+          <select name="preset" data-preset>
+            {batteryOptions.map((option) => <option value={option.id}>{option.text}</option>)}
+            <option value="custom">{common.custom}</option>
+          </select>
+        </label>
+        <p class="source wide" data-source>{common.source}: <a href={batterySource.url} data-source-link>{batterySource.title}</a></p>
+        <NumberField name="emf" label={battery.fields.emf} spec={batteryFields.emf} presetBound />
+        <NumberField name="internalResistance" label={battery.fields.internalResistance} spec={batteryFields.internalResistance} presetBound />
+        <NumberField name="loadResistance" label={battery.fields.loadResistance} spec={batteryFields.loadResistance} />
+        <NumberField name="cutoffVoltage" label={battery.fields.cutoffVoltage} spec={batteryFields.cutoffVoltage} note={common.optional} />
+        <p class="field-error wide" data-error role="alert" hidden></p>
+      </form>
+      <BatterySketch labels={views.battery.sketch} description={views.battery.sketchLabel} title={common.views.sketch} />
+      <ViewPanels view={views.battery} labels={battery.readout} primary="terminalVoltage" common={common} />
+    </div>
+  </section>
+
+  <p class="educational-note"><span aria-hidden="true">!</span>{common.educational}</p>
+</led-workbench>
+
+<script>
+  import './element';
+</script>

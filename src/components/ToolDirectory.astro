@@ -8,7 +8,7 @@ const copy = pick({
   fr: {
     directoryLabel: 'Répertoire des calculateurs',
     statusLabel: 'Caractéristiques des outils',
-  count: '2 instruments théoriques',
+  count: '3 instruments théoriques',
   local: 'Calculs dans votre navigateur',
   formulas: 'Formules visibles',
   open: 'Ouvrir le calculateur',
@@ -31,12 +31,21 @@ const copy = pick({
       outputs: '4 résultats',
       kind: 'three-phase',
     },
+    {
+      title: 'Calcul de résistance pour LED',
+      description: 'Partez d’une alimentation et d’une fiche de LED : résistance normalisée, courant réel, puissance, puis chute sur une ligne CC et pile sous charge.',
+      href: `${base}/led-resistor-calculator/`,
+      notation: 'R = (Vs − n·Vf) / I',
+      inputs: '3 scénarios',
+      outputs: '4 vues',
+      kind: 'led',
+    },
   ],
   },
   root: {
     directoryLabel: 'Calculator directory',
     statusLabel: 'Tool characteristics',
-  count: '2 theory instruments',
+  count: '3 theory instruments',
   local: 'Calculates in your browser',
   formulas: 'Formulas stay visible',
   open: 'Open calculator',
@@ -59,6 +68,15 @@ const copy = pick({
       outputs: '4 results',
       kind: 'three-phase',
     },
+    {
+      title: 'LED resistor calculator',
+      description: 'Start from a supply and an LED datasheet: standard resistor, real current and wattage, then DC wire-run drop and battery sag.',
+      href: `${base}/led-resistor-calculator/`,
+      notation: 'R = (Vs − n·Vf) / I',
+      inputs: '3 scenarios',
+      outputs: '4 views',
+      kind: 'led',
+    },
   ],
   },
 }, locale);
@@ -78,6 +96,10 @@ const copy = pick({
           {tool.kind === 'rlc' ? (
             <>
               <i class="terminal"></i><b>R</b><span></span><b>L</b><span></span><b>C</b><i class="terminal"></i>
+            </>
+          ) : tool.kind === 'led' ? (
+            <>
+              <i class="terminal"></i><span></span><b>R</b><span></span><b>▷|</b><i class="terminal"></i>
             </>
           ) : (
             <>
@@ -258,6 +280,8 @@ const copy = pick({
   @media (min-width: 50rem) {
     .directory-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .directory-card + .directory-card { border-top: 0; border-left: 1px solid var(--sl-color-hairline); }
+    .directory-card:nth-child(2n + 1) { border-left: 0; }
+    .directory-card:nth-child(n + 3) { border-top: 1px solid var(--sl-color-hairline); }
     .directory-card { grid-template-rows: auto 1fr auto; }
     .schematic { min-height: 12rem; }
   }

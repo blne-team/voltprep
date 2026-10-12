@@ -1,0 +1,21 @@
+---
+// Series loop: supply on the left, resistor on top, LED on the right, current arrow along the bottom.
+interface Props { labels: Record<string, string>; description: string; title: string }
+const { labels, description, title } = Astro.props;
+---
+
+<figure class="view sketch">
+  <figcaption>{title}</figcaption>
+  <svg viewBox="0 0 360 220" role="img" aria-label={description} data-sketch-svg>
+    <path class="wire" d="M60 60 H140 M220 60 H300 V95 M300 135 V170 H60 V125 M60 95 V60" />
+    <g class="cell"><line x1="42" y1="100" x2="78" y2="100" /><line class="short" x1="50" y1="120" x2="70" y2="120" /></g>
+    <rect class="part heat" x="140" y="48" width="80" height="24" />
+    <path class="part" d="M285 95 H315 L300 135 Z M285 135 H315" />
+    <path class="emit" d="M320 105 l14 -10 M320 120 l14 -10" />
+    <path class="flow" d="M200 170 H140 m10 -6 l-10 6 l10 6" />
+    <text x="12" y="150" data-sketch="supply">{labels.supply}</text>
+    <text x="180" y="38" text-anchor="middle" data-sketch="resistance">{labels.resistance}</text>
+    <text x="240" y="122" text-anchor="end" data-sketch="vf">{labels.vf}</text>
+    <text x="180" y="196" text-anchor="middle" class="flow-label" data-sketch="current">{labels.current}</text>
+  </svg>
+</figure>

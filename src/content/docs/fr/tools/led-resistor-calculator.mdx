@@ -1,0 +1,71 @@
+---
+title: Calcul de résistance pour LED
+description: "Trouvez la résistance série d’une LED à partir de l’alimentation et de la fiche technique : valeur E24, courant réel, watts dans la résistance et mesures à faire."
+editUrl: false
+pageType: tool
+topic: electrical
+kind: tool
+tags: [ohms-law]
+---
+
+import LedWorkbench from '../../../../components/led-workbench/LedWorkbench.astro';
+import ToolNotes from '../../../../components/ToolNotes.astro';
+
+Branchez une LED rouge directement sur 5 V : elle tirera tout le courant que l’alimentation peut fournir, puis grillera. La LED ne limite pas son propre courant; c’est la résistance en série qui s’en charge. Ce calcul de résistance pour LED part de votre tension d’alimentation et des valeurs de la fiche technique, choisit la résistance normalisée et montre les étapes, la puissance et ce que votre multimètre devrait lire. Les autres onglets appliquent le même raisonnement à une longue ligne en courant continu et à une pile qui faiblit sous charge.
+
+<LedWorkbench />
+
+## D’où viennent les chiffres
+
+L’astuce consiste à appliquer la loi d’Ohm à la résistance, pas à la LED. Une LED garde à ses bornes une tension à peu près fixe, sa tension directe (Vf). Ce qui reste de l’alimentation se retrouve donc aux bornes de la résistance, et cette tension divisée par le courant voulu donne la résistance.
+
+Les résistances n’existent qu’en certaines valeurs. L’outil prend la valeur suivante de la série E24 (ou E12), si bien que le courant réel tombe sur la cible ou juste en dessous. Il recalcule ensuite le courant avec cette pièce, parce que c’est ce courant-là que la LED reçoit vraiment.
+
+Les fiches techniques donnent une Vf typique et une Vf maximale. L’outil calcule les deux : une LED située en haut de la plage tire moins de courant avec la même résistance, ce qui explique que deux LED « identiques » n’éclairent pas pareil. Quand l’alimentation dépasse à peine la Vf, cet écart fait beaucoup varier le courant, et l’outil le signale.
+
+La puissance dans la résistance vaut sa tension multipliée par son courant. L’outil propose une pièce d’au moins deux fois cette puissance, pour qu’elle reste tiède. Cette marge ×2 est une règle pratique propre à Fieldbook, pas une donnée de fabricant.
+
+## Ce que la loi d’Ohm dit de la chute de tension sur une ligne de 12 V
+
+Un câble est aussi une résistance, simplement petite. La résistance du cuivre augmente avec la longueur, diminue avec la section et monte un peu quand il chauffe. Sur une longue ligne basse tension, le courant fait l’aller-retour : les deux conducteurs comptent. Multipliez cette résistance par le courant de la charge et vous obtenez les volts que la charge ne verra jamais; multipliez encore par le courant et vous obtenez la chaleur répartie le long du câble. L’onglet de la ligne affiche ces valeurs pour du cuivre recuit. C’est de la théorie seulement : le choix d’une section de conducteur relève de l’édition applicable du code de l’électricité et d’une personne qualifiée, et l’outil ne recommande jamais de section.
+
+## Pourquoi la tension d’une pile baisse sous charge
+
+Une pile se comporte comme une source de tension parfaite avec une petite résistance cachée à l’intérieur. Sans rien de branché, vous lisez la tension complète. Dès qu’un courant circule, une partie de la tension se perd dans cette résistance interne : les bornes affichent moins, et cette part de la puissance chauffe la pile au lieu d’atteindre l’appareil. Un gadget qui redémarre quand un moteur démarre, c’est souvent exactement ça : la tension aux bornes passe sous le minimum de l’appareil. L’onglet de la pile reprend la plage de résistance interne d’une pile neuve donnée par la fiche technique de la pile alcaline AA d’Energizer.
+
+<ToolNotes>
+<section>
+
+## Hypothèses du modèle
+
+- Courant continu seulement, en régime établi. Pour les circuits CA avec inductance et capacité, voyez l’[analyseur de circuit RLC série](/fr/tools/series-rlc/).
+- La tension directe de la LED reste fixée à la valeur de fiche que vous entrez; une vraie LED la voit varier avec le courant et la température.
+- Résistances et câbles sont des résistances constantes, et l’alimentation est idéale sauf si vous donnez une résistance interne.
+- La résistance du câble utilise le cuivre recuit à 20 °C et son coefficient de température (NBS Circular 31); les autres températures sont une correction linéaire.
+- La tension nominale de la pile tient lieu de tension à vide, et sa résistance interne est constante, alors que les deux changent avec la charge restante, la température et le courant.
+- La marge sur la puissance de la résistance, l’alerte « peu de marge » (courant à Vf maximale sous les trois quarts du courant typique) et les seuils de perte de 10 % sont des règles pratiques propres à Fieldbook.
+
+Modèle théorique seulement : il ne dimensionne pas les conducteurs, ne choisit pas de protection et ne remplace ni un code ni une personne qualifiée.
+
+</section>
+<section>
+
+## Vérifications théoriques à essayer
+
+- Choisissez la LED bleue et abaissez l’alimentation vers 3,3 V. Observez l’écart entre le courant typique et le courant à Vf maximale, puis expliquez-le en mots.
+- Avec une LED rouge sur 12 V, ajoutez des LED en série une à une. Prédisez ce qui arrive à la puissance dans la résistance avant de regarder.
+- Dans l’onglet de la ligne, doublez la longueur, puis doublez la section. Quel changement annule l’autre?
+- Dans l’onglet de la pile, réduisez la résistance de la charge pas à pas. À quel moment plus d’un dixième de la puissance reste-t-il dans la pile?
+
+Ces questions d’étude sont originales et ont été rédigées pour ce site.
+
+## Sources
+
+- Préréglages de LED : fiches techniques Kingbright des LED [WP7113SRD/D rouge](https://www.kingbrightusa.com/images/catalog/SPEC/WP7113SRD-D.pdf), [WP7113YD jaune](https://www.kingbrightusa.com/images/catalog/SPEC/WP7113YD.pdf), [WP7113QBC/D bleue](https://www.kingbrightusa.com/images/catalog/SPEC/WP7113QBC-D.pdf) et [WP7113QWC/D blanche](https://www.kingbrightusa.com/images/catalog/SPEC/WP7113QWC-D.pdf).
+- Valeurs normalisées de résistances : [CEI 60063:2015](https://webstore.iec.ch/en/publication/22011), telles que présentées par [Vishay](https://www.vishay.com/docs/28372/e-series.pdf).
+- Puissances nominales des résistances : [fiche de la série CF de Stackpole](https://www.seielect.com/catalog/sei-cf_cfm.pdf).
+- Résistivité et coefficient de température du cuivre : [NBS Circular 31, Copper wire tables](https://nvlpubs.nist.gov/nistpubs/Legacy/circ/nbscircular31e2.pdf).
+- Tension et résistance interne de la pile alcaline AA : [fiche Energizer EN91](https://data.energizer.com/pdfs/en91.pdf); méthode de mesure : [Energizer, Battery internal resistance](https://data.energizer.com/pdfs/batteryir.pdf).
+
+</section>
+</ToolNotes>

@@ -7,9 +7,10 @@ This map gives every public page one primary search intent. Use the supporting c
 | `/` | personal learning notes | electrical, 3D printing, communications, computer science | List every post and every topic so visitors can choose where to start. |
 | `/topics/electrical/` | electrical theory notes | electrical theory, AC circuits, theory calculators | Generated category listing of every electrical post. |
 | `/tags/<tag>/` | posts about one subject (for example AC circuits) | the tag label | Generated listing across topics; keep tag names specific so each page has a distinct intent. |
-| `/tools/` | electrical theory calculators | RLC circuit calculator, three-phase power calculator | Help learners choose a focused, transparent theory model without field-design claims. |
+| `/tools/` | electrical theory calculators | RLC circuit calculator, three-phase power calculator, LED resistor calculator | Help learners choose a focused, transparent theory model without field-design claims. |
 | `/tools/series-rlc/` | series RLC circuit calculator | complex impedance, reactance, phase angle, RMS current, AC power | Provide an interactive ideal series-circuit model with formulas and assumptions in view. |
 | `/tools/three-phase-power/` | three-phase power calculator | apparent power, real power, reactive power, power factor | Provide an interactive ideal balanced-system model with formulas and assumptions in view. |
+| `/tools/led-resistor-calculator/` | led resistor calculator | series resistor, forward voltage, E24 value, resistor wattage, voltage drop, internal resistance | Scenario workbench: size an LED's series resistor end to end (words, sketch, maths, meter check), with DC wire-run drop and battery sag as theory-only secondary scenarios. |
 | `/publishing-method/` | electrical education publishing standards | source policy, technical review, code edition, jurisdiction, original practice questions | Establish trust and define what can be published. |
 | `/share/` | share electrical knowledge | electrical questions, source suggestions, corrections, community discussion | Help contributors provide context that can be checked and improved. |
 

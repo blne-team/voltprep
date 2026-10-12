@@ -1,0 +1,71 @@
+---
+title: LED resistor calculator
+description: Pick the series resistor for an LED from your supply and datasheet, with the nearest E24 value, real current, resistor watts, and what to check with a meter.
+editUrl: false
+pageType: tool
+topic: electrical
+kind: tool
+tags: [ohms-law]
+---
+
+import LedWorkbench from '../../../components/led-workbench/LedWorkbench.astro';
+import ToolNotes from '../../../components/ToolNotes.astro';
+
+A red LED on a 5 V supply, wired straight across, will pull as much current as the supply can give and burn out. The LED doesn't limit its own current; a resistor in series does. This LED resistor calculator takes your supply voltage and the LED's datasheet figures, picks the standard resistor, and shows the steps, the wattage and what your meter should read. The other tabs use the same reasoning on a long DC wire run and on a battery that sags under load.
+
+<LedWorkbench />
+
+## How the numbers are worked out
+
+The trick is to apply Ohm's law to the resistor, not to the LED. An LED holds a roughly fixed voltage across itself, its forward voltage (Vf), so whatever the supply has left over sits across the resistor. That leftover voltage divided by the current you want gives the resistance.
+
+Resistors only come in certain values. The calculator takes the next value up in the E24 (or E12) series, so the real current lands at or just under your target. It then works out the current again with that part, because that is the number your LED actually sees.
+
+Datasheets give a typical and a maximum Vf. The calculator runs both: an LED from the high end of the spread draws less current with the same resistor, which is why two "identical" LEDs can glow differently. When the supply is only a little above the LED's Vf, that spread swings the current a lot, and the tool says so.
+
+The resistor's power is its voltage times its current. The tool suggests a part rated for at least twice that, so it runs comfortably cool. That 2× margin is Fieldbook's own rule of thumb, not a manufacturer's figure.
+
+## What Ohm's law says about voltage drop on a 12 V wire run
+
+A wire is a resistor too, just a small one. Copper's resistance grows with length, shrinks with cross-section and rises a little as it warms. On a long low-voltage run the current goes out and back, so both conductors count. Multiply that resistance by the load current and you get the volts the load never sees; multiply by the current again and you get the heat spread along the wire. The wire-run tab shows those numbers for annealed copper. It is theory only: conductor sizing follows the applicable electrical code edition and a qualified person, and the tool never recommends a size.
+
+## Why a battery's voltage drops under load
+
+A battery behaves like a perfect voltage source with a small resistance hidden inside it. With nothing connected you read the full voltage. Draw current and part of the voltage is lost across that internal resistance, so the terminals read less, and that part of the power warms the battery instead of reaching the device. A gadget that resets when a motor starts is often just this: the terminal voltage dips below what the device needs. The battery tab uses the fresh-cell internal resistance range from Energizer's AA alkaline datasheet.
+
+<ToolNotes>
+<section>
+
+## Model assumptions
+
+- DC only, steady state. For AC circuits with inductance and capacitance, see the [series RLC circuit calculator](/tools/series-rlc/).
+- The LED's forward voltage is fixed at the datasheet value you enter; real LEDs shift it with current and temperature.
+- Resistors and wires are treated as constant resistances, and the supply as ideal unless you give an internal resistance.
+- Wire resistance uses annealed copper at 20 °C with its temperature coefficient (NBS Circular 31); other temperatures are a linear correction.
+- The battery's nominal voltage stands in for its open-circuit voltage, and its internal resistance is held constant, though both change with charge, temperature and load.
+- The resistor rating margin, the "little headroom" check (current at maximum Vf below three quarters of typical) and the 10 % loss checks are Fieldbook's own rules of thumb.
+
+Theory model only: it does not size conductors, select protection or replace a code or a qualified person.
+
+</section>
+<section>
+
+## Try these theory checks
+
+- Set the LED preset to blue and lower the supply toward 3.3 V. Watch the gap between the typical and maximum-Vf current, then explain it in words.
+- With a red LED on 12 V, add LEDs in series one at a time. Predict what happens to the resistor's power before you look.
+- On the wire-run tab, double the length, then double the cross-section. Which change undoes the other?
+- On the battery tab, lower the load resistance step by step. At what point does more than a tenth of the power stay inside the battery?
+
+These are original study prompts written for this site.
+
+## Sources
+
+- LED presets: Kingbright datasheets for the [WP7113SRD/D red](https://www.kingbrightusa.com/images/catalog/SPEC/WP7113SRD-D.pdf), [WP7113YD yellow](https://www.kingbrightusa.com/images/catalog/SPEC/WP7113YD.pdf), [WP7113QBC/D blue](https://www.kingbrightusa.com/images/catalog/SPEC/WP7113QBC-D.pdf) and [WP7113QWC/D white](https://www.kingbrightusa.com/images/catalog/SPEC/WP7113QWC-D.pdf) LEDs.
+- Standard resistor values: [IEC 60063:2015](https://webstore.iec.ch/en/publication/22011), as tabulated by [Vishay](https://www.vishay.com/docs/28372/e-series.pdf).
+- Resistor power ratings: [Stackpole CF series datasheet](https://www.seielect.com/catalog/sei-cf_cfm.pdf).
+- Copper resistivity and temperature coefficient: [NBS Circular 31, Copper wire tables](https://nvlpubs.nist.gov/nistpubs/Legacy/circ/nbscircular31e2.pdf).
+- AA alkaline voltage and internal resistance: [Energizer EN91 datasheet](https://data.energizer.com/pdfs/en91.pdf); measuring method: [Energizer, Battery internal resistance](https://data.energizer.com/pdfs/batteryir.pdf).
+
+</section>
+</ToolNotes>
