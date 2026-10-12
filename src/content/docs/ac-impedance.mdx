@@ -1,0 +1,109 @@
+---
+title: "What is impedance? How AC circuits oppose current"
+description: "Impedance is how a circuit opposes alternating current. See how resistance and reactance combine, why current lags or leads, and how Z = V/I extends Ohm's law."
+editUrl: false
+pageType: "article"
+topic: "electrical"
+kind: "guide"
+tags: ["ac-circuits"]
+head:
+  - tag: title
+    content: "What is impedance? Resistance, reactance and phase in AC"
+---
+
+import Predict from '../../components/explainers/Predict.astro';
+
+Take a small coil and put a meter across it on the resistance range: say it reads 4 Ω (an original example). On a 12 V DC supply, [Ohm's law](/ohms-law/) gives 12 V ÷ 4 Ω = 3 A, since the ohm is a volt per ampere [[1]](#source-1). Now feed the same coil 12 V AC at 60 Hz and the current is closer to 1 A (worked out below) [[2]](#source-2) [[6]](#source-6). Nothing about the copper changed. What changed is that the current keeps reversing, and a coil opposes alternating current more as the frequency rises [[3]](#source-3). That extra opposition, combined with the plain resistance, is what impedance means.
+
+This page explains what impedance is, how it differs from resistance, and why current and voltage drift out of step in an AC circuit. The coil above and every other worked example here are original Fieldbook examples using ideal parts.
+
+## Resistance, reactance and impedance
+
+Start with the vocabulary, because the three words get mixed up.
+
+- **Resistance** (*R*) opposes current the same way whether it is direct or alternating, and it is the only one of the three basic parts that turns electrical energy into heat [[3]](#source-3).
+- **Reactance** (*X*) is the opposition that inductors and capacitors show to alternating current. It depends on frequency, and an ideal inductor or capacitor stores and returns energy instead of using it up [[3]](#source-3).
+- **Impedance** (*Z*) is the whole opposition a part or circuit shows to AC at a given frequency. National Instruments describes it as a quantity whose size is the voltage divided by the current and whose angle is the phase angle between them [[2]](#source-2).
+
+All three are measured in ohms. The SI defines the ohm as a volt per ampere, the same unit you met with Ohm's law [[1]](#source-1). That is why impedance feels familiar: *Z* = *V* ÷ *I* is Ohm's law with *Z* standing in for *R* [[2]](#source-2). The difference is that *Z* only tells the truth at one frequency, and it carries a second piece of information, the angle, that resistance never needed.
+
+Written as a pair, impedance is *Z* = *R* + j*X*: a resistive part and a reactive part [[2]](#source-2). When *X* is zero the load is purely resistive, and when *R* is zero it is purely reactive [[2]](#source-2). Real parts sit somewhere in between [[2]](#source-2). The "j" just marks the reactive part as a separate direction. You don't need complex numbers to follow this page; think of it as two numbers that have to be added like the sides of a right triangle, not like ordinary lengths.
+
+## Where reactance comes from
+
+An inductor is a coil. On DC an ideal one is just a wire, but as the frequency rises it becomes harder for alternating current to pass [[3]](#source-3). Its reactance grows in step with frequency:
+
+- *X*<sub>L</sub> = 2π*fL*, with *f* in hertz and *L* in henries [[2]](#source-2)
+
+A capacitor does the opposite. On DC an ideal capacitor is an open circuit, and it gets harder for alternating current to pass as the frequency falls [[3]](#source-3). Its reactance shrinks as frequency goes up:
+
+- *X*<sub>C</sub> = 1 ÷ (2π*fC*), with *C* in farads [[2]](#source-2) [[5]](#source-5)
+
+The hertz, henry and farad are all SI units with special names, and the ohm sits in the same table [[1]](#source-1). Here is the original coil example worked through. A 30 mH coil at 60 Hz has *X*<sub>L</sub> = 2π × 60 Hz × 0.03 H ≈ 11.31 Ω. The same coil at 1 kHz has *X*<sub>L</sub> ≈ 188.5 Ω, while its wire resistance stays where it was.
+
+<Predict question="Double the frequency through a capacitor. Does the current go up or down?">
+
+Up. A capacitor's reactance is 1 ÷ (2π*fC*), so doubling *f* halves *X*<sub>C</sub>. In the 10 µF example further down, 60 Hz gives about 265.3 Ω and 120 Hz about 132.6 Ω, so the current at the same voltage doubles. An inductor does the reverse. (Original practice prompt.)
+
+</Predict>
+
+## Phase: why current lags or leads
+
+Reactance doesn't only reduce the current. It shifts *when* the current peaks. In an ideal inductor the current lags the voltage by a quarter of a cycle, π/2 rad or 90° [[5]](#source-5). In an ideal capacitor the current leads the voltage by the same quarter cycle [[5]](#source-5). A resistor keeps them in step.
+
+In a circuit with resistance and reactance together, the shift lands somewhere between the two extremes [[5]](#source-5) [[6]](#source-6). The phase angle is the amount by which voltage and current are out of step [[6]](#source-6), and for a series circuit it is:
+
+- θ = arctan(*X* ÷ *R*), where *X* = *X*<sub>L</sub> − *X*<sub>C</sub> [[6]](#source-6)
+
+A positive angle means the inductor's reactance is larger, and the current lags [[6]](#source-6). The site's [series RLC circuit calculator](/tools/series-rlc/) uses the same sign convention: positive reactance gives a positive phase angle and lagging current, negative reactance a negative angle and leading current.
+
+Back to the coil at 60 Hz: θ = arctan(11.31 Ω ÷ 4 Ω) ≈ 70.5°. The current peaks about eight-tenths of the way to a full quarter cycle (70.5° of 90°) after the voltage. At 1 kHz the reactance swamps the resistance and the angle climbs to about 88.8°, nearly a pure inductor [[6]](#source-6).
+
+<Predict question="A series circuit has equal resistance and reactance. What is the phase angle?">
+
+45°. θ = arctan(*X* ÷ *R*), and when *X* = *R* the ratio is 1, so θ = arctan(1) = 45°. Drawn as an impedance triangle, that's a right triangle with two equal short sides. In the series RLC calculator, try 10 Ω with about 26.5 mH at 60 Hz (that gives *X*<sub>L</sub> ≈ 10 Ω) and read the angle. (Original practice prompt.)
+
+</Predict>
+
+## The impedance triangle
+
+Because resistance and reactance act at right angles to each other, they add like the two short sides of a right triangle. The long side is the size of the impedance, and the angle at the base is the phase angle.
+
+For a series circuit:
+
+- |*Z*| = √(*R*² + *X*²) [[6]](#source-6)
+
+Draw it and the coil example becomes a picture. At 60 Hz the base is 4 Ω, the upright side is 11.31 Ω, and the long side is √(4² + 11.31²) Ω ≈ 12.0 Ω. Dividing, 12 V ÷ 12.0 Ω ≈ 1.0 A, which solves the opening puzzle. At 1 kHz the triangle is a tall sliver: |*Z*| ≈ 188.5 Ω and the current falls to about 0.064 A [[6]](#source-6).
+
+Treat the triangle as a sketch of what is going on, not a formula to memorize. A short upright side means the circuit behaves mostly like a resistor. A tall one means reactance runs the show and the angle heads toward a quarter cycle [[5]](#source-5) [[6]](#source-6). When inductive and capacitive reactance cancel, the upright side vanishes, the impedance falls to *R*, and current and voltage line up again.
+
+## Frequency changes everything
+
+The same part has a different impedance at every frequency [[2]](#source-2), so an impedance value without a frequency is incomplete. That is the biggest practical difference from resistance.
+
+Canadian mains supply runs at 60 Hz: Hydro-Québec, for example, states its nominal supply frequency as 60 Hz, which makes one cycle about 16.67 ms long [[4]](#source-4). So the 60 Hz figures above are the mains-frequency case, and the 1 kHz figures show how quickly a coil changes once you leave it.
+
+Capacitors run the other way. An original example: a 10 µF capacitor has *X*<sub>C</sub> ≈ 265.3 Ω at 60 Hz and about 132.6 Ω at 120 Hz. With 12 V across it, the current is about 45.2 mA at 60 Hz and about 90.5 mA at 120 Hz [[2]](#source-2).
+
+You'll also see impedance printed on headphones and speakers. It is the same idea: ohms at a stated frequency. This page stays with circuits.
+
+## What a meter shows
+
+A typical AC meter shows the size of a voltage or current, not its timing. Measure the coil's voltage and current and divide one by the other, and you get the size of the impedance, |*Z*| ≈ 12.0 Ω at 60 Hz, not the DC resistance. The angle needs an instrument that compares the two waveforms. That is also why a DC resistance reading can mislead you about how a coil behaves on AC.
+
+This stays at the level of theory: what the numbers mean, not how to measure a live circuit.
+
+## Try your own values
+
+The [series RLC circuit calculator](/tools/series-rlc/) takes any resistance, inductance, capacitance and frequency and shows the impedance, phase angle and current with the formulas in view. Put in the coil example (4 Ω, 30 mH, 60 Hz, no capacitor) and check the 70.5° angle against the triangle above [[6]](#source-6). Then raise the frequency and watch the angle head toward a quarter cycle [[6]](#source-6).
+
+If you come to three-phase systems next, power factor is the cosine of this same phase angle. The [three-phase power calculator](/tools/three-phase-power/) shows it at work.
+
+## Sources
+
+- <span id="source-1"></span>[1] [The International System of Units (SI Brochure), 9th edition, Table 4](https://www.bipm.org/en/si-brochure-9), BIPM, published 2019, accessed 2026-10-12.
+- <span id="source-2"></span>[2] [Capacitance and Inductance Measurements with PXI DMMs](https://www.ni.com/en/support/documentation/supplemental/06/capacitance-and-inductance-measurements-with-pxi-dmms.html), National Instruments, date unknown, accessed 2026-10-12.
+- <span id="source-3"></span>[3] [Fundamental Knowledge of High-Frequency Characteristics in Inductors and Capacitors: Impedance and Resonance (1)](https://article.murata.com/en-us/article/basics-of-l-and-c-hf-characteristics-imp-and-res-1), Murata Manufacturing, published 2023-01-24, accessed 2026-10-12.
+- <span id="source-4"></span>[4] [Caractéristiques de la tension fournie par les réseaux moyenne et basse tension d’Hydro-Québec (in French)](https://www.hydroquebec.com/data/documents-donnees/pdf/caracteristiques-moyenne-basse-tension.pdf), Hydro-Québec, published 2016-07, accessed 2026-10-12.
+- <span id="source-5"></span>[5] [University Physics Volume 2, 15.2 Simple AC Circuits (teaching reference)](https://openstax.org/books/university-physics-volume-2/pages/15-2-simple-ac-circuits), OpenStax, date unknown, accessed 2026-10-12.
+- <span id="source-6"></span>[6] [University Physics Volume 2, 15.3 RLC Series Circuits with AC (teaching reference)](https://openstax.org/books/university-physics-volume-2/pages/15-3-rlc-series-circuits-with-ac), OpenStax, date unknown, accessed 2026-10-12.
