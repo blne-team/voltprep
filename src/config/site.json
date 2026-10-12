@@ -25,6 +25,7 @@
         "day": "Day"
       },
       "externalLabel": "opens in a new tab",
+      "adLabel": "Advertisement",
       "home": {
         "title": "Field notes for learning things properly.",
         "summary": "A personal notebook, published. Guides, explainers and tools grouped by topic and written so that every claim can be checked.",
@@ -93,6 +94,7 @@
         "day": "Jour"
       },
       "externalLabel": "s’ouvre dans un nouvel onglet",
+      "adLabel": "Publicité",
       "home": {
         "title": "Des notes de terrain pour apprendre avec rigueur.",
         "summary": "Un carnet personnel, publié. Des guides, des explications et des outils regroupés par sujet et rédigés pour que chaque affirmation puisse être vérifiée.",
@@ -161,6 +163,7 @@
         "day": "日间"
       },
       "externalLabel": "在新标签页中打开",
+      "adLabel": "广告",
       "home": {
         "title": "为扎实学习而记的笔记。",
         "summary": "一本公开的个人笔记本。指南、讲解和工具按主题整理，每一条说法都可以查证。",

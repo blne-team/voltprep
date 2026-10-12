@@ -1,6 +1,7 @@
 ---
 import AsciiBox from './ascii/AsciiBox.astro';
 import AsciiRule from './ascii/AsciiRule.astro';
+import AdSlot from './ads/AdSlot.astro';
 import PcbBackground from './PcbBackground.astro';
 import PostList from './PostList.astro';
 import NotePlate from './NotePlate.astro';
@@ -56,6 +57,8 @@ const topicList = topicKeys.map((key) => ({
     </AsciiRule>
     <PostList posts={posts} labelledBy="entries-title" />
   </section>
+
+  {posts.length > 0 && <AdSlot placement="home" />}
 </div>
 
 <style>

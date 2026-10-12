@@ -83,6 +83,7 @@
         "languageLabel",
         "theme",
         "externalLabel",
+        "adLabel",
         "home",
         "topicBarLabel",
         "allEntries",
@@ -137,6 +138,11 @@
           }
         },
         "externalLabel": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adLabel": {
+          "description": "Label above an ad placement, and its accessible name.",
           "type": "string",
           "minLength": 1
         },
