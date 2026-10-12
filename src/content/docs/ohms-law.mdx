@@ -1,0 +1,112 @@
+---
+title: "Ohm's law: how voltage, current and resistance relate"
+description: What Ohm's law says, why V = IR works for a resistor and not an LED, and how to use it on a real circuit, with a live one-circuit explainer.
+editUrl: false
+pageType: article
+topic: electrical
+kind: guide
+tags: [ohms-law]
+---
+
+import OhmsLawExplainer from '../../components/explainers/OhmsLawExplainer.astro';
+import Predict from '../../components/explainers/Predict.astro';
+
+Put a 24 Ω resistor across a 12 V supply and an ammeter in the loop reads 0.5 A. Swap in a 48 Ω resistor and the needle drops to 0.25 A. That steady, predictable trade between push and opposition is Ohm's law (often written "ohms law"), and it is the first relationship most people learn in electrical theory. This page shows it four ways at once, then shows where it stops working.
+
+This is original study material on circuit theory. It is not code guidance or a wiring procedure.
+
+## What Ohm's law says
+
+For a resistor held at a steady temperature, the current through it is proportional to the voltage across it. Double the voltage and the current doubles. The ratio of voltage to current stays the same, and that fixed ratio is the resistance.
+
+Written as a formula, with *V* in volts, *I* in amperes and *R* in ohms:
+
+- *V* = *I* × *R*
+- *I* = *V* ÷ *R*
+- *R* = *V* ÷ *I*
+
+The units line up because of how the SI defines them. The BIPM's SI Brochure lists the ohm (Ω) as the coherent derived unit of electric resistance, expressed as V/A, a volt per ampere ([SI Brochure, 9th edition, Table 4](https://www.bipm.org/en/si-brochure-9)). Its historical appendix quotes the 1946 definition: one ohm is the resistance between two points when 1 V across them produces 1 A in the conductor, provided the conductor holds no source of its own. So "12 V ÷ 24 Ω = 0.5 A" is not just arithmetic; the units themselves say the same thing.
+
+## One circuit, four views
+
+The explainer below is an original Fieldbook explainer. It holds one ideal circuit: a source, one resistor and an ammeter, with resistance-free wires and a resistance that never changes. Move a slider and the sentence, the sketch, the maths and the meter all change together.
+
+<OhmsLawExplainer />
+
+Start at the default, 12 V across 24 Ω. The maths view gives 0.5 A, and the resistor turns 6 W into heat. Now try predicting before you touch anything.
+
+<Predict question="Keep the source at 12 V and double the resistance from 24 Ω to 48 Ω. What happens to the current?">
+
+It halves, from 0.5 A to 0.25 A. With *V* fixed, *I* = *V* ÷ *R*, so current and resistance move in opposite directions by the same factor. Set the slider to 48 Ω and read the meter to check. (Original practice prompt.)
+
+</Predict>
+
+## The triangle is a memory aid, not the idea
+
+Many textbooks draw a triangle with *V* on top and *I* and *R* underneath: cover the quantity you want and the other two show you whether to multiply or divide. It works, and if it helps you under exam pressure, use it.
+
+The trouble is that the triangle hides the physics. It makes *V*, *I* and *R* look like three interchangeable letters. In a real circuit you usually set two of them (a battery fixes the voltage, a part fixes the resistance) and the third follows. Saying it as a sentence ("the current is whatever the voltage can push through that resistance") keeps cause and effect straight, which matters once circuits stop being ideal.
+
+## Power: where the energy goes
+
+Current through a resistance turns electrical energy into heat. The power is *P* = *V* × *I*, in watts. Substitute Ohm's law and you get two more forms that are handy when you only know two quantities:
+
+- *P* = *I*² × *R*
+- *P* = *V*² ÷ *R*
+
+At the default setting, 12 V × 0.5 A = 6 W. The explainer's copper glow shows that power.
+
+<Predict question="Back at 24 Ω, double the voltage from 12 V to 24 V. What happens to the power?">
+
+It goes up four times, from 6 W to 24 W. Doubling the voltage doubles the current (0.5 A to 1 A), and power is voltage times current, so both factors double. *P* = *V*² ÷ *R* says the same thing: square the doubled voltage. Try it on the sliders. (Original practice prompt.)
+
+</Predict>
+
+If you work with three-phase systems later, the same idea of power as voltage times current carries over, with a few extra factors; the [three-phase power calculator](/tools/three-phase-power/) keeps those in view.
+
+## Where Ohm's law stops: ohmic and non-ohmic parts
+
+Here is the distinction most quick explanations blur. You can always divide a voltage by a current and call the answer "resistance at that point". That is just the definition of resistance. Ohm's law is the stronger claim that this ratio stays constant as the voltage changes. Parts where it does are called ohmic. Parts where it doesn't are non-ohmic.
+
+A light-emitting diode is the clearest non-ohmic example. Kingbright's datasheet for its WP7113SRD-D red LED gives a forward voltage of 1.85 V typical and 2.5 V maximum at a forward current of 20 mA ([Kingbright WP7113SRD-D datasheet](https://www.kingbrightusa.com/images/catalog/SPEC/WP7113SRD-D.pdf)). Its forward-current graph is a steep curve, not a straight line through zero: below its turn-on region almost nothing flows, and above it a small extra voltage makes the current climb fast. The same datasheet lists the forward voltage's temperature coefficient as −1.9 mV/°C, so even the curve moves as the part warms.
+
+<Predict question="An LED goes straight onto a 5 V supply with no resistor. Does V = IR tell you the current?">
+
+No. There's no fixed *R* to divide by. The LED's voltage–current curve sets the current, and above the forward voltage it rises steeply, so with nothing else in the loop the current is limited only by the supply and the wiring. The datasheet for the WP7113SRD-D rates it at 30 mA DC forward current, absolute maximum. Ohm's law can't predict this circuit; it can only help once you add a part that does obey it. (Original practice prompt.)
+
+</Predict>
+
+## Worked example: the resistor obeys, the LED doesn't
+
+Put that red LED in series with a resistor on a 5 V supply and aim for 20 mA, the datasheet's test current. The two parts share the same current, and their voltages add up to the supply.
+
+1. Take the LED's typical forward voltage at 20 mA: 1.85 V.
+2. The resistor gets the rest: 5 V − 1.85 V = 3.15 V.
+3. The resistor *is* ohmic, so use Ohm's law on it alone: *R* = 3.15 V ÷ 0.020 A = 157.5 Ω.
+
+If the LED sits at its 2.5 V maximum instead, the resistor sees 2.5 V and the same sum gives 125 Ω. That spread is why a resistor value from the typical figure is a starting point, not a guarantee. The point for theory is the split: you never applied Ohm's law to the LED. You applied it to the one part that follows it, and let the LED's datasheet supply the rest. A dedicated LED resistor tool for this calculation is planned for the site.
+
+## Checking it with meters, in theory
+
+On a schematic, the two meters go in different places, and the reason is Ohm's law itself.
+
+- A voltmeter connects *across* the resistor, in parallel with it, because voltage is a difference between two points. An ideal voltmeter draws no current, so it doesn't change the circuit.
+- An ammeter goes *in series*, in the loop, because current is what flows through the path. An ideal ammeter has no resistance, so it adds nothing to *R*.
+
+Read *V* and *I* at several settings and plot them. For an ohmic resistor the points fall on a straight line through zero, and its slope gives the resistance. For an LED they trace a curve. This page stays at that level: it describes where ideal meters sit on a diagram, not how to measure a live installation.
+
+## Does Ohm's law work for AC?
+
+For a plain resistor, yes: voltage and current rise and fall together, and the same ratio holds moment to moment. Add inductors and capacitors and the opposition depends on frequency and shifts current out of step with voltage. Resistance then generalizes to impedance. The [series RLC circuit calculator](/tools/series-rlc/) shows that model, with the phase angle in view.
+
+## Where the name comes from
+
+Georg Simon Ohm set out the relationship in *Die galvanische Kette, mathematisch bearbeitet* (The galvanic circuit investigated mathematically), published in Berlin in 1827 ([digitized copy, Internet Archive](https://archive.org/details/bub_gb_tTVQAAAAcAAJ)). The unit of resistance carries his name, and the SI keeps it as the volt per ampere.
+
+For more pages like this one, browse the [electrical theory notes](/topics/electrical/).
+
+## Sources
+
+- BIPM, *The International System of Units (SI Brochure)*, 9th edition (2019): Table 4 (ohm, Ω = V/A) and Appendix 1 (1946 definition of the ohm). [bipm.org/en/si-brochure-9](https://www.bipm.org/en/si-brochure-9). Accessed 2026-10-11.
+- Kingbright, *WP7113SRD-D* T-1 3/4 (5 mm) solid-state lamp datasheet: forward voltage, temperature coefficient, absolute maximum ratings. [kingbrightusa.com](https://www.kingbrightusa.com/images/catalog/SPEC/WP7113SRD-D.pdf). Accessed 2026-10-11.
+- G. S. Ohm, *Die galvanische Kette, mathematisch bearbeitet*, Berlin: T. H. Riemann, 1827. [Internet Archive (Bavarian State Library copy)](https://archive.org/details/bub_gb_tTVQAAAAcAAJ). Accessed 2026-10-11.
