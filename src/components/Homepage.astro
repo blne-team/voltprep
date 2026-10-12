@@ -1,0 +1,148 @@
+---
+import AsciiBox from './ascii/AsciiBox.astro';
+import AsciiRule from './ascii/AsciiRule.astro';
+import PcbBackground from './PcbBackground.astro';
+import PostList from './PostList.astro';
+import NotePlate from './NotePlate.astro';
+import { getLocalizedSiteConfig, getSiteLocale } from '../config/site';
+import { topicHref, topicKeys, topics } from '../config/taxonomy';
+import { getPosts } from '../lib/posts';
+
+const locale = getSiteLocale(Astro.url.pathname);
+const { home } = getLocalizedSiteConfig(Astro.url.pathname);
+const posts = await getPosts(locale);
+const topicList = topicKeys.map((key) => ({
+  key,
+  ...topics[key],
+  count: posts.filter((post) => post.topic === key).length,
+}));
+---
+
+<div class="home-shell not-content">
+  <PcbBackground />
+
+  <section class="hero" aria-labelledby="home-title">
+    <div class="hero-text">
+      <h1 id="home-title">{home.title}</h1>
+      <p>{home.summary}</p>
+    </div>
+    <NotePlate copy={home.plate} />
+  </section>
+
+  <section class="topics" aria-labelledby="topics-title">
+    <AsciiRule variant="double">
+      <h2 id="topics-title">{home.topicsHeading}</h2>
+    </AsciiRule>
+    <ul>
+      {topicList.map((topic) => (
+        <li>
+          <AsciiBox variant={topic.count > 0 ? 'single' : 'dashed'} tone={topic.count > 0 ? 'accent' : 'muted'} class="topic-box">
+            <h3 slot="label" class:list={{ planned: topic.count === 0 }}>
+              <a href={topicHref(topic.key, locale)}>{topic.name[locale]}</a>
+            </h3>
+            <span slot="meta" class="topic-count">{topic.count > 0 ? home.count(topic.count) : home.planned}</span>
+            <p>{topic.summary[locale]}</p>
+            {topic.count === 0 && <p class="planned-note">{home.plannedNote}</p>}
+          </AsciiBox>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="entries" aria-labelledby="entries-title">
+    <AsciiRule variant="double">
+      <h2 id="entries-title">{home.entriesHeading}</h2>
+      <span slot="meta" class="count">{home.count(posts.length)}</span>
+    </AsciiRule>
+    <PostList posts={posts} labelledBy="entries-title" />
+  </section>
+</div>
+
+<style>
+  .home-shell {
+    position: relative;
+    isolation: isolate;
+    width: min(100% - 3rem, 82rem);
+    margin-inline: auto;
+    padding-block: clamp(1.5rem, 4vw, 3rem) clamp(3rem, 7vw, 6rem);
+  }
+
+  .home-shell :is(h1, h2, h3, p) { margin: 0; }
+  .home-shell :where(ul) { margin: 0; padding: 0; list-style: none; }
+
+  /* Hero: introduction beside the notebook plate. */
+  .hero {
+    display: grid;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .hero-text { display: grid; gap: 1.25rem; }
+
+  h1 {
+    max-width: 24ch;
+    color: var(--sl-color-white);
+    text-wrap: balance;
+    font-size: clamp(2.1rem, 1.5rem + 2.2vw, 3.2rem);
+    font-weight: 760;
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+  }
+
+  .hero-text p {
+    max-width: 30rem;
+    color: var(--sl-color-gray-2);
+    font-family: var(--ff-font-quote);
+    font-size: clamp(1.05rem, 1rem + 0.3vw, 1.2rem);
+    line-height: 1.6;
+  }
+
+
+  @media (min-width: 60rem) {
+    .hero { grid-template-columns: minmax(0, 1fr) minmax(0, 36rem); gap: clamp(2rem, 5vw, 4.5rem); }
+  }
+
+  /* Section headings set into a character rule */
+  h2 {
+    color: var(--sl-color-white);
+    font-size: clamp(1.4rem, 1.15rem + 0.9vw, 1.85rem);
+    letter-spacing: -0.035em;
+  }
+
+  .count,
+  .topic-count {
+    color: var(--sl-color-gray-3);
+    font-family: var(--ff-font-mono);
+    font-size: 0.72rem;
+  }
+
+  .topics { margin-top: clamp(2.5rem, 5vw, 3.5rem); }
+  .entries { margin-top: clamp(3rem, 6vw, 4.5rem); }
+  .entries :global(.ascii-rule) { margin-bottom: 1.25rem; }
+
+  .topics ul {
+    display: grid;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+  }
+
+  :global(.topic-box) { height: 100%; background: var(--sl-color-bg); }
+  :global(.topic-box) h3 { color: var(--sl-color-white); font-size: 1.1rem; letter-spacing: -0.02em; }
+  :global(.topic-box) h3.planned { color: var(--sl-color-gray-3); }
+  :global(.topic-box) h3 a { color: inherit; text-underline-offset: 0.2em; }
+  :global(.topic-box) h3 a:hover { color: var(--sl-color-text-accent); }
+  :global(.topic-box) p { font-family: var(--sl-font); color: var(--sl-color-gray-2); font-size: 0.92rem; line-height: 1.55; }
+  :global(.topic-box) .planned-note { margin-top: 0.5rem; color: var(--sl-color-gray-3); font-family: var(--ff-font-mono); font-size: 0.72rem; }
+
+  @media (min-width: 40rem) {
+    .topics ul { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (min-width: 72rem) {
+    .topics ul { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 34rem) {
+    .home-shell { width: min(100% - 2rem, 82rem); }
+  }
+</style>

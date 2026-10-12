@@ -1,0 +1,15 @@
+import { type SiteLocale } from '../config/locales';
+import { tagKeys, topicKeys } from '../config/taxonomy';
+import { getPosts } from './posts';
+
+// Every topic gets a page, so topic links work before anything is filed there.
+export const topicPaths = (locales: SiteLocale[]) => locales.flatMap((locale) => topicKeys.map((topic) => ({ locale, topic })));
+
+// A tag gets a page once a post in that language (or an untranslated English post) uses it.
+export async function tagPaths(locales: SiteLocale[]) {
+  const perLocale = await Promise.all(locales.map(async (locale) => {
+    const posts = await getPosts(locale);
+    return tagKeys.filter((tag) => posts.some((post) => post.tags.includes(tag))).map((tag) => ({ locale, tag }));
+  }));
+  return perLocale.flat();
+}

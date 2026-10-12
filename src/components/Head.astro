@@ -1,0 +1,94 @@
+---
+import { SITE_URL } from 'astro:env/server';
+import { getCollection } from 'astro:content';
+import { adsenseClientId } from '../config/ads';
+import { getLocalizedPath, getSiteLocale, siteConfig, type SiteLocale } from '../config/site';
+const route = Astro.locals.starlightRoute;
+const production = Boolean(SITE_URL);
+const localeKey = getSiteLocale(Astro.url.pathname);
+const locale = siteConfig.locales[localeKey];
+const isHomepage = Astro.url.pathname === locale.homeHref;
+const isNotFound = route.entry.id === '404' || route.entry.id.endsWith('/404');
+const loadAdsense = import.meta.env.PROD && production && !isNotFound && Boolean(adsenseClientId);
+// Starlight's own hreflang links are replaced by ours below, which list only real translations.
+const isStarlightAlternate = (tag: string, attrs?: Record<string, unknown>) => tag === 'link' && attrs?.rel === 'alternate' && Boolean(attrs?.hreflang);
+const head = route.head
+  .filter(({ tag, attrs }) => !isStarlightAlternate(tag, attrs))
+  .filter(({ tag, attrs }) => production || !(tag === 'link' && ['canonical', 'sitemap'].includes(String(attrs?.rel))) && !(tag === 'meta' && (attrs?.property === 'og:url' || attrs?.name === 'robots')));
+const localeEntries = Object.entries(siteConfig.locales) as [
+  SiteLocale,
+  (typeof siteConfig.locales)[SiteLocale],
+][];
+// Untranslated pages show the English text: keep them out of search and give them no language alternates.
+const isFallback = Boolean(route.isFallback);
+// Pages kept out of search (untranslated, or an empty topic) list no language alternates either.
+const isNoindex = isFallback || route.head.some(({ tag, attrs }) => tag === 'meta' && attrs?.name === 'robots' && String(attrs?.content).startsWith('noindex'));
+// A content page links only to the languages it is translated into; generated pages (topics, tags) exist in every language.
+const docUrls = new Set((await getCollection('docs')).map(({ id }) => (id === 'index' ? '/' : `/${id.replace(/\/?index$/, '')}/`.replace(/\/\/$/, '/'))));
+const isContentPage = docUrls.has(getLocalizedPath(Astro.url.pathname, siteConfig.defaultLocale));
+const alternates = production && !isNotFound && !isNoindex
+  ? localeEntries
+      .filter(([key]) => !isContentPage || docUrls.has(getLocalizedPath(Astro.url.pathname, key)))
+      .map(([key, alternateLocale]) => ({
+        language: alternateLocale.language,
+        href: new URL(getLocalizedPath(Astro.url.pathname, key), Astro.site).href,
+      }))
+  : [];
+const siteUrl = production ? new URL('/', Astro.site).href : undefined;
+const websiteId = production ? new URL('/#website', Astro.site).href : '#website';
+const organization = {
+  '@type': 'Organization',
+  '@id': production ? new URL('/#organization', Astro.site).href : '#organization',
+  name: siteConfig.brand.name,
+  description: siteConfig.brand.description,
+  ...(siteUrl ? { url: siteUrl } : {}),
+};
+const pageUrl = production ? new URL(Astro.url.pathname, Astro.site).href : undefined;
+const website = {
+  '@type': 'WebSite',
+  '@id': websiteId,
+  name: siteConfig.brand.name,
+  description: siteConfig.brand.description,
+  inLanguage: localeEntries.map(([, configuredLocale]) => configuredLocale.language),
+  ...(siteUrl ? { url: siteUrl } : {}),
+  publisher: { '@id': organization['@id'] },
+  about: siteConfig.structuredData.about,
+};
+const webpage = {
+  '@type': isHomepage || route.entry.data.pageType === 'landing' ? 'CollectionPage' : 'WebPage',
+  '@id': pageUrl ? `${pageUrl}#webpage` : '#webpage',
+  name: route.entry.data.title,
+  description: route.entry.data.description,
+  inLanguage: locale.language,
+  ...(pageUrl ? { url: pageUrl } : {}),
+  isPartOf: { '@id': websiteId },
+  publisher: { '@id': organization['@id'] },
+  about: siteConfig.structuredData.about,
+};
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [organization, website, webpage],
+};
+---
+{head.map(({ tag: Tag, attrs, content }) => <Tag {...attrs} set:html={content} />)}
+{!production && <meta name="robots" content="noindex, nofollow" />}
+{production && isFallback && <meta name="robots" content="noindex, follow" />}
+<meta property="og:locale" content={locale.openGraph} />
+{localeEntries
+  .filter(([key]) => key !== localeKey)
+  .map(([, alternateLocale]) => <meta property="og:locale:alternate" content={alternateLocale.openGraph} />)}
+{alternates.map((alternate) => (
+  <link rel="alternate" hreflang={alternate.language} href={alternate.href} />
+))}
+{alternates.length > 0 && (
+  <link rel="alternate" hreflang="x-default" href={new URL(getLocalizedPath(Astro.url.pathname, siteConfig.defaultLocale), Astro.site).href} />
+)}
+{loadAdsense && <meta name="google-adsense-account" content={adsenseClientId} />}
+{loadAdsense && (
+  <script
+    async
+    src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClientId}`}
+    crossorigin="anonymous"
+  ></script>
+)}
+<script type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g, '\\u003c')} />

@@ -1,0 +1,264 @@
+---
+import { getContentLocale, getSiteLocale, localePrefix, pick } from '../config/site';
+
+// Text follows the page's language (English on untranslated pages); links stay in the reader's language.
+const locale = getContentLocale(Astro.url.pathname, Astro.locals.starlightRoute);
+const base = `${localePrefix(getSiteLocale(Astro.url.pathname))}/tools`;
+const copy = pick({
+  fr: {
+    directoryLabel: 'Répertoire des calculateurs',
+    statusLabel: 'Caractéristiques des outils',
+  count: '2 instruments théoriques',
+  local: 'Calculs dans votre navigateur',
+  formulas: 'Formules visibles',
+  open: 'Ouvrir le calculateur',
+  tools: [
+    {
+      title: 'Analyseur de circuit RLC série',
+      description: 'Étudiez comment la résistance, l’inductance et la capacité déterminent l’impédance, le déphasage, le courant et les puissances CA.',
+      href: `${base}/series-rlc/`,
+      notation: 'Z = R + j(XL − XC)',
+      inputs: '5 entrées',
+      outputs: '8 résultats',
+      kind: 'rlc',
+    },
+    {
+      title: 'Puissance triphasée équilibrée',
+      description: 'Reliez la tension ligne-ligne, le courant et le facteur de puissance aux puissances apparente, active et réactive.',
+      href: `${base}/three-phase-power/`,
+      notation: '|S| = √3 VLL IL',
+      inputs: '4 entrées',
+      outputs: '4 résultats',
+      kind: 'three-phase',
+    },
+  ],
+  },
+  root: {
+    directoryLabel: 'Calculator directory',
+    statusLabel: 'Tool characteristics',
+  count: '2 theory instruments',
+  local: 'Calculates in your browser',
+  formulas: 'Formulas stay visible',
+  open: 'Open calculator',
+  tools: [
+    {
+      title: 'Series RLC circuit analyzer',
+      description: 'Explore how resistance, inductance, and capacitance shape impedance, phase, current, and AC power.',
+      href: `${base}/series-rlc/`,
+      notation: 'Z = R + j(XL − XC)',
+      inputs: '5 inputs',
+      outputs: '8 results',
+      kind: 'rlc',
+    },
+    {
+      title: 'Balanced three-phase power',
+      description: 'Connect line-to-line voltage, line current, and power factor to apparent, real, and reactive power.',
+      href: `${base}/three-phase-power/`,
+      notation: '|S| = √3 VLL IL',
+      inputs: '4 inputs',
+      outputs: '4 results',
+      kind: 'three-phase',
+    },
+  ],
+  },
+}, locale);
+---
+
+<section class="tool-directory" aria-label={copy.directoryLabel}>
+  <div class="directory-status" aria-label={copy.statusLabel}>
+    <span>{copy.count}</span>
+    <span>{copy.local}</span>
+    <span>{copy.formulas}</span>
+  </div>
+
+  <div class="directory-grid">
+    {copy.tools.map((tool) => (
+      <article class:list={['directory-card', tool.kind]}>
+        <div class="schematic" aria-hidden="true">
+          {tool.kind === 'rlc' ? (
+            <>
+              <i class="terminal"></i><b>R</b><span></span><b>L</b><span></span><b>C</b><i class="terminal"></i>
+            </>
+          ) : (
+            <>
+              <i></i><i></i><i></i><b>3Φ</b>
+            </>
+          )}
+        </div>
+        <div class="card-copy">
+          <code>{tool.notation}</code>
+          <h2>{tool.title}</h2>
+          <p>{tool.description}</p>
+        </div>
+        <div class="card-footer">
+          <p><span>{tool.inputs}</span><span>{tool.outputs}</span></p>
+          <a href={tool.href}>{copy.open}<span aria-hidden="true">↗</span></a>
+        </div>
+      </article>
+    ))}
+  </div>
+</section>
+
+<style>
+  .tool-directory {
+    --instrument: #173e47;
+    --signal: #e06d3f;
+    margin-block: 2.25rem 3rem;
+  }
+
+  .directory-status {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem 1.3rem;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--sl-color-hairline);
+    border-bottom: 0;
+    background: color-mix(in srgb, var(--sl-color-bg) 90%, var(--ff-visual));
+    color: var(--sl-color-gray-2);
+    font-size: 0.78rem;
+    font-weight: 650;
+  }
+
+  .directory-status span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .directory-status span::before {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: var(--sl-color-accent);
+    content: '';
+  }
+
+  .directory-grid {
+    display: grid;
+    border: 1px solid var(--sl-color-hairline);
+  }
+
+  .directory-card {
+    display: grid;
+    min-width: 0;
+    margin: 0;
+    background: var(--sl-color-bg);
+  }
+
+  .directory-card + .directory-card {
+    border-top: 1px solid var(--sl-color-hairline);
+  }
+
+  .schematic {
+    position: relative;
+    display: flex;
+    min-height: 8rem;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    overflow: hidden;
+    background-color: var(--instrument);
+    background-image:
+      linear-gradient(rgb(255 255 255 / 0.055) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(255 255 255 / 0.055) 1px, transparent 1px);
+    background-size: 1.25rem 1.25rem;
+    color: #f6fbf8;
+  }
+
+  .schematic::after {
+    position: absolute;
+    inset: 0.65rem;
+    border: 1px solid rgb(255 255 255 / 0.18);
+    content: '';
+    pointer-events: none;
+  }
+
+  .schematic b {
+    z-index: 1;
+    display: grid;
+    width: 2.2rem;
+    height: 2.2rem;
+    place-items: center;
+    border: 2px solid var(--signal);
+    background: var(--instrument);
+    color: #fff;
+    font-family: var(--sl-font-heading);
+    font-size: 0.85rem;
+  }
+
+  .schematic span {
+    z-index: 1;
+    width: 1rem;
+    border-top: 2px solid #a8c95f;
+  }
+
+  .schematic .terminal {
+    z-index: 1;
+    width: 0.55rem;
+    height: 0.55rem;
+    border: 2px solid #a8c95f;
+    border-radius: 50%;
+  }
+
+  .schematic.three-phase,
+  .three-phase .schematic { gap: 0.35rem; }
+
+  .three-phase .schematic i {
+    z-index: 1;
+    width: clamp(2rem, 9vw, 3rem);
+    height: 2.2rem;
+    border-top: 2px solid #a8c95f;
+    border-radius: 50%;
+    transform: translateY(0.9rem);
+  }
+
+  .three-phase .schematic i:nth-child(2) { transform: translateY(0.9rem) rotate(120deg); }
+  .three-phase .schematic i:nth-child(3) { transform: translateY(0.9rem) rotate(240deg); }
+  .three-phase .schematic b { position: absolute; }
+
+  .card-copy { padding: clamp(1.25rem, 4vw, 2rem); }
+
+  .card-copy code {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-left: 0.2rem solid var(--signal);
+    background: color-mix(in srgb, var(--sl-color-bg) 88%, var(--ff-visual));
+    color: var(--sl-color-text);
+    font-size: 0.78rem;
+  }
+
+  .card-copy h2 {
+    margin: 1rem 0 0;
+    font-size: clamp(1.45rem, 4vw, 2rem);
+    line-height: 1.08;
+  }
+
+  .card-copy p {
+    max-width: 42rem;
+    margin: 0.75rem 0 0;
+    color: var(--sl-color-gray-2);
+    line-height: 1.55;
+  }
+
+  .card-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.85rem clamp(1.25rem, 4vw, 2rem);
+    border-top: 1px solid var(--sl-color-hairline);
+  }
+
+  .card-footer p { display: flex; gap: 1rem; margin: 0; color: var(--sl-color-gray-3); font-size: 0.76rem; }
+  .card-footer a { color: var(--sl-color-text-accent); font-weight: 720; text-decoration: none; }
+  .card-footer a span { margin-left: 0.35rem; }
+  .card-footer a:hover { text-decoration: underline; text-underline-offset: 0.25rem; }
+
+  @media (min-width: 50rem) {
+    .directory-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .directory-card + .directory-card { border-top: 0; border-left: 1px solid var(--sl-color-hairline); }
+    .directory-card { grid-template-rows: auto 1fr auto; }
+    .schematic { min-height: 12rem; }
+  }
+</style>

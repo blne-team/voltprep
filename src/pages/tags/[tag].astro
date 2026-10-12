@@ -1,0 +1,11 @@
+---
+import TaxonomyRoute from '../../components/TaxonomyRoute.astro';
+import { defaultLocale } from '../../config/locales';
+import { tagPaths } from '../../lib/taxonomy-routes';
+
+export async function getStaticPaths() {
+  return (await tagPaths([defaultLocale])).map(({ tag }) => ({ params: { tag } }));
+}
+---
+
+<TaxonomyRoute locale={defaultLocale} kind="tag" tag={Astro.params.tag} />

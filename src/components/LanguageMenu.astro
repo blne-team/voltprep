@@ -1,0 +1,190 @@
+---
+import { Icon } from '@astrojs/starlight/components';
+import { getLocalizedPath, getSiteLocale, siteConfig, type SiteLocale } from '../config/site';
+
+interface Props {
+  compact?: boolean;
+}
+
+const { compact = false } = Astro.props;
+const localeKey = getSiteLocale(Astro.url.pathname);
+const activeLocale = siteConfig.locales[localeKey];
+const languageLinks = Object.entries(siteConfig.locales) as [
+  SiteLocale,
+  (typeof siteConfig.locales)[SiteLocale],
+][];
+---
+
+<faraday-language-menu>
+  <details class:list={['language-menu', { compact }]}>
+    <summary aria-label={`${activeLocale.languageName}: ${activeLocale.label}`}>
+      <Icon name="translate" class="control-icon" />
+      <span class="language-code" aria-hidden="true">{activeLocale.shortLabel}</span>
+      <Icon name="down-caret" class="caret" />
+    </summary>
+    <div class="language-options">
+      {languageLinks.map(([key, locale]) => (
+        <a
+          href={getLocalizedPath(Astro.url.pathname, key)}
+          lang={locale.language}
+          hreflang={locale.language}
+          aria-current={key === localeKey ? 'page' : undefined}
+        >
+          <span class="option-copy">
+            <span>{locale.languageName}</span>
+            <small>{locale.regionName}</small>
+          </span>
+          {key === localeKey && <span class="current-mark" aria-hidden="true">✓</span>}
+        </a>
+      ))}
+    </div>
+  </details>
+</faraday-language-menu>
+
+<script>
+  class FaradayLanguageMenu extends HTMLElement {
+    connectedCallback(): void {
+      if (this.dataset.ready === 'true') return;
+      this.dataset.ready = 'true';
+      const details = this.querySelector('details');
+      if (!details) return;
+
+      details.addEventListener('toggle', () => {
+        if (!details.open) return;
+        document.querySelectorAll<HTMLDetailsElement>(
+          'faraday-language-menu details[open], faraday-theme-control details[open]',
+        ).forEach((menu) => {
+          if (menu !== details) menu.open = false;
+        });
+      });
+
+      document.addEventListener('click', (event) => {
+        if (event.target instanceof Node && !this.contains(event.target)) details.open = false;
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key !== 'Escape' || !details.open) return;
+        details.open = false;
+        details.querySelector('summary')?.focus();
+      });
+    }
+  }
+
+  if (!customElements.get('faraday-language-menu')) {
+    customElements.define('faraday-language-menu', FaradayLanguageMenu);
+  }
+</script>
+
+<style>
+  faraday-language-menu,
+  .language-menu {
+    display: block;
+    position: relative;
+  }
+
+  summary {
+    display: grid;
+    min-width: 3.8rem;
+    height: 2.25rem;
+    grid-template-columns: 0.85rem auto 0.65rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    padding-inline: 0.4rem;
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 0.55rem;
+    background: color-mix(in srgb, var(--sl-color-bg-nav) 84%, var(--ff-visual));
+    color: var(--sl-color-text);
+    cursor: pointer;
+    list-style: none;
+    transition: border-color 140ms ease, background-color 140ms ease, transform 140ms ease;
+  }
+
+  summary::-webkit-details-marker { display: none; }
+
+  summary:hover {
+    border-color: color-mix(in srgb, var(--sl-color-accent) 65%, var(--sl-color-hairline));
+    background: var(--sl-color-accent-low);
+  }
+
+  summary:active { transform: translateY(1px); }
+
+  .language-menu[open] summary {
+    border-color: var(--sl-color-accent);
+    background: var(--sl-color-accent-low);
+  }
+
+  .control-icon { color: var(--sl-color-accent); }
+
+  .language-code {
+    font-family: var(--sl-font-heading);
+    font-size: 0.68rem;
+    font-weight: 760;
+    letter-spacing: 0.06em;
+  }
+
+  .caret {
+    width: 0.65rem;
+    transition: transform 140ms ease;
+  }
+
+  .language-menu[open] .caret { transform: rotate(180deg); }
+
+  .language-options {
+    position: absolute;
+    z-index: 40;
+    top: calc(100% + 0.55rem);
+    right: 0;
+    display: grid;
+    width: 11.5rem;
+    padding: 0.3rem;
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 0.7rem;
+    background: var(--sl-color-bg-nav);
+    box-shadow: 0 0.9rem 2rem color-mix(in srgb, var(--ff-ink) 16%, transparent);
+  }
+
+  .language-options::before {
+    position: absolute;
+    top: -0.28rem;
+    right: 1.2rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-top: 1px solid var(--sl-color-hairline);
+    border-left: 1px solid var(--sl-color-hairline);
+    background: var(--sl-color-bg-nav);
+    content: '';
+    transform: rotate(45deg);
+  }
+
+  .language-options a {
+    display: flex;
+    min-height: 2.5rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.4rem 0.55rem;
+    border-radius: 0.42rem;
+    color: var(--sl-color-text);
+    line-height: 1.1;
+    text-decoration: none;
+  }
+
+  .language-options a:hover,
+  .language-options a:focus-visible { background: var(--sl-color-accent-low); }
+
+  .language-options a[aria-current='page'] { color: var(--sl-color-accent-high); }
+
+  .option-copy { display: grid; gap: 0.18rem; font-size: 0.8rem; font-weight: 680; }
+  .option-copy small { color: var(--sl-color-gray-3); font-size: 0.66rem; font-weight: 550; }
+  .current-mark { color: var(--ff-lime); font-size: 0.82rem; font-weight: 800; }
+
+  .compact summary { width: 100%; justify-content: start; }
+  .compact .language-options { position: static; width: 100%; margin-top: 0.45rem; box-shadow: none; }
+  .compact .language-options::before { display: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    summary,
+    .caret { transition: none; }
+  }
+</style>

@@ -1,0 +1,382 @@
+---
+import Search from '@astrojs/starlight/components/Search.astro';
+import SiteTitle from './SiteTitle.astro';
+import LanguageMenu from './LanguageMenu.astro';
+import ThemeControl from './ThemeControl.astro';
+import AsciiBox from './ascii/AsciiBox.astro';
+import { getLocalizedSiteConfig, getSiteLocale, isNavGroup, siteConfig, type NavItem, type NavLink } from '../config/site';
+import { topicHref, topicKeys, topics, type TopicKey } from '../config/taxonomy';
+import { getTopicCounts } from '../lib/posts';
+
+const { pathname } = Astro.url;
+const locale = getSiteLocale(pathname);
+const content = getLocalizedSiteConfig(pathname);
+const counts = await getTopicCounts(locale);
+const homeHref = siteConfig.locales[locale].homeHref;
+const entryTopic = Astro.locals.starlightRoute.entry.data.topic as TopicKey | undefined;
+const currentTopic = entryTopic ?? topicKeys.find((key) => pathname === topicHref(key, locale));
+const isHome = pathname === homeHref;
+const navigation: readonly NavItem[] = content.navigation;
+const isCurrent = (href?: string) => Boolean(href) && pathname === href;
+const inSection = (item: NavItem) => isNavGroup(item)
+  ? [item.href, ...item.children.map((child) => child.href)].some((href) => href && pathname.startsWith(href))
+  : pathname.startsWith(item.href);
+const linkAttrs = (link: NavLink) => ({
+  href: link.href,
+  target: link.external ? '_blank' : undefined,
+  rel: link.external ? 'noreferrer' : undefined,
+  'aria-current': isCurrent(link.href) ? ('page' as const) : undefined,
+});
+---
+
+<div class="site-header">
+  <div class="bar">
+    <div class="title-wrap"><SiteTitle /></div>
+
+    <nav class="pages" aria-label={content.menuLabel}>
+      <ul>
+        {navigation.map((item) => isNavGroup(item) ? (
+          <li>
+            <details class="dropdown" data-menu>
+              <summary data-active={inSection(item) ? '' : undefined}>
+                {item.label}<span class="caret" aria-hidden="true">▾</span>
+              </summary>
+              <div class="dropdown-panel">
+                <AsciiBox class="menu-box">
+                  <span slot="label" class="menu-title">{item.label}</span>
+                  {item.href && <a class="overview" {...linkAttrs({ label: item.overview ?? item.label, href: item.href })}>{item.overview ?? item.label}</a>}
+                  <ul class="menu-list">
+                    {item.children.map((child) => (
+                      <li>
+                        <a {...linkAttrs(child)}>
+                          <span class="item-label">{child.label}</span>
+                          {child.description && <span class="item-description">{child.description}</span>}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </AsciiBox>
+              </div>
+            </details>
+          </li>
+        ) : (
+          <li><a class="page-link" data-active={inSection(item) ? '' : undefined} {...linkAttrs(item)}>{item.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="header-tools print:hidden">
+      <Search />
+      <ThemeControl {...content.theme} />
+      <div class="desktop-languages"><LanguageMenu /></div>
+      <details class="mobile-menu">
+        <summary aria-label={content.menuLabel}><span></span><span></span><span></span></summary>
+        <div class="mobile-menu-panel">
+          <nav aria-label={content.menuLabel}>
+            {navigation.map((item) => isNavGroup(item) ? (
+              <div class="mobile-group">
+                {item.href ? <a class="mobile-link" {...linkAttrs({ label: item.label, href: item.href })}>{item.label}</a> : <p class="mobile-link">{item.label}</p>}
+                <ul class="menu-list">
+                  {item.children.map((child) => <li><a {...linkAttrs(child)}><span class="item-label">{child.label}</span></a></li>)}
+                </ul>
+              </div>
+            ) : (
+              <a class="mobile-link" {...linkAttrs(item)}>{item.label}</a>
+            ))}
+          </nav>
+          <LanguageMenu compact />
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <nav class="topic-bar print:hidden" aria-label={content.topicBarLabel}>
+    <span class="prompt" aria-hidden="true">~/</span>
+    <ul>
+      <li><a href={homeHref} aria-current={isHome ? 'page' : undefined}>{content.allEntries}</a></li>
+      {topicKeys.map((key) => (
+        <li>
+          <a
+            href={topicHref(key, locale)}
+            class:list={{ planned: counts[key] === 0 }}
+            aria-current={pathname === topicHref(key, locale) ? 'page' : currentTopic === key ? 'true' : undefined}
+          >
+            {topics[key].name[locale]}<span class="count">{counts[key] > 0 ? counts[key] : content.home.planned}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+</div>
+
+<script>
+  // Header menus (dropdowns, theme, language, mobile) are <details> elements:
+  // opening one closes the others, and an outside click or Escape closes them all.
+  const header = document.querySelector<HTMLElement>('.site-header');
+  if (header) {
+    const openMenus = () => [...header.querySelectorAll<HTMLDetailsElement>('details[open]')];
+
+    document.addEventListener('toggle', (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLDetailsElement) || !target.open || !header.contains(target)) return;
+      openMenus().forEach((menu) => {
+        if (menu !== target && !menu.contains(target)) menu.open = false;
+      });
+    }, true);
+
+    document.addEventListener('click', (event) => {
+      if (!(event.target instanceof Node)) return;
+      openMenus().forEach((menu) => {
+        if (!menu.contains(event.target as Node)) menu.open = false;
+      });
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape') return;
+      const menus = openMenus();
+      if (menus.length === 0) return;
+      menus.forEach((menu) => { menu.open = false; });
+      menus[menus.length - 1].querySelector('summary')?.focus();
+    });
+  }
+</script>
+
+<style>
+  .site-header {
+    display: grid;
+    grid-template-rows: var(--ff-bar-height) var(--ff-topic-bar-height);
+    height: 100%;
+  }
+
+  .bar {
+    display: grid;
+    grid-template-columns: minmax(12rem, 1fr) auto auto;
+    gap: clamp(1rem, 2.5vw, 2.5rem);
+    align-items: center;
+    width: min(100%, 92rem);
+    margin-inline: auto;
+    padding-inline: var(--sl-nav-pad-x);
+  }
+
+  .title-wrap { min-width: 0; }
+
+  .pages > ul {
+    display: flex;
+    align-items: center;
+    gap: clamp(1rem, 2vw, 1.75rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.9rem;
+    font-weight: 650;
+  }
+
+  .page-link,
+  .dropdown summary {
+    color: var(--sl-color-gray-2);
+    text-decoration: none;
+    text-underline-offset: 0.35rem;
+  }
+
+  .page-link:hover,
+  .page-link[data-active],
+  .dropdown summary:hover,
+  .dropdown summary[data-active],
+  .dropdown[open] summary {
+    color: var(--sl-color-white);
+    text-decoration: underline;
+    text-decoration-color: var(--sl-color-accent);
+    text-decoration-thickness: 2px;
+  }
+
+  .page-link:focus-visible,
+  .dropdown summary:focus-visible { outline: 2px solid var(--sl-color-accent); outline-offset: 4px; }
+
+  /* Dropdown: a framed panel listing the sub-items as a tree. */
+  .dropdown { position: relative; }
+
+  .dropdown summary {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .dropdown summary::-webkit-details-marker { display: none; }
+  .caret { display: inline-block; font-size: 0.7rem; text-decoration: none; transition: transform 140ms ease; }
+  .dropdown[open] .caret { transform: rotate(180deg); }
+
+  .dropdown-panel {
+    position: absolute;
+    z-index: 40;
+    top: calc(100% + 0.9rem);
+    right: -1rem;
+    width: max-content;
+    min-width: 17rem;
+    max-width: 22rem;
+  }
+
+  :global(.menu-box) {
+    --box-size: 0.9rem;
+    background: var(--sl-color-bg-nav);
+    box-shadow: 0.5rem 0.5rem 0 color-mix(in srgb, var(--sl-color-text) 9%, transparent);
+  }
+
+  .menu-title { color: var(--sl-color-gray-3); font-family: var(--ff-font-mono); font-size: 0.7rem; font-weight: 500; }
+
+  .overview {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--sl-color-text-accent);
+    font-family: var(--sl-font);
+    font-size: 0.86rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .overview:hover { text-decoration: underline; }
+
+  .menu-list {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .menu-list li { position: relative; padding-left: 3.5ch; }
+
+  .menu-list li::before {
+    position: absolute;
+    top: 0.45rem;
+    left: 0;
+    color: var(--sl-color-gray-4);
+    content: '├──';
+    font-family: var(--ff-font-box);
+    line-height: 1;
+  }
+
+  .menu-list li:last-child::before { content: '└──'; }
+
+  .menu-list a {
+    display: grid;
+    gap: 0.1rem;
+    padding: 0.35rem 0.4rem;
+    color: var(--sl-color-text);
+    font-family: var(--sl-font);
+    text-decoration: none;
+  }
+
+  .menu-list a:hover,
+  .menu-list a[aria-current] { background: color-mix(in srgb, var(--sl-color-accent) 12%, transparent); }
+  .menu-list li:has(a:hover)::before { color: var(--ff-copper); }
+  .menu-list a:focus-visible,
+  .overview:focus-visible { outline: 2px solid var(--sl-color-accent); outline-offset: 1px; }
+
+  .item-label { font-size: 0.86rem; font-weight: 680; }
+  .item-description { color: var(--sl-color-gray-3); font-size: 0.74rem; font-weight: 500; }
+
+  .header-tools { display: flex; min-width: 0; align-items: center; justify-content: flex-end; gap: 0.3rem; }
+  .mobile-menu { display: none; }
+
+  /* Topic bar: a text-mode index of every topic, current one in inverse video. */
+  .topic-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: min(100%, 92rem);
+    margin-inline: auto;
+    padding-inline: var(--sl-nav-pad-x);
+    border-top: 1px dashed var(--sl-color-hairline);
+    font-family: var(--ff-font-mono);
+    font-size: 0.74rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .topic-bar::-webkit-scrollbar { display: none; }
+  .prompt { flex: none; color: var(--ff-copper); font-weight: 700; }
+
+  .topic-bar ul {
+    display: flex;
+    gap: 0.35rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    white-space: nowrap;
+  }
+
+  .topic-bar a {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.45rem;
+    padding: 0.28rem 0.55rem;
+    color: var(--sl-color-gray-2);
+    text-decoration: none;
+  }
+
+  .topic-bar a:hover { color: var(--sl-color-white); background: color-mix(in srgb, var(--sl-color-accent) 12%, transparent); }
+  .topic-bar a:focus-visible { outline: 2px solid var(--sl-color-accent); outline-offset: -2px; }
+
+  .topic-bar a[aria-current] {
+    background: var(--sl-color-accent);
+    color: var(--sl-color-black);
+    font-weight: 700;
+  }
+
+  .count { color: var(--sl-color-gray-3); font-size: 0.66rem; }
+  .topic-bar a[aria-current] .count { color: inherit; opacity: 0.75; }
+  .topic-bar a.planned:not([aria-current]),
+  .topic-bar a.planned:not([aria-current]) .count { color: var(--sl-color-gray-4); }
+  .topic-bar a.planned:hover { color: var(--sl-color-white); }
+
+  @media (max-width: 60rem) {
+    .bar { grid-template-columns: minmax(0, 1fr) auto; }
+    .pages,
+    .desktop-languages { display: none; }
+    .mobile-menu { display: block; }
+
+    .mobile-menu summary {
+      display: grid;
+      width: 2.5rem;
+      height: 2.5rem;
+      place-content: center;
+      gap: 0.25rem;
+      border: 1px solid var(--sl-color-hairline);
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .mobile-menu summary::-webkit-details-marker { display: none; }
+    .mobile-menu summary span { width: 1rem; height: 1px; background: var(--sl-color-text); }
+    .mobile-menu summary:focus-visible { outline: 2px solid var(--sl-color-accent); outline-offset: 2px; }
+
+    .mobile-menu-panel {
+      position: fixed;
+      z-index: 20;
+      top: var(--sl-nav-height);
+      right: 1rem;
+      display: grid;
+      width: min(20rem, calc(100vw - 2rem));
+      gap: 1.25rem;
+      padding: 1.1rem 1.25rem;
+      border: 1px solid var(--sl-color-hairline);
+      background: var(--sl-color-bg-nav);
+      box-shadow: 0.5rem 0.5rem 0 color-mix(in srgb, var(--sl-color-text) 9%, transparent);
+    }
+
+    .mobile-menu-panel > nav { display: grid; }
+
+    .mobile-link {
+      margin: 0;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--sl-color-hairline);
+      color: var(--sl-color-text);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .mobile-group .menu-list { padding: 0.4rem 0 0.5rem; border-bottom: 1px solid var(--sl-color-hairline); }
+    .mobile-group .mobile-link { border-bottom: 0; padding-bottom: 0.25rem; }
+  }
+</style>

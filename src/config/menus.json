@@ -1,0 +1,61 @@
+{
+  "$schema": "./menus.schema.json",
+  "header": {
+    "root": [
+      { "label": "Topics", "topics": true },
+      {
+        "label": "Tools",
+        "href": "/tools/",
+        "overview": "All theory tools",
+        "children": [
+          { "label": "Series RLC analyzer", "href": "/tools/series-rlc/", "description": "Impedance, phase and AC power" },
+          { "label": "Three-phase power", "href": "/tools/three-phase-power/", "description": "Apparent, real and reactive power" }
+        ]
+      }
+    ],
+    "fr": [
+      { "label": "Sujets", "topics": true },
+      {
+        "label": "Outils",
+        "href": "/fr/tools/",
+        "overview": "Tous les outils théoriques",
+        "children": [
+          { "label": "Analyseur RLC série", "href": "/fr/tools/series-rlc/", "description": "Impédance, phase et puissances CA" },
+          { "label": "Puissance triphasée", "href": "/fr/tools/three-phase-power/", "description": "Puissances apparente, active et réactive" }
+        ]
+      }
+    ],
+    "zh": [
+      { "label": "主题", "topics": true },
+      {
+        "label": "工具",
+        "href": "/zh/tools/",
+        "overview": "全部理论工具",
+        "children": [
+          { "label": "RLC 串联分析器", "href": "/zh/tools/series-rlc/", "description": "阻抗、相位和交流功率" },
+          { "label": "三相功率", "href": "/zh/tools/three-phase-power/", "description": "视在功率、有功功率和无功功率" }
+        ]
+      }
+    ]
+  },
+  "footer": {
+    "root": [
+      { "label": "All entries", "href": "/" },
+      { "label": "Theory tools", "href": "/tools/" },
+      { "label": "Publishing standards", "href": "/publishing-method/" },
+      { "label": "Sharing guide", "href": "/share/" }
+    ],
+    "fr": [
+      { "label": "Toutes les entrées", "href": "/fr/" },
+      { "label": "Outils théoriques", "href": "/fr/tools/" },
+      { "label": "Normes de publication", "href": "/fr/publishing-method/" },
+      { "label": "Guide de partage", "href": "/fr/share/" }
+    ],
+    "zh": [
+      { "label": "全部条目", "href": "/zh/" },
+      { "label": "理论工具", "href": "/zh/tools/" },
+      { "label": "发布标准", "href": "/zh/publishing-method/" },
+      { "label": "分享指南", "href": "/zh/share/" }
+    ]
+  }
+}

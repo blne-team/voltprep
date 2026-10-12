@@ -1,0 +1,179 @@
+---
+import { giscusConfig } from '../config/comments';
+import { getLocalizedSiteConfig, getSiteLocale, siteConfig } from '../config/site';
+
+const discussionUrl = giscusConfig
+  ? `https://github.com/${giscusConfig.repo}/discussions`
+  : undefined;
+const localeKey = getSiteLocale(Astro.url.pathname);
+const content = getLocalizedSiteConfig(Astro.url.pathname).community;
+const giscusLanguage = siteConfig.locales[localeKey].giscus;
+---
+
+{giscusConfig && discussionUrl && (
+  <page-discussion
+    data-repo={giscusConfig.repo}
+    data-repo-id={giscusConfig.repoId}
+    data-category={giscusConfig.category}
+    data-category-id={giscusConfig.categoryId}
+    data-lang={giscusLanguage}
+  >
+    <section class="discussion" aria-labelledby="page-discussion-heading" data-pagefind-ignore>
+      <div class="discussion-intro">
+        <h2 id="page-discussion-heading">{content.heading}</h2>
+        <p>{content.summary}</p>
+      </div>
+      <div class="discussion-actions">
+        <button type="button" data-load hidden>{content.loadAction}</button>
+        <a href={discussionUrl}>{content.githubAction}</a>
+      </div>
+      <p class="discussion-privacy">{content.privacy}</p>
+      <p class="discussion-loading" data-loading hidden>{content.loading}</p>
+      <div class="giscus" data-thread></div>
+    </section>
+  </page-discussion>
+)}
+
+<script>
+  class PageDiscussion extends HTMLElement {
+    connectedCallback(): void {
+      if (this.dataset.ready === 'true') return;
+      this.dataset.ready = 'true';
+      const button = this.querySelector<HTMLButtonElement>('[data-load]');
+      if (!button) return;
+      button.hidden = false;
+      button.addEventListener('click', () => this.load(button), { once: true });
+    }
+
+    private theme(): string {
+      return document.documentElement.dataset.theme === 'light' ? 'light' : 'transparent_dark';
+    }
+
+    private load(button: HTMLButtonElement): void {
+      const thread = this.querySelector<HTMLElement>('[data-thread]');
+      const loading = this.querySelector<HTMLElement>('[data-loading]');
+      if (!thread) return;
+      button.hidden = true;
+      if (loading) loading.hidden = false;
+
+      const embed = document.createElement('script');
+      embed.src = 'https://giscus.app/client.js';
+      embed.async = true;
+      embed.crossOrigin = 'anonymous';
+      Object.assign(embed.dataset, {
+        repo: this.dataset.repo,
+        repoId: this.dataset.repoId,
+        category: this.dataset.category,
+        categoryId: this.dataset.categoryId,
+        mapping: 'pathname',
+        strict: '1',
+        reactionsEnabled: '1',
+        emitMetadata: '0',
+        inputPosition: 'top',
+        theme: this.theme(),
+        lang: this.dataset.lang,
+        loading: 'eager',
+      });
+      thread.after(embed);
+
+      // Hide the loading line once giscus has inserted its frame.
+      new MutationObserver((_, observer) => {
+        if (!thread.querySelector('iframe')) return;
+        if (loading) loading.hidden = true;
+        observer.disconnect();
+      }).observe(thread, { childList: true, subtree: true });
+
+      new MutationObserver(() => {
+        thread.querySelector<HTMLIFrameElement>('iframe.giscus-frame')?.contentWindow?.postMessage(
+          { giscus: { setConfig: { theme: this.theme() } } },
+          'https://giscus.app',
+        );
+      }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    }
+  }
+
+  if (!customElements.get('page-discussion')) {
+    customElements.define('page-discussion', PageDiscussion);
+  }
+</script>
+
+<style>
+  page-discussion { display: block; }
+
+  .discussion {
+    display: grid;
+    gap: 1rem 3rem;
+    padding-block: clamp(2rem, 5vw, 3rem);
+    border-top: 1px solid var(--sl-color-hairline);
+  }
+
+  .discussion-intro { max-width: 40rem; }
+
+  h2 {
+    margin: 0;
+    color: var(--sl-color-white);
+    font-size: clamp(1.35rem, 2.4vw, 1.7rem);
+  }
+
+  .discussion-intro p {
+    margin: 0.6rem 0 0;
+    color: var(--sl-color-gray-2);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .discussion-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+    align-items: center;
+  }
+
+  button {
+    min-height: 2.75rem;
+    padding: 0.6rem 1.15rem;
+    border: 1px solid var(--sl-color-accent);
+    border-radius: 0.4rem;
+    background: var(--sl-color-accent);
+    color: var(--sl-color-black);
+    font: inherit;
+    font-size: 0.92rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  button:hover { background: var(--sl-color-accent-high); border-color: var(--sl-color-accent-high); }
+  button:focus-visible { outline: 2px solid var(--sl-color-accent); outline-offset: 3px; }
+
+  .discussion-actions a {
+    color: var(--sl-color-gray-2);
+    font-size: 0.92rem;
+    font-weight: 650;
+    text-underline-offset: 0.25rem;
+  }
+
+  .discussion-actions a:hover { color: var(--sl-color-text-accent); }
+
+  .discussion-privacy,
+  .discussion-loading {
+    margin: 0;
+    color: var(--sl-color-gray-3);
+    font-size: 0.8rem;
+    line-height: 1.5;
+  }
+
+  .giscus { grid-column: 1 / -1; }
+  .giscus:empty { display: none; }
+
+  @media (min-width: 50rem) {
+    .discussion { grid-template-columns: minmax(0, 1fr) auto; align-items: end; }
+    .discussion-intro { grid-row: 1 / span 2; }
+    .discussion-actions { justify-content: flex-end; }
+    .discussion-privacy { max-width: 22rem; text-align: right; }
+    .discussion-loading { grid-column: 1 / -1; }
+  }
+
+  @media print {
+    page-discussion { display: none; }
+  }
+</style>

@@ -1,0 +1,172 @@
+---
+import DefaultFooter from '@astrojs/starlight/components/Footer.astro';
+import AdSlot from './AdSlot.astro';
+import Comments from './Comments.astro';
+import AsciiRule from './ascii/AsciiRule.astro';
+import { getLocalizedPath, getLocalizedSiteConfig, getSiteLocale, siteConfig } from '../config/site';
+import { tagHref, tagKeys, tags, topicHref, topicKeys, topics } from '../config/taxonomy';
+import { getPosts } from '../lib/posts';
+
+const route = Astro.locals.starlightRoute;
+const pageId = route.entry.id;
+const localeKey = getSiteLocale(Astro.url.pathname);
+const content = getLocalizedSiteConfig(Astro.url.pathname);
+const isHomepage = Astro.url.pathname === siteConfig.locales[localeKey].homeHref;
+const isNotFound = pageId === '404' || pageId.endsWith('/404');
+const showFooterAd = !isHomepage && !isNotFound;
+const showComments = route.entry.data.template === 'doc' && ['article', 'tool'].includes(route.entry.data.pageType) && !isNotFound;
+const posts = await getPosts(localeKey);
+const topicCounts = topicKeys.map((key) => ({ key, count: posts.filter((post) => post.topic === key).length }));
+const tagCounts = tagKeys
+  .map((key) => ({ key, count: posts.filter((post) => post.tags.includes(key)).length }))
+  .filter((tag) => tag.count > 0);
+const otherLanguages = siteConfig.localeKeys.filter((key) => key !== localeKey).map((key) => ({ key, ...siteConfig.locales[key] }));
+const year = new Date().getUTCFullYear();
+---
+
+{showFooterAd && <AdSlot placement="footer" />}
+{!isHomepage && <DefaultFooter />}
+{showComments && <Comments />}
+
+<footer class="site-footer">
+  <AsciiRule variant="double" class="footer-rule" />
+  <div class="colophon">
+    <p class="brand" translate="no">{siteConfig.brand.name}</p>
+    <p class="tagline">{content.footer.tagline}</p>
+  </div>
+
+  <nav class="columns" aria-label={content.footer.navigationLabel}>
+    <section>
+      <AsciiRule class="column-rule"><h2>{content.footer.columns.topics}</h2></AsciiRule>
+      <ul>
+        {topicCounts.map(({ key, count }) => (
+          <li data-planned={count === 0 ? '' : undefined}>
+            <a href={topicHref(key, localeKey)}>{topics[key].name[localeKey]}</a>
+            <small>{count > 0 ? count : content.home.planned}</small>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section>
+      <AsciiRule class="column-rule"><h2>{content.footer.columns.tags}</h2></AsciiRule>
+      <ul>
+        {tagCounts.map(({ key, count }) => (
+          <li><a href={tagHref(key, localeKey)}>#{tags[key][localeKey]}</a><small>{count}</small></li>
+        ))}
+      </ul>
+    </section>
+
+    <section>
+      <AsciiRule class="column-rule"><h2>{content.footer.columns.site}</h2></AsciiRule>
+      <ul>
+        {content.footer.links.map((link) => <li><a href={link.href} target={link.external ? '_blank' : undefined} rel={link.external ? 'noreferrer' : undefined}>{link.label}</a></li>)}
+        {otherLanguages.map((other) => (
+          <li><a href={getLocalizedPath(Astro.url.pathname, other.key)} hreflang={other.language} lang={other.language}>{other.label}</a></li>
+        ))}
+      </ul>
+    </section>
+  </nav>
+
+  <AsciiRule variant="dashed" class="legal-rule" />
+  <div class="legal">
+    <p>© {year} {siteConfig.brand.name}</p>
+    <p>{content.footer.statement}</p>
+    <a class="top" href="#">{content.footer.top}<span aria-hidden="true"> ↑</span></a>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    display: grid;
+    grid-template-columns: minmax(14rem, 0.9fr) minmax(0, 2fr);
+    gap: 2.5rem clamp(2rem, 5vw, 5rem);
+    width: 100%;
+    margin: clamp(3rem, 6vw, 5rem) auto 0;
+    padding: 0 0 1.5rem;
+    color: var(--sl-color-gray-2);
+  }
+
+  .site-footer :where(h2, p, ul) { margin: 0; }
+  .site-footer ul { display: grid; gap: 0.55rem; padding: 0; list-style: none; }
+
+  .brand {
+    color: var(--sl-color-white);
+    font-family: var(--sl-font-heading);
+    font-size: 1.5rem;
+    font-weight: 760;
+    letter-spacing: -0.035em;
+  }
+
+  .tagline {
+    max-width: 24rem;
+    margin-top: 0.6rem !important;
+    color: var(--sl-color-gray-3);
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+
+  .columns {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2rem;
+  }
+
+  :global(.footer-rule),
+  :global(.legal-rule) { grid-column: 1 / -1; }
+  :global(.footer-rule) { --rule-color: var(--sl-color-gray-2); margin-bottom: 0.5rem; }
+  :global(.column-rule) { --rule-size: 0.8rem; margin-bottom: 0.85rem; }
+  :global(.column-rule .heading) { padding-inline: 0.6ch; }
+
+  .columns h2 {
+    color: var(--sl-color-gray-3);
+    font-family: var(--ff-font-mono);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0;
+  }
+
+  .columns li {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    font-size: 0.88rem;
+  }
+
+  .columns a {
+    color: var(--sl-color-gray-1);
+    text-decoration: none;
+  }
+
+  .columns a:hover { color: var(--sl-color-text-accent); text-decoration: underline; text-underline-offset: 0.2em; }
+  .columns a:focus-visible,
+  .top:focus-visible { outline: 2px solid var(--sl-color-accent); outline-offset: 2px; }
+  .columns section:nth-child(2) a { font-family: var(--ff-font-mono); font-size: 0.7rem; }
+  .columns small { color: var(--sl-color-gray-3); font-family: var(--ff-font-mono); font-size: 0.68rem; }
+  [data-planned] a { color: var(--sl-color-gray-4); }
+
+  .legal {
+    display: flex;
+    grid-column: 1 / -1;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem 1.5rem;
+    color: var(--sl-color-gray-3);
+    font-size: 0.72rem;
+    line-height: 1.5;
+  }
+
+  .legal p:nth-child(2) { flex: 1; min-width: 16rem; }
+  .top { color: var(--sl-color-gray-2); font-family: var(--ff-font-mono); font-size: 0.7rem; text-decoration: none; }
+  .top:hover { color: var(--sl-color-text-accent); }
+
+  @media (max-width: 56rem) {
+    .site-footer { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 34rem) {
+    .columns { grid-template-columns: 1fr 1fr; }
+    .columns section:last-child { grid-column: 1 / -1; }
+  }
+</style>

@@ -1,0 +1,62 @@
+---
+import DefaultMarkdownContent from '@astrojs/starlight/components/MarkdownContent.astro';
+import TableOfContents from '@astrojs/starlight/components/TableOfContents.astro';
+
+const { toc } = Astro.locals.starlightRoute;
+---
+
+{toc ? (
+  <div class="reading-grid">
+    <DefaultMarkdownContent><slot /></DefaultMarkdownContent>
+    <aside class="reading-toc print:hidden" data-pagefind-ignore>
+      <TableOfContents />
+    </aside>
+  </div>
+) : (
+  <DefaultMarkdownContent><slot /></DefaultMarkdownContent>
+)}
+
+<style>
+  .reading-toc { display: none; }
+
+  @media (min-width: 72rem) {
+    .reading-grid {
+      display: grid;
+      grid-template-columns: minmax(0, var(--ff-article-width)) var(--ff-toc-width);
+      justify-content: space-between;
+      gap: 3rem;
+    }
+
+    .reading-toc {
+      position: sticky;
+      top: calc(var(--sl-nav-height) + 1.5rem);
+      display: block;
+      align-self: start;
+      max-height: calc(100vh - var(--sl-nav-height) - 3rem);
+      overflow-y: auto;
+      padding-left: 1.25rem;
+      border-left: 1px solid var(--sl-color-hairline);
+      font-size: 0.85rem;
+      scrollbar-width: thin;
+    }
+
+    .reading-toc :global(:where(a)) {
+      display: block;
+      color: var(--sl-color-gray-3);
+      font-size: var(--sl-text-xs);
+      text-decoration: none;
+      overflow-wrap: anywhere;
+    }
+
+    .reading-toc :global(:where(a):hover) { color: var(--sl-color-white); }
+
+    .reading-toc :global(h2) {
+      margin: 0 0 0.6rem;
+      color: var(--sl-color-gray-3);
+      font-family: var(--sl-font);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+  }
+</style>

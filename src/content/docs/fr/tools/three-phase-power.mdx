@@ -1,0 +1,39 @@
+---
+title: Calculateur de puissance triphasée équilibrée
+description: Calculez les puissances apparente, active et réactive à partir de la tension de ligne, du courant et du facteur de puissance d’un système triphasé équilibré.
+editUrl: false
+pageType: tool
+topic: electrical
+kind: tool
+tags: [ac-circuits, three-phase]
+---
+
+import ElectricalCalculator from '../../../../components/ElectricalCalculator.astro';
+import ToolNotes from '../../../../components/ToolNotes.astro';
+
+Utilisez ce calculateur pour relier la tension ligne-ligne, le courant de ligne, le facteur de puissance et le sens de la puissance réactive dans un système triphasé équilibré idéal.
+
+<ElectricalCalculator kind="three-phase" />
+
+<ToolNotes>
+<section>
+
+## Hypothèses du modèle
+
+Le calculateur suppose un système sinusoïdal équilibré et utilise la tension ligne-ligne avec le courant de ligne. La relation de puissance apparente est `|S| = √3 VLL IL`. La puissance réactive en retard est positive et celle en avance est négative.
+
+Le modèle ne tient pas compte du déséquilibre, des harmoniques, des transitoires, des pertes, du rendement, de la demande, de la protection, des conventions de mesure ou des exigences du code de l’électricité.
+
+</section>
+<section>
+
+## Vérifications théoriques à essayer
+
+- Gardez la tension et le courant fixes, puis réduisez le facteur de puissance et comparez la puissance apparente à la puissance active.
+- Passez d’une charge en retard à une charge en avance et repérez les résultats qui changent de signe.
+- Réglez le facteur de puissance à un et expliquez pourquoi la puissance réactive et l’angle deviennent nuls.
+
+Ces exercices originaux ont été rédigés pour ce site.
+
+</section>
+</ToolNotes>

@@ -1,0 +1,12 @@
+---
+// Tag pages for every language other than English (/fr/tags/…, /zh/tags/…).
+import TaxonomyRoute from '../../../components/TaxonomyRoute.astro';
+import { defaultLocale, localeKeys, type SiteLocale } from '../../../config/locales';
+import { tagPaths } from '../../../lib/taxonomy-routes';
+
+export async function getStaticPaths() {
+  return (await tagPaths(localeKeys.filter((key) => key !== defaultLocale))).map((params) => ({ params }));
+}
+---
+
+<TaxonomyRoute locale={Astro.params.locale as SiteLocale} kind="tag" tag={Astro.params.tag} />

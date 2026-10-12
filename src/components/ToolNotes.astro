@@ -1,0 +1,24 @@
+---
+// Lays out the explanatory sections under a tool side by side on wide screens.
+// Wrap each section's markdown in a <section> element in the MDX page.
+---
+
+<div class="tool-notes"><slot /></div>
+
+<style>
+  .tool-notes {
+    display: grid;
+    gap: 0 3.5rem;
+    margin-top: 2.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--sl-color-hairline);
+  }
+
+  .tool-notes > :global(section) { margin-top: 0; }
+  .tool-notes > :global(section > :first-child) { margin-top: 1.5rem; }
+  .tool-notes > :global(section > * + *) { margin-top: 1rem; }
+
+  @media (min-width: 60rem) {
+    .tool-notes { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
+  }
+</style>

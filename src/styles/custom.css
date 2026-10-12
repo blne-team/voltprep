@@ -1,0 +1,221 @@
+@import '@fontsource-variable/archivo';
+@import '@fontsource-variable/source-sans-3';
+@import '@fontsource-variable/source-serif-4';
+@import '@fontsource-variable/martian-mono';
+
+:root {
+  --sl-color-accent-low: #153a3c;
+  --sl-color-accent: #a8c95f;
+  --sl-color-accent-high: #edf5d8;
+  /* The web fonts have no Chinese glyphs; Chinese text falls through to these system fonts (nothing is downloaded). */
+  --ff-cjk-sans: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', 'Noto Sans SC';
+  --ff-cjk-serif: 'Songti SC', 'Noto Serif CJK SC', 'Noto Serif SC', 'SimSun';
+  --sl-font: 'Source Sans 3 Variable', 'Segoe UI', system-ui, var(--ff-cjk-sans), sans-serif;
+  --sl-font-heading: 'Archivo Variable', 'Arial Narrow', var(--ff-cjk-sans), sans-serif;
+  --ff-font-quote: 'Source Serif 4 Variable', Georgia, var(--ff-cjk-serif), serif;
+  --ff-font-mono: 'Martian Mono Variable', ui-monospace, 'SFMono-Regular', Consolas, var(--ff-cjk-sans), monospace;
+  /* Box-drawing characters (U+2500) come from the system monospace font, which always includes them. */
+  --ff-font-box: ui-monospace, 'SFMono-Regular', Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace;
+  /* PCB background: solder-mask traces and exposed copper */
+  --pcb-trace: color-mix(in srgb, var(--ff-lime) 11%, transparent);
+  --pcb-copper: color-mix(in srgb, var(--ff-copper) 16%, transparent);
+  --ff-bar-height: 3.75rem;
+  --ff-topic-bar-height: 2.4rem;
+  --sl-nav-height: calc(var(--ff-bar-height) + var(--ff-topic-bar-height));
+  /* Text-mode field drawing on the homepage */
+  --field-ground: var(--ff-canvas);
+  --field-ink: var(--ff-lime);
+  --field-rule: var(--ff-line);
+  --ff-article-width: 44rem;
+  --ff-toc-width: 14rem;
+  --ff-tool-width: 80rem;
+  --sl-content-pad-x: clamp(1rem, 3.5vw, 2.5rem);
+  --ff-canvas: #102d29;
+  --ff-ink: #f7faf5;
+  --ff-muted: #b8c8c2;
+  --ff-green: #a8c95f;
+  --ff-green-dark: #102d29;
+  --ff-lime: #b8d970;
+  --ff-lime-soft: #263f2b;
+  --ff-copper: #df7446;
+  --ff-visual: #24443e;
+  --ff-white: #173631;
+  --ff-line: #36534d;
+  --ff-on-dark: #dce8e2;
+  --ff-grid: rgb(202 218 210 / 0.07);
+}
+
+:root[data-theme='light'] {
+  --sl-color-accent-low: #e4edc8;
+  --sl-color-accent: #426b36;
+  --sl-color-accent-high: #173d35;
+  --sl-color-bg: #f1f4ef;
+  --sl-color-bg-nav: #f1f4ef;
+  --sl-color-hairline: #cbd5cd;
+  --ff-canvas: #f1f4ef;
+  --ff-ink: #102d29;
+  --ff-muted: #51635d;
+  --ff-green: #315e4e;
+  --ff-green-dark: #173d35;
+  --ff-lime: #a8c95f;
+  --ff-lime-soft: #dce9bb;
+  --ff-copper: #d5683c;
+  --ff-visual: #dfe9e1;
+  --ff-white: #ffffff;
+  --ff-line: #cbd5cd;
+  --ff-on-dark: #dce8e2;
+  --ff-grid: rgb(49 94 78 / 0.075);
+  --field-ground: var(--ff-white);
+  --field-ink: var(--ff-green);
+  --field-rule: var(--ff-line);
+  --pcb-trace: color-mix(in srgb, var(--ff-green) 9%, transparent);
+  --pcb-copper: color-mix(in srgb, var(--ff-copper) 14%, transparent);
+}
+
+body {
+  overflow-x: clip;
+  font-size: 1.0625rem;
+  font-kerning: normal;
+  font-optical-sizing: auto;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--sl-color-accent) 35%, transparent);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--sl-font-heading);
+  font-variation-settings: 'wdth' 96;
+  letter-spacing: -0.04em;
+}
+
+/*
+ * Page canvas. Every page has one canvas width shared by the title, content,
+ * comments and footer. Articles fit a reading column plus the table of contents;
+ * tools get a wide workbench.
+ */
+:root:not([data-has-sidebar]) {
+  --sl-content-width: calc(var(--ff-article-width) + var(--ff-toc-width) + 3rem);
+}
+
+:root:not([data-has-sidebar]):has([data-page-type='tool']) {
+  --sl-content-width: var(--ff-tool-width);
+}
+
+:root:not(:has([data-page-type='tool'])) .sl-markdown-content:not(:has(.home-shell)) {
+  max-width: var(--ff-article-width);
+}
+
+.sl-markdown-content > p:first-child:not(.not-content *) {
+  color: var(--sl-color-gray-1);
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+
+/* Reading pages: comfortable measure and rhythm for long study text. */
+.sl-markdown-content {
+  line-height: 1.7;
+}
+
+.sl-markdown-content :is(p, li):not(.not-content *) {
+  max-width: 68ch;
+}
+
+.sl-markdown-content h2:not(.not-content *) {
+  margin-top: 2.75rem;
+  font-size: clamp(1.55rem, 1.2rem + 1vw, 1.9rem);
+}
+
+.sl-markdown-content h3:not(.not-content *) {
+  margin-top: 2rem;
+  font-size: 1.25rem;
+}
+
+.sl-markdown-content :is(ol, ul):not(.not-content *) > li::marker {
+  color: var(--sl-color-text-accent);
+  font-weight: 700;
+}
+
+.sl-markdown-content a:not(.not-content *) {
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+.sl-markdown-content a:not(.not-content *):hover {
+  text-decoration-thickness: 2px;
+}
+
+/* Header rows set their own inline padding. */
+.header {
+  padding: 0 !important;
+  border-bottom-color: var(--sl-color-hairline) !important;
+  background: color-mix(in srgb, var(--sl-color-bg-nav) 92%, transparent) !important;
+  backdrop-filter: blur(14px);
+}
+
+.header-tools site-search button[data-open-modal] {
+  width: 2.25rem !important;
+  min-width: 2.25rem;
+  height: 2.25rem !important;
+  max-width: 2.25rem !important;
+  justify-content: center;
+  padding: 0 !important;
+  border-color: var(--sl-color-hairline) !important;
+  border-radius: 0.55rem !important;
+  background: color-mix(in srgb, var(--sl-color-bg-nav) 84%, var(--ff-visual)) !important;
+  color: var(--sl-color-text) !important;
+}
+
+.header-tools site-search button[data-open-modal] > span,
+.header-tools site-search button[data-open-modal] > kbd {
+  display: none !important;
+}
+
+.header-tools site-search button[data-open-modal]:hover {
+  border-color: var(--sl-color-accent) !important;
+  background: var(--sl-color-accent-low) !important;
+}
+
+body:has(.home-shell) .content-panel {
+  padding: 0;
+  border-top: 0;
+}
+
+body:has(.home-shell) .content-panel > .sl-container {
+  max-width: none;
+}
+
+.sl-markdown-content:has(.home-shell) {
+  max-width: none;
+}
+
+.sl-markdown-content:has(.home-shell) > * {
+  margin-top: 0;
+}
+
+.sl-markdown-content:has(.home-shell) + footer {
+  margin-top: 0;
+}
+
+body:has(.home-shell) .site-footer {
+  width: min(100% - 3rem, 82rem);
+}
+
+a:focus-visible,
+button:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--sl-color-accent);
+  outline-offset: 4px;
+}
+
+@media (max-width: 38rem) {
+  :root { --ff-bar-height: 3.4rem; --ff-topic-bar-height: 2.3rem; }
+}
+
+/* Chinese glyphs are already evenly spaced; the headings' negative tracking would crowd them. */
+html :is(h1, h2, h3, h4, h5, h6):lang(zh) {
+  letter-spacing: 0;
+}

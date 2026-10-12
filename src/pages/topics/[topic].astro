@@ -1,0 +1,11 @@
+---
+import TaxonomyRoute from '../../components/TaxonomyRoute.astro';
+import { defaultLocale } from '../../config/locales';
+import { topicPaths } from '../../lib/taxonomy-routes';
+
+export function getStaticPaths() {
+  return topicPaths([defaultLocale]).map(({ topic }) => ({ params: { topic } }));
+}
+---
+
+<TaxonomyRoute locale={defaultLocale} kind="topic" topic={Astro.params.topic} />

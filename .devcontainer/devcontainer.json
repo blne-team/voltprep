@@ -1,34 +1,22 @@
 {
-  "name": "voteprep",
+  "name": "Faraday Fieldbook",
   "dockerComposeFile": "docker-compose.yml",
   "service": "dev",
   "initializeCommand": "sh -c 'printf \"USER_UID=%s\\nUSER_GID=%s\\n\" \"$(id -u)\" \"$(id -g)\" > .devcontainer/.env'",
-
-  "workspaceFolder": "/workspaces/voteprep",
-  "remoteEnv": {
-
-    "VIRTUAL_ENV": "/opt/venv",
-    "PATH": "/opt/venv/bin:${containerEnv:PATH}",
-    "UV_PROJECT_ENVIRONMENT": "/opt/venv"
-
-  },
-
+  "workspaceFolder": "/workspace",
   "customizations": {
     "vscode": {
       "extensions": [
-        "ms-python.python",
-        "ms-python.vscode-pylance",
         "ms-azuretools.vscode-docker",
-        "dbaeumer.vscode-eslint"
-      ],
-      "settings": {
-
-        "python.defaultInterpreterPath": "/opt/venv/bin/python",
-
-        "python.terminal.activateEnvironment": false
-      }
+        "dbaeumer.vscode-eslint",
+        "astro-build.astro-vscode"
+      ]
     }
   },
   "updateRemoteUserUID": false,
-  "remoteUser": "user"
+  "remoteUser": "user",
+  "forwardPorts": [
+    4321,
+    8787
+  ]
 }

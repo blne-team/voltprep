@@ -1,0 +1,520 @@
+---
+import { getContentLocale, pick, siteConfig } from '../config/site';
+
+interface Props {
+  kind: 'rlc' | 'three-phase';
+}
+
+const { kind } = Astro.props;
+// Text follows the page's language (English on untranslated pages).
+const locale = getContentLocale(Astro.url.pathname, Astro.locals.starlightRoute);
+const copy = pick({
+  fr: {
+    formulaRail: 'Formules utilisées',
+  diagram: {
+    rlc: { title: 'Triangle des impédances', up: 'Inductif (+X)', down: 'Capacitif (−X)', a: 'R', b: 'X', h: '|Z|' },
+    threePhase: { title: 'Triangle des puissances', up: 'En retard (+Q)', down: 'En avance (−Q)', a: 'P', b: 'Q', h: '|S|' },
+    caption: 'Le triangle est redessiné à l’échelle à chaque changement.',
+  },
+  inputPanel: 'Réglages du modèle',
+  results: 'Lecture calculée',
+  invalid: 'Entrez des valeurs valides dans les limites indiquées.',
+  ready: 'Mise à jour instantanée',
+  educational: 'Modèle théorique seulement — ne pas utiliser pour dimensionner, approuver ou exécuter des travaux.',
+  rlc: {
+    legend: 'Valeurs du circuit',
+    frequency: 'Fréquence',
+    voltage: 'Tension efficace',
+    resistance: 'Résistance',
+    inductance: 'Inductance',
+    capacitance: 'Capacité',
+    none: '0 = aucune',
+    outputs: {
+      impedance: 'Impédance complexe', magnitude: 'Module de l’impédance', phase: 'Angle de phase', current: 'Courant efficace',
+      realPower: 'Puissance active', reactivePower: 'Puissance réactive', apparentPower: 'Puissance apparente', powerFactor: 'Facteur de puissance',
+    },
+    leading: 'en avance', lagging: 'en retard', unity: 'unitaire',
+  },
+  threePhase: {
+    legend: 'Valeurs du système',
+    voltage: 'Tension ligne-ligne',
+    current: 'Courant de ligne',
+    powerFactor: 'Facteur de puissance',
+    direction: 'Sens de la puissance réactive',
+    lagging: 'Charge en retard (inductive)',
+    leading: 'Charge en avance (capacitive)',
+    outputs: { apparentPower: 'Puissance apparente', realPower: 'Puissance active', reactivePower: 'Puissance réactive', phase: 'Angle du facteur de puissance' },
+  },
+  },
+  root: {
+    formulaRail: 'Formulas used',
+  diagram: {
+    rlc: { title: 'Impedance triangle', up: 'Inductive (+X)', down: 'Capacitive (−X)', a: 'R', b: 'X', h: '|Z|' },
+    threePhase: { title: 'Power triangle', up: 'Lagging (+Q)', down: 'Leading (−Q)', a: 'P', b: 'Q', h: '|S|' },
+    caption: 'The triangle is redrawn to scale with every change.',
+  },
+  inputPanel: 'Model controls',
+  results: 'Calculated readout',
+  invalid: 'Enter valid values within the indicated limits.',
+  ready: 'Updates instantly',
+  educational: 'Theory model only — do not use it to size, approve, or perform electrical work.',
+  rlc: {
+    legend: 'Circuit values',
+    frequency: 'Frequency', voltage: 'RMS voltage', resistance: 'Resistance', inductance: 'Inductance', capacitance: 'Capacitance', none: '0 = none',
+    outputs: {
+      impedance: 'Complex impedance', magnitude: 'Impedance magnitude', phase: 'Phase angle', current: 'RMS current',
+      realPower: 'Real power', reactivePower: 'Reactive power', apparentPower: 'Apparent power', powerFactor: 'Power factor',
+    },
+    leading: 'leading', lagging: 'lagging', unity: 'unity',
+  },
+  threePhase: {
+    legend: 'System values',
+    voltage: 'Line-to-line voltage', current: 'Line current', powerFactor: 'Power factor', direction: 'Reactive-power direction',
+    lagging: 'Lagging load (inductive)', leading: 'Leading load (capacitive)',
+    outputs: { apparentPower: 'Apparent power', realPower: 'Real power', reactivePower: 'Reactive power', phase: 'Power-factor angle' },
+  },
+  },
+}, locale);
+const diagram = kind === 'rlc' ? copy.diagram.rlc : copy.diagram.threePhase;
+---
+
+<electrical-calculator data-kind={kind} data-locale={siteConfig.locales[locale].language} data-invalid={copy.invalid}>
+  <div class="formula-rail" aria-label={copy.formulaRail}>
+    <p><span class="live-dot"></span>{copy.ready}</p>
+    {kind === 'rlc' ? (
+      <div>
+        <code>X<sub>L</sub> = 2πfL</code>
+        <code>X<sub>C</sub> = 1 / (2πfC)</code>
+        <code>Z = R + j(X<sub>L</sub> − X<sub>C</sub>)</code>
+      </div>
+    ) : (
+      <div>
+        <code>|S| = √3 V<sub>LL</sub>I<sub>L</sub></code>
+        <code>P = |S| cos φ</code>
+        <code>Q = |S| sin φ</code>
+      </div>
+    )}
+  </div>
+
+  <div class="workbench">
+    <form data-calculator={kind}>
+      <div class="panel-heading"><h2>{copy.inputPanel}</h2></div>
+      {kind === 'rlc' ? (
+        <fieldset>
+          <legend>{copy.rlc.legend}</legend>
+          <label>{copy.rlc.frequency}<span><input name="frequency" type="number" min="0.001" step="any" value="60" required /><b>Hz</b></span></label>
+          <label>{copy.rlc.voltage}<span><input name="voltage" type="number" min="0" step="any" value="120" required /><b>V</b></span></label>
+          <label>{copy.rlc.resistance}<span><input name="resistance" type="number" min="0" step="any" value="20" required /><b>Ω</b></span></label>
+          <label>{copy.rlc.inductance}<small>{copy.rlc.none}</small><span><input name="inductance" type="number" min="0" step="any" value="100" required /><b>mH</b></span></label>
+          <label>{copy.rlc.capacitance}<small>{copy.rlc.none}</small><span><input name="capacitance" type="number" min="0" step="any" value="50" required /><b>µF</b></span></label>
+        </fieldset>
+      ) : (
+        <fieldset>
+          <legend>{copy.threePhase.legend}</legend>
+          <label>{copy.threePhase.voltage}<span><input name="voltage" type="number" min="0" step="any" value="600" required /><b>V</b></span></label>
+          <label>{copy.threePhase.current}<span><input name="current" type="number" min="0" step="any" value="40" required /><b>A</b></span></label>
+          <label>{copy.threePhase.powerFactor}<span><input name="powerFactor" type="number" min="0" max="1" step="0.01" value="0.85" required /></span></label>
+          <label class="wide">{copy.threePhase.direction}
+            <select name="direction">
+              <option value="lagging">{copy.threePhase.lagging}</option>
+              <option value="leading">{copy.threePhase.leading}</option>
+            </select>
+          </label>
+        </fieldset>
+      )}
+    </form>
+
+    <section class="diagram-panel" aria-labelledby="diagram-heading">
+      <div class="panel-heading"><h2 id="diagram-heading">{diagram.title}</h2></div>
+      <svg viewBox="0 0 360 250" role="img" aria-labelledby="diagram-heading" data-triangle>
+        <line class="axis" x1="48" y1="125" x2="340" y2="125" />
+        <line class="axis" x1="48" y1="12" x2="48" y2="238" />
+        <text class="axis-label" x="56" y="22">{diagram.up}</text>
+        <text class="axis-label" x="56" y="236">{diagram.down}</text>
+        <path class="fill" data-shape="fill" />
+        <line class="leg" data-shape="a" />
+        <line class="leg leg-reactive" data-shape="b" />
+        <line class="hypotenuse" data-shape="h" />
+        <path class="arc" data-shape="arc" />
+        <text class="label" data-label="a" data-symbol={diagram.a} text-anchor="middle"></text>
+        <text class="label" data-label="b" data-symbol={diagram.b}></text>
+        <text class="label label-result" data-label="h" data-symbol={diagram.h}></text>
+        <text class="label label-angle" data-label="angle" data-symbol="φ"></text>
+      </svg>
+      <p class="diagram-caption">{copy.diagram.caption}</p>
+    </section>
+
+    <section class="result-panel" data-results={kind} aria-live="polite" aria-labelledby="result-heading">
+      <div class="panel-heading"><h2 id="result-heading">{copy.results}</h2></div>
+      <p class="tool-error" data-error hidden>{copy.invalid}</p>
+      {kind === 'rlc' ? (
+        <dl>
+          <div class="primary"><dt>{copy.rlc.outputs.impedance}</dt><dd data-output="impedance">—</dd></div>
+          <div><dt>{copy.rlc.outputs.magnitude}</dt><dd data-output="magnitude">—</dd></div>
+          <div><dt>{copy.rlc.outputs.phase}</dt><dd data-output="phase">—</dd></div>
+          <div><dt>{copy.rlc.outputs.current}</dt><dd data-output="current">—</dd></div>
+          <div><dt>{copy.rlc.outputs.realPower}</dt><dd data-output="real-power">—</dd></div>
+          <div><dt>{copy.rlc.outputs.reactivePower}</dt><dd data-output="reactive-power">—</dd></div>
+          <div><dt>{copy.rlc.outputs.apparentPower}</dt><dd data-output="apparent-power">—</dd></div>
+          <div><dt>{copy.rlc.outputs.powerFactor}</dt><dd data-output="power-factor" data-leading={copy.rlc.leading} data-lagging={copy.rlc.lagging} data-unity={copy.rlc.unity}>—</dd></div>
+        </dl>
+      ) : (
+        <dl>
+          <div class="primary"><dt>{copy.threePhase.outputs.apparentPower}</dt><dd data-output="apparent-power">—</dd></div>
+          <div><dt>{copy.threePhase.outputs.realPower}</dt><dd data-output="real-power">—</dd></div>
+          <div><dt>{copy.threePhase.outputs.reactivePower}</dt><dd data-output="reactive-power">—</dd></div>
+          <div><dt>{copy.threePhase.outputs.phase}</dt><dd data-output="phase">—</dd></div>
+        </dl>
+      )}
+    </section>
+  </div>
+  <p class="educational-note"><span aria-hidden="true">!</span>{copy.educational}</p>
+</electrical-calculator>
+
+<script>
+  type OutputName = 'impedance' | 'magnitude' | 'phase' | 'current' | 'real-power' | 'reactive-power' | 'apparent-power' | 'power-factor';
+
+  class ElectricalCalculator extends HTMLElement {
+    private formatter = new Intl.NumberFormat('en-CA', { maximumSignificantDigits: 5 });
+
+    connectedCallback(): void {
+      if (this.dataset.ready === 'true') return;
+      this.dataset.ready = 'true';
+      this.formatter = new Intl.NumberFormat(this.dataset.locale || 'en-CA', { maximumSignificantDigits: 5 });
+      const form = this.querySelector<HTMLFormElement>('form[data-calculator]');
+      if (!form) return;
+      form.addEventListener('input', () => this.calculate(form));
+      form.addEventListener('submit', (event) => event.preventDefault());
+      this.calculate(form);
+    }
+
+    private value(form: HTMLFormElement, name: string): number {
+      return Number(new FormData(form).get(name));
+    }
+
+    private format(value: number, unit: string, divisor = 1): string {
+      const normalized = Math.abs(value) < 1e-10 ? 0 : value / divisor;
+      return `${this.formatter.format(normalized)}\u00a0${unit}`;
+    }
+
+    private output(panel: Element, name: OutputName, value: string): void {
+      const target = panel.querySelector<HTMLElement>(`[data-output="${name}"]`);
+      if (target) target.textContent = value;
+    }
+
+    private validity(form: HTMLFormElement, panel: Element, valid: boolean): boolean {
+      const error = panel.querySelector<HTMLElement>('[data-error]');
+      const results = panel.querySelector('dl');
+      if (error) error.hidden = valid;
+      if (results) results.toggleAttribute('hidden', !valid);
+      form.toggleAttribute('data-invalid', !valid);
+      return valid;
+    }
+
+    // Draws a right triangle: horizontal leg `a` (R or P), signed vertical leg `b` (X or Q, positive up).
+    private drawTriangle(a: number, b: number, labels: { a: string; b: string; h: string; angle: string }): void {
+      const svg = this.querySelector<SVGSVGElement>('[data-triangle]');
+      if (!svg) return;
+      const origin = { x: 48, y: 125 };
+      const scale = Math.min(a > 0 ? 180 / a : Infinity, b !== 0 ? 95 / Math.abs(b) : Infinity);
+      const size = Number.isFinite(scale) ? scale : 0;
+      const corner = { x: origin.x + a * size, y: origin.y };
+      const tip = { x: corner.x, y: origin.y - b * size };
+      const shape = (name: string) => svg.querySelector<SVGElement>(`[data-shape="${name}"]`);
+      const line = (name: string, from: { x: number; y: number }, to: { x: number; y: number }) => {
+        const element = shape(name);
+        if (!element) return;
+        element.setAttribute('x1', String(from.x));
+        element.setAttribute('y1', String(from.y));
+        element.setAttribute('x2', String(to.x));
+        element.setAttribute('y2', String(to.y));
+      };
+      line('a', origin, corner);
+      line('b', corner, tip);
+      line('h', origin, tip);
+      shape('fill')?.setAttribute('d', `M${origin.x} ${origin.y} L${corner.x} ${corner.y} L${tip.x} ${tip.y} Z`);
+
+      const angle = Math.atan2(b, a);
+      const radius = Math.min(34, Math.hypot(tip.x - origin.x, tip.y - origin.y) * 0.4);
+      const arcEnd = { x: origin.x + radius * Math.cos(angle), y: origin.y - radius * Math.sin(angle) };
+      shape('arc')?.setAttribute('d', Math.abs(angle) < 1e-6 ? '' : `M${origin.x + radius} ${origin.y} A${radius} ${radius} 0 0 ${angle > 0 ? 0 : 1} ${arcEnd.x} ${arcEnd.y}`);
+
+      const below = b < 0;
+      const place = (name: string, x: number, y: number, text?: string, anchor?: string) => {
+        const label = svg.querySelector<SVGTextElement>(`[data-label="${name}"]`);
+        if (!label) return;
+        label.setAttribute('x', String(x));
+        label.setAttribute('y', String(y));
+        if (anchor) label.setAttribute('text-anchor', anchor);
+        label.textContent = text === undefined ? `${label.dataset.symbol}` : `${label.dataset.symbol} = ${text}`;
+      };
+      place('a', (origin.x + corner.x) / 2, origin.y + (below ? -10 : 20), labels.a);
+      place('b', corner.x + 10, (corner.y + tip.y) / 2 + 4, labels.b);
+      const middle = { x: (origin.x + tip.x) / 2, y: (origin.y + tip.y) / 2 };
+      const away = { x: middle.x - corner.x, y: middle.y - corner.y };
+      const length = Math.hypot(away.x, away.y) || 1;
+      // Keep the hypotenuse label on the side away from the right angle, anchored so the text grows outward.
+      const outward = away.x / length;
+      place('h', middle.x + outward * 12, middle.y + (away.y / length) * 14 + 4, labels.h, outward < -0.3 ? 'end' : outward > 0.3 ? 'start' : 'middle');
+      // The arc carries only the symbol; the angle value is in the readout.
+      const half = angle / 2;
+      place('angle', origin.x + (radius + 10) * Math.cos(half), origin.y - (radius + 10) * Math.sin(half) + 4, undefined, 'start');
+      svg.setAttribute('aria-label', [labels.a, labels.b, labels.h, labels.angle].join(', '));
+    }
+
+    private calculate(form: HTMLFormElement): void {
+      const calculator = form.dataset.calculator;
+      const panel = this.querySelector(`[data-results="${calculator}"]`);
+      if (!panel) return;
+      if (calculator === 'rlc') this.calculateRlc(form, panel);
+      if (calculator === 'three-phase') this.calculateThreePhase(form, panel);
+    }
+
+    private calculateRlc(form: HTMLFormElement, panel: Element): void {
+      const frequency = this.value(form, 'frequency');
+      const voltage = this.value(form, 'voltage');
+      const resistance = this.value(form, 'resistance');
+      const inductance = this.value(form, 'inductance') / 1000;
+      const capacitance = this.value(form, 'capacitance') / 1_000_000;
+      const inputs = [frequency, voltage, resistance, inductance, capacitance];
+      const validInputs = form.checkValidity() && inputs.every(Number.isFinite)
+        && frequency > 0 && voltage >= 0 && resistance >= 0 && inductance >= 0 && capacitance >= 0;
+      if (!validInputs) {
+        this.validity(form, panel, false);
+        return;
+      }
+
+      const omega = 2 * Math.PI * frequency;
+      const inductiveReactance = omega * inductance;
+      const capacitiveReactance = capacitance > 0 ? 1 / (omega * capacitance) : 0;
+      const reactance = inductiveReactance - capacitiveReactance;
+      const magnitude = Math.hypot(resistance, reactance);
+      if (!this.validity(form, panel, magnitude > 0 && Number.isFinite(magnitude))) return;
+
+      const phaseRadians = Math.atan2(reactance, resistance);
+      const current = voltage / magnitude;
+      const realPower = current ** 2 * resistance;
+      const reactivePower = current ** 2 * reactance;
+      const apparentPower = voltage * current;
+      const powerFactor = Math.abs(Math.cos(phaseRadians));
+      const sign = reactance >= 0 ? '+' : '−';
+      const directionTarget = panel.querySelector<HTMLElement>('[data-output="power-factor"]');
+      const direction = Math.abs(reactance) < 1e-10
+        ? directionTarget?.dataset.unity
+        : reactance > 0 ? directionTarget?.dataset.lagging : directionTarget?.dataset.leading;
+
+      this.output(panel, 'impedance', `${this.formatter.format(resistance)} ${sign} j${this.formatter.format(Math.abs(reactance))} Ω`);
+      this.output(panel, 'magnitude', this.format(magnitude, 'Ω'));
+      this.output(panel, 'phase', this.format(phaseRadians * 180 / Math.PI, '°'));
+      this.output(panel, 'current', this.format(current, 'A'));
+      this.output(panel, 'real-power', this.format(realPower, 'W'));
+      this.output(panel, 'reactive-power', this.format(reactivePower, 'var'));
+      this.output(panel, 'apparent-power', this.format(apparentPower, 'VA'));
+      this.output(panel, 'power-factor', `${this.formatter.format(powerFactor)} ${direction || ''}`.trim());
+      this.drawTriangle(resistance, reactance, {
+        a: this.format(resistance, 'Ω'),
+        b: this.format(reactance, 'Ω'),
+        h: this.format(magnitude, 'Ω'),
+        angle: this.format(phaseRadians * 180 / Math.PI, '°'),
+      });
+    }
+
+    private calculateThreePhase(form: HTMLFormElement, panel: Element): void {
+      const voltage = this.value(form, 'voltage');
+      const current = this.value(form, 'current');
+      const powerFactor = this.value(form, 'powerFactor');
+      const direction = String(new FormData(form).get('direction'));
+      const valid = form.checkValidity() && [voltage, current, powerFactor].every(Number.isFinite)
+        && voltage >= 0 && current >= 0 && powerFactor >= 0 && powerFactor <= 1;
+      if (!this.validity(form, panel, valid)) return;
+
+      const apparentPower = Math.sqrt(3) * voltage * current;
+      const realPower = apparentPower * powerFactor;
+      const phaseRadians = Math.acos(powerFactor);
+      const phaseSign = direction === 'leading' ? -1 : 1;
+      const reactivePower = phaseSign * apparentPower * Math.sin(phaseRadians);
+
+      this.output(panel, 'apparent-power', this.format(apparentPower, 'kVA', 1000));
+      this.output(panel, 'real-power', this.format(realPower, 'kW', 1000));
+      this.output(panel, 'reactive-power', this.format(reactivePower, 'kvar', 1000));
+      this.output(panel, 'phase', this.format(phaseSign * phaseRadians * 180 / Math.PI, '°'));
+      this.drawTriangle(realPower, reactivePower, {
+        a: this.format(realPower, 'kW', 1000),
+        b: this.format(reactivePower, 'kvar', 1000),
+        h: this.format(apparentPower, 'kVA', 1000),
+        angle: this.format(phaseSign * phaseRadians * 180 / Math.PI, '°'),
+      });
+    }
+  }
+
+  if (!customElements.get('electrical-calculator')) {
+    customElements.define('electrical-calculator', ElectricalCalculator);
+  }
+</script>
+
+<style>
+  electrical-calculator {
+    --instrument: #173e47;
+    --instrument-deep: #102f36;
+    --screen: #d9eea8;
+    --signal: #e06d3f;
+    display: block;
+    container-type: inline-size;
+    margin-block: 2rem 2.75rem;
+    border: 1px solid var(--sl-color-hairline);
+    box-shadow: 0.6rem 0.6rem 0 color-mix(in srgb, var(--sl-color-text) 8%, transparent);
+  }
+
+  .formula-rail {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 1.5rem;
+    min-height: 3.1rem;
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid rgb(255 255 255 / 0.16);
+    background: var(--instrument-deep);
+    color: #eef6f2;
+  }
+
+  .formula-rail p { display: flex; align-items: center; gap: 0.5rem; margin: 0; font-size: 0.75rem; font-weight: 680; }
+  .live-dot { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--screen); box-shadow: 0 0 0 0.2rem rgb(217 238 168 / 0.13); }
+  .formula-rail div { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; }
+  .formula-rail code { padding: 0; background: none; color: #eef6f2; font-size: 0.73rem; }
+
+  .workbench {
+    display: grid;
+    grid-template-areas: 'controls' 'diagram' 'readout';
+  }
+
+  form { grid-area: controls; }
+  .result-panel { grid-area: readout; }
+
+  .diagram-panel {
+    grid-area: diagram;
+    min-width: 0;
+    padding: clamp(1.25rem, 4vw, 2rem);
+    border-top: 1px solid var(--sl-color-hairline);
+    background-color: var(--sl-color-bg);
+    background-image:
+      linear-gradient(var(--ff-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--ff-grid) 1px, transparent 1px);
+    background-size: 1.25rem 1.25rem;
+  }
+
+  .diagram-panel svg { display: block; width: 100%; max-width: 30rem; height: auto; margin-inline: auto; overflow: visible; }
+  .axis { stroke: var(--sl-color-gray-5); stroke-width: 1; }
+  .axis-label { fill: var(--sl-color-gray-3); font-size: 11px; font-weight: 600; }
+  .fill { fill: color-mix(in srgb, var(--sl-color-accent) 12%, transparent); }
+  .leg { stroke: var(--sl-color-gray-1); stroke-width: 2.5; stroke-linecap: round; }
+  .leg-reactive { stroke-dasharray: 6 5; }
+  .hypotenuse { stroke: var(--sl-color-accent); stroke-width: 3.5; stroke-linecap: round; }
+  .arc { fill: none; stroke: var(--ff-copper); stroke-width: 2; }
+  .label { fill: var(--sl-color-gray-1); font-family: var(--sl-font-heading); font-size: 12.5px; font-weight: 650; font-variant-numeric: tabular-nums; }
+  .label-result { fill: var(--sl-color-text-accent); font-weight: 750; }
+  .label-angle { fill: var(--ff-copper); }
+  .diagram-caption { margin: 0.75rem 0 0; color: var(--sl-color-gray-3); font-size: 0.78rem; text-align: center; }
+  form { min-width: 0; padding: clamp(1.25rem, 4vw, 2rem); background: color-mix(in srgb, var(--sl-color-bg) 92%, var(--ff-visual)); }
+
+  .panel-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.35rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid currentColor;
+  }
+
+  .panel-heading h2 { margin: 0; color: inherit; font-size: 1.05rem; letter-spacing: -0.02em; }
+  fieldset { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; padding: 0; border: 0; }
+  legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+  label {
+    display: grid;
+    min-width: 0;
+    gap: 0.35rem;
+    align-content: start;
+    color: var(--sl-color-gray-2);
+    font-size: 0.8rem;
+    font-weight: 680;
+  }
+
+  label.wide { grid-column: 1 / -1; }
+  label small { color: var(--sl-color-gray-3); font-size: 0.68rem; font-weight: 520; }
+  label > span { display: grid; grid-template-columns: minmax(0, 1fr) 2.25rem; align-items: stretch; }
+  label > span b { display: grid; place-items: center; border: 1px solid var(--sl-color-hairline); border-left: 0; background: var(--sl-color-bg); color: var(--sl-color-gray-3); font-size: 0.72rem; }
+
+  input,
+  select {
+    width: 100%;
+    min-width: 0;
+    min-height: 3rem;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 0;
+    background: var(--sl-color-bg);
+    color: var(--sl-color-text);
+    font: inherit;
+    font-size: 1rem;
+  }
+
+  input:focus,
+  select:focus { position: relative; z-index: 1; border-color: var(--sl-color-accent); outline: 2px solid color-mix(in srgb, var(--sl-color-accent) 45%, transparent); outline-offset: 2px; }
+  form[data-invalid] input:invalid { border-color: var(--sl-color-red); }
+
+  .result-panel {
+    min-width: 0;
+    padding: clamp(1.25rem, 4vw, 2rem);
+    background-color: var(--instrument);
+    background-image: radial-gradient(circle at 1px 1px, rgb(255 255 255 / 0.06) 1px, transparent 0);
+    background-size: 1rem 1rem;
+    color: #eef6f2;
+  }
+
+  .result-panel .panel-heading { border-bottom-color: rgb(255 255 255 / 0.25); }
+  dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; margin: 0; border-top: 1px solid rgb(255 255 255 / 0.18); border-left: 1px solid rgb(255 255 255 / 0.18); }
+  dl > div { min-width: 0; padding: 0.9rem; border-right: 1px solid rgb(255 255 255 / 0.18); border-bottom: 1px solid rgb(255 255 255 / 0.18); background: rgb(16 47 54 / 0.72); }
+  dl > div.primary { grid-column: 1 / -1; padding-block: 1.15rem; background: var(--screen); color: #17352f; }
+  dt { color: inherit; opacity: 0.78; font-size: 0.7rem; font-weight: 650; }
+  dd { overflow-wrap: anywhere; margin: 0.35rem 0 0; color: #d9eea8; font-family: var(--sl-font-heading); font-size: clamp(1rem, 3vw, 1.25rem); font-weight: 700; letter-spacing: -0.02em; }
+  .primary dd { color: #17352f; font-size: clamp(1.3rem, 5vw, 2rem); }
+  .tool-error { margin: 0; padding: 0.8rem; border: 1px solid #f2a487; color: #ffd9ca; font-weight: 650; }
+
+  .educational-note {
+    display: flex;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0.9rem 1rem;
+    border-top: 1px solid var(--sl-color-hairline);
+    background: var(--sl-color-bg);
+    color: var(--sl-color-gray-2);
+    font-size: 0.78rem;
+  }
+
+  .educational-note span { display: grid; flex: 0 0 1.2rem; height: 1.2rem; place-items: center; border-radius: 50%; background: var(--signal); color: white; font-weight: 800; }
+  [hidden] { display: none !important; }
+
+  @container (min-width: 44rem) {
+    .workbench {
+      grid-template-columns: minmax(16rem, 0.85fr) minmax(0, 1.15fr);
+      grid-template-areas: 'controls readout' 'diagram diagram';
+    }
+    form { border-right: 1px solid var(--sl-color-hairline); }
+  }
+
+  @container (min-width: 68rem) {
+    .workbench {
+      grid-template-columns: minmax(16rem, 0.8fr) minmax(0, 1.1fr) minmax(19rem, 1fr);
+      grid-template-areas: 'controls diagram readout';
+    }
+    .diagram-panel { border-top: 0; border-right: 1px solid var(--sl-color-hairline); }
+    .diagram-panel svg { margin-top: 1.5rem; }
+  }
+
+  @container (max-width: 30rem) {
+    fieldset, dl { grid-template-columns: 1fr; }
+    dl > div.primary { grid-column: auto; }
+    .formula-rail div { display: none; }
+  }
+</style>

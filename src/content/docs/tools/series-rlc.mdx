@@ -1,0 +1,41 @@
+---
+title: Series RLC Circuit Analyzer
+description: Calculate complex impedance, phase angle, RMS current, and AC power for an ideal series RLC circuit while keeping the formulas visible.
+editUrl: false
+pageType: tool
+topic: electrical
+kind: tool
+tags: [ac-circuits]
+---
+
+import ElectricalCalculator from '../../../components/ElectricalCalculator.astro';
+import ToolNotes from '../../../components/ToolNotes.astro';
+
+Use this analyzer to explore how resistance, inductance, capacitance, and frequency combine in an ideal series AC circuit. Change one quantity at a time and compare the readout with your prediction.
+
+<ElectricalCalculator kind="rlc" />
+
+<ToolNotes>
+<section>
+
+## Model assumptions
+
+The analyzer treats resistance, inductance, and capacitance as ideal series elements in sinusoidal steady state at one frequency. Voltage and current are RMS values. Entering zero inductance or capacitance omits that element from the model.
+
+Positive reactance produces a positive phase angle and lagging current in this sign convention. Negative reactance produces a negative phase angle and leading current. Reactive power uses the same sign.
+
+The model does not account for component tolerances, parasitic effects, losses, harmonics, transients, protection, or electrical-code requirements.
+
+</section>
+<section>
+
+## Try these theory checks
+
+- Set inductance and capacitance to zero and explain why the phase angle becomes zero.
+- Raise the frequency with both reactive elements present and watch which reactance becomes dominant.
+- Adjust values until the inductive and capacitive reactances nearly cancel, then inspect current and power factor.
+
+These are original study prompts written for this site.
+
+</section>
+</ToolNotes>

@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 640" role="img" aria-labelledby="title desc">
+  <title id="title">Faraday induction ring illustration</title>
+  <desc id="desc">A technical editorial illustration of an iron ring wrapped with two copper wire coils, connected to brass terminals, with magnetic field lines surrounding the ring.</desc>
+  <defs>
+    <linearGradient id="iron" x1="180" y1="105" x2="610" y2="490" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#516460"/><stop offset=".48" stop-color="#162724"/><stop offset="1" stop-color="#71827e"/>
+    </linearGradient>
+    <linearGradient id="copper" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#6f2c1a"/><stop offset=".46" stop-color="#d06a37"/><stop offset=".7" stop-color="#7b321d"/><stop offset="1" stop-color="#eda069"/>
+    </linearGradient>
+    <linearGradient id="brass" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#76500f"/><stop offset=".45" stop-color="#d7a93a"/><stop offset="1" stop-color="#8d641d"/>
+    </linearGradient>
+    <linearGradient id="wood" x1="110" y1="484" x2="688" y2="590" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3c2a22"/><stop offset=".5" stop-color="#76513a"/><stop offset="1" stop-color="#2a211d"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="16" stdDeviation="13" flood-color="#0b1715" flood-opacity=".2"/>
+    </filter>
+  </defs>
+  <g fill="none" stroke="#68b7bd" stroke-linecap="round" opacity=".5">
+    <path d="M236 184C116 152 76 241 108 325c25 65 101 61 140 16" stroke-width="3"/>
+    <path d="M224 151C75 104 26 229 64 344c30 91 137 98 194 31" stroke-width="2"/>
+    <path d="M566 184c120-32 160 57 128 141-25 65-101 61-140 16" stroke-width="3"/>
+    <path d="M578 151c149-47 198 78 160 193-30 91-137 98-194 31" stroke-width="2"/>
+    <path d="M293 117c58-45 156-57 218-5M290 439c66 49 160 55 226 3" stroke-width="2"/>
+  </g>
+  <g filter="url(#shadow)">
+    <path d="M111 485h578l40 45-38 60H108l-37-60 40-45Z" fill="url(#wood)" stroke="#182421" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M91 523h618" stroke="#c28c57" stroke-width="4" opacity=".55"/>
+    <path d="M111 565h578" stroke="#1b1715" stroke-width="8" opacity=".72"/>
+    <path d="M124 590h63l-8 22h-47l-8-22Zm489 0h63l-8 22h-47l-8-22Z" fill="#1b2422"/>
+    <circle cx="400" cy="287" r="168" fill="none" stroke="url(#iron)" stroke-width="84"/>
+    <path d="M278 171a168 168 0 0 1 245-4" fill="none" stroke="#9baba7" stroke-width="8" stroke-linecap="round" opacity=".32"/>
+    <path d="M522 414a168 168 0 0 1-241 1" fill="none" stroke="#07110f" stroke-width="12" stroke-linecap="round" opacity=".42"/>
+    <g transform="rotate(18 270 292)">
+      <rect x="201" y="171" width="140" height="241" rx="34" fill="#d9ccb0" stroke="#8f8065" stroke-width="5"/>
+      <path d="M207 196h128M204 214h134M202 232h138M201 250h140M201 268h140M201 286h140M201 304h140M201 322h140M201 340h140M202 358h138M204 376h134M207 394h128" fill="none" stroke="url(#copper)" stroke-width="14" stroke-linecap="round"/>
+      <path d="M209 191h124M205 209h132M203 227h136M202 245h138M202 263h138M202 281h138M202 299h138M202 317h138M202 335h138M203 353h136M205 371h132M209 389h124" fill="none" stroke="#f2a574" stroke-width="2.5" stroke-linecap="round" opacity=".8"/>
+      <path d="M222 174v235M321 176v231" stroke="#eee1c5" stroke-width="5" opacity=".8"/>
+    </g>
+    <g transform="rotate(-18 530 292)">
+      <rect x="459" y="171" width="140" height="241" rx="34" fill="#d9ccb0" stroke="#8f8065" stroke-width="5"/>
+      <path d="M465 196h128M462 214h134M460 232h138M459 250h140M459 268h140M459 286h140M459 304h140M459 322h140M459 340h140M460 358h138M462 376h134M465 394h128" fill="none" stroke="url(#copper)" stroke-width="14" stroke-linecap="round"/>
+      <path d="M467 191h124M463 209h132M461 227h136M460 245h138M460 263h138M460 281h138M460 299h138M460 317h138M460 335h138M461 353h136M463 371h132M467 389h124" fill="none" stroke="#f2a574" stroke-width="2.5" stroke-linecap="round" opacity=".8"/>
+      <path d="M480 174v235M579 176v231" stroke="#eee1c5" stroke-width="5" opacity=".8"/>
+    </g>
+    <g>
+      <path d="M221 383c-22 35-53 57-83 89M579 383c22 35 53 57 83 89" fill="none" stroke="#173b38" stroke-width="12" stroke-linecap="round"/>
+      <path d="M219 382c-22 35-52 56-81 89M581 382c22 35 52 56 81 89" fill="none" stroke="#6aa59d" stroke-width="3" stroke-linecap="round"/>
+      <path d="M126 443h38v80h-38zM636 443h38v80h-38z" fill="url(#brass)" stroke="#60440f" stroke-width="4"/>
+      <path d="M113 514h64v16h-64zM623 514h64v16h-64z" fill="#9c762a" stroke="#60440f" stroke-width="4"/>
+      <circle cx="145" cy="441" r="18" fill="url(#brass)" stroke="#60440f" stroke-width="4"/><circle cx="655" cy="441" r="18" fill="url(#brass)" stroke="#60440f" stroke-width="4"/>
+      <path d="M132 429h26M642 429h26" stroke="#f5d270" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="145" cy="522" r="5" fill="#ead377"/><circle cx="655" cy="522" r="5" fill="#ead377"/>
+    </g>
+  </g>
+  <g fill="none" stroke="#f2bd31" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M692 402l-11 14 13 5-14 20" stroke-width="5"/><path d="M108 350c-19 7-30 18-37 36" stroke-width="3" opacity=".75"/>
+  </g>
+</svg>

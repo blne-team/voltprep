@@ -1,68 +1,20 @@
-# Coverage.py
-htmlcov/
-reports/
-
-# Copier
-*.rej
-
-# Data
-*.csv*
-*.dat*
-*.pickle*
-*.xls*
-*.zip*
-data/
-
-# direnv
-.envrc
-
-# dotenv
-.env
-
-# Hypothesis
-.hypothesis/
-
-# Jupyter
-*.ipynb
-.ipynb_checkpoints/
-notebooks/
-
-# macOS
-.DS_Store
-
-# mise
-mise.local.toml
-
-# mypy
-.dmypy.json
-.mypy_cache/
-
-# Node.js
+# Dependencies and build output
 node_modules/
-
-# PyCharm
-.idea/
-
-# pyenv
-.python-version
-
-# pytest
-.pytest_cache/
-
-# Python
-__pycache__/
-*.egg-info/
-*.py[cdo]
-.venv/
 dist/
+.astro/
+.wrangler/
 
-# Ruff
-.ruff_cache/
+# Local environment and provider secrets
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
 
-# Terraform
-.terraform/
-
-# VS Code
+# Local tooling artifacts
+.codegraph/
+.playwright-cli/
+output/
 .vscode/
-
-# Default template
+.idea/
+.DS_Store

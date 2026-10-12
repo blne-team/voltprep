@@ -1,0 +1,54 @@
+---
+import DefaultPageTitle from '@astrojs/starlight/components/PageTitle.astro';
+import { getSiteLocale, localePrefix } from '../config/site';
+import { kindLabels, tagHref, tags, topicHref, topics } from '../config/taxonomy';
+
+const locale = getSiteLocale(Astro.url.pathname);
+const { pageType, topic, kind, tags: postTags } = Astro.locals.starlightRoute.entry.data;
+// Landing pages (homepage, topic and tag listings) render their own h1.
+const isLanding = pageType === 'landing';
+const toolsHref = `${localePrefix(locale)}/tools/`;
+---
+
+{!isLanding && (
+  <div class="page-intro" data-page-type={pageType}>
+    {topic && (
+      <p class="post-meta">
+        <a href={topicHref(topic, locale)}>{topics[topic].name[locale]}</a>
+        <span aria-hidden="true">/</span>
+        {kind === 'tool' ? <a href={toolsHref}>{kindLabels[kind][locale]}</a> : <span>{kindLabels[kind][locale]}</span>}
+      </p>
+    )}
+    <DefaultPageTitle />
+    {postTags.length > 0 && (
+      <p class="post-tags">
+        {postTags.map((tag) => <a href={tagHref(tag, locale)}>#{tags[tag][locale]}</a>)}
+      </p>
+    )}
+  </div>
+)}
+
+<style>
+  .page-intro { padding-block: 0.75rem 0.25rem; }
+
+  .page-intro :global(h1) {
+    max-width: 22ch;
+    font-size: clamp(2.1rem, 1.4rem + 2.6vw, 3.1rem);
+    line-height: 1.05;
+  }
+
+  .post-meta,
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.6rem;
+    font-family: var(--ff-font-mono);
+    font-size: 0.74rem;
+  }
+
+  .post-meta { margin: 0 0 0.9rem; color: var(--sl-color-gray-3); }
+  .post-meta a { color: var(--sl-color-text-accent); text-underline-offset: 0.2em; }
+  .post-tags { margin: 1rem 0 0; }
+  .post-tags a { color: var(--sl-color-gray-2); text-decoration: none; }
+  .post-tags a:hover { color: var(--sl-color-text-accent); text-decoration: underline; }
+</style>

@@ -1,0 +1,75 @@
+{
+  "$schema": "./taxonomy.schema.json",
+  "topics": [
+    {
+      "id": "electrical",
+      "name": {
+        "root": "Electrical",
+        "fr": "Électricité",
+        "zh": "电气"
+      },
+      "summary": {
+        "root": "Electrical theory and calculators: impedance, AC power and three-phase circuits.",
+        "fr": "Théorie électrique et calculateurs : impédance, puissance en CA et circuits triphasés.",
+        "zh": "电气理论和计算工具：阻抗、交流功率和三相电路。"
+      }
+    },
+    {
+      "id": "3d-printing",
+      "name": {
+        "root": "3D printing",
+        "fr": "Impression 3D",
+        "zh": "3D 打印"
+      },
+      "summary": {
+        "root": "Notes on 3D printing: materials, slicing, calibration and designing parts that print well.",
+        "fr": "Des notes sur l’impression 3D : matériaux, tranchage, calibrage et conception de pièces qui s’impriment bien.",
+        "zh": "关于 3D 打印的笔记：材料、切片、校准，以及如何设计容易打印的零件。"
+      }
+    },
+    {
+      "id": "communications",
+      "name": {
+        "root": "Communications",
+        "fr": "Communications",
+        "zh": "通信"
+      },
+      "summary": {
+        "root": "Notes on how information travels: signals, modulation, radio and networks.",
+        "fr": "Des notes sur la façon dont l’information circule : signaux, modulation, radio et réseaux.",
+        "zh": "关于信息如何传递的笔记：信号、调制、无线电和网络。"
+      }
+    },
+    {
+      "id": "computer-science",
+      "name": {
+        "root": "Computer science",
+        "fr": "Informatique",
+        "zh": "计算机科学"
+      },
+      "summary": {
+        "root": "Notes on computer science: algorithms, data structures, systems and the maths behind them.",
+        "fr": "Des notes d’informatique : algorithmes, structures de données, systèmes et les mathématiques qui les sous-tendent.",
+        "zh": "计算机科学笔记：算法、数据结构、系统，以及它们背后的数学。"
+      }
+    }
+  ],
+  "tags": [
+    {
+      "id": "ac-circuits",
+      "name": {
+        "root": "AC circuits",
+        "fr": "Circuits CA",
+        "zh": "交流电路"
+      }
+    },
+    {
+      "id": "three-phase",
+      "name": {
+        "root": "Three-phase",
+        "fr": "Triphasé",
+        "zh": "三相电"
+      }
+    }
+  ]
+}

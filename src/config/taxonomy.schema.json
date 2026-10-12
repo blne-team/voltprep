@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Topics and tags",
+  "description": "Topics are categories (each post has one); tags cut across topics. A post refers to them by id in its frontmatter: `topic: electrical`, `tags: [ac-circuits]`. `root` is English, `fr` French, `zh` Simplified Chinese.",
+  "type": "object",
+  "required": [
+    "topics",
+    "tags"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "topics": {
+      "description": "Every topic, in the order shown in the topic bar, menus and homepage. Each gets a page at /topics/<id>/, even before it has posts.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "summary"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/id"
+          },
+          "name": {
+            "$ref": "#/$defs/localized"
+          },
+          "summary": {
+            "description": "One sentence, used on the homepage card and as the topic page description.",
+            "$ref": "#/$defs/localized"
+          }
+        }
+      }
+    },
+    "tags": {
+      "description": "Every tag. A tag gets a page at /tags/<id>/ once a post uses it.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/id"
+          },
+          "name": {
+            "$ref": "#/$defs/localized"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "id": {
+      "description": "Used in URLs and post frontmatter: lowercase letters, digits and hyphens, for example 3d-printing. Changing it changes the page address.",
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "localized": {
+      "type": "object",
+      "required": [
+        "root",
+        "fr",
+        "zh"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "root": {
+          "description": "English",
+          "type": "string",
+          "minLength": 1
+        },
+        "fr": {
+          "description": "French",
+          "type": "string",
+          "minLength": 1
+        },
+        "zh": {
+          "description": "Simplified Chinese",
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

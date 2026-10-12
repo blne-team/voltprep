@@ -1,0 +1,39 @@
+---
+title: Balanced Three-Phase Power Calculator
+description: Calculate apparent, real, and reactive power from line voltage, line current, and power factor in an ideal balanced three-phase system.
+editUrl: false
+pageType: tool
+topic: electrical
+kind: tool
+tags: [ac-circuits, three-phase]
+---
+
+import ElectricalCalculator from '../../../components/ElectricalCalculator.astro';
+import ToolNotes from '../../../components/ToolNotes.astro';
+
+Use this calculator to connect line-to-line voltage, line current, power factor, and reactive-power direction in an ideal balanced three-phase system.
+
+<ElectricalCalculator kind="three-phase" />
+
+<ToolNotes>
+<section>
+
+## Model assumptions
+
+The calculator assumes a balanced sinusoidal system and uses line-to-line voltage with line current. Its apparent-power relationship is `|S| = √3 VLL IL`. Lagging reactive power is positive and leading reactive power is negative.
+
+The model does not account for unbalance, harmonics, transients, losses, efficiency, demand, protection, metering conventions, or electrical-code requirements.
+
+</section>
+<section>
+
+## Try these theory checks
+
+- Keep voltage and current fixed, then lower the power factor and compare apparent power with real power.
+- Switch between lagging and leading and identify which calculated values change sign.
+- Set the power factor to one and explain why reactive power and the power-factor angle become zero.
+
+These are original study prompts written for this site.
+
+</section>
+</ToolNotes>

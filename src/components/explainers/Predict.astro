@@ -1,0 +1,64 @@
+---
+import { getContentLocale, pick } from '../../config/site';
+
+interface Props {
+  question: string;
+}
+
+const { question } = Astro.props;
+const copy = pick({
+  root: { lead: 'Predict first', reveal: 'Show the explanation', hide: 'Hide the explanation' },
+  fr: { lead: 'Prédisez d’abord', reveal: 'Voir l’explication', hide: 'Masquer l’explication' },
+  zh: { lead: '先预测', reveal: '查看解释', hide: '收起解释' },
+}, getContentLocale(Astro.url.pathname, Astro.locals.starlightRoute));
+---
+
+<details class="predict not-content">
+  <summary>
+    <span class="lead">{copy.lead}</span>
+    <span class="question">{question}</span>
+    <span class="toggle" data-reveal={copy.reveal} data-hide={copy.hide}></span>
+  </summary>
+  <div class="answer"><slot /></div>
+</details>
+
+<style>
+  .predict {
+    margin-block: 1.75rem;
+    border-left: 3px solid var(--ff-copper);
+    background: color-mix(in srgb, var(--sl-color-bg) 90%, var(--ff-visual));
+  }
+
+  summary {
+    display: grid;
+    gap: 0.3rem;
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  summary::-webkit-details-marker { display: none; }
+  summary:focus-visible { outline: 2px solid var(--sl-color-accent); outline-offset: 2px; }
+
+  .lead { color: var(--ff-copper); font-size: 0.8rem; font-weight: 700; }
+
+  .question {
+    color: var(--sl-color-white);
+    font-family: var(--ff-font-quote);
+    font-size: 1.12rem;
+    line-height: 1.5;
+  }
+
+  .toggle { margin-top: 0.35rem; color: var(--sl-color-text-accent); font-size: 0.85rem; font-weight: 650; text-decoration: underline; text-underline-offset: 0.2em; }
+  .toggle::before { content: attr(data-reveal); }
+  .predict[open] .toggle::before { content: attr(data-hide); }
+
+  .answer {
+    padding: 0 1.25rem 1.1rem;
+    color: var(--sl-color-gray-1);
+    line-height: 1.65;
+  }
+
+  .answer :global(p) { margin: 0; }
+  .answer :global(p + p) { margin-top: 0.75rem; }
+</style>

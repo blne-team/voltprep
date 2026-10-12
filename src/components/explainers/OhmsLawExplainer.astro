@@ -1,0 +1,423 @@
+---
+import { getContentLocale, pick, siteConfig } from '../../config/site';
+
+// Text follows the page's language (English on untranslated pages).
+const locale = getContentLocale(Astro.url.pathname, Astro.locals.starlightRoute);
+const numberLocale = siteConfig.locales[locale].language;
+const copy = pick({
+  fr: {
+  title: 'Un circuit, quatre représentations',
+  intro: 'Déplacez un curseur : les quatre vues changent ensemble, parce qu’elles décrivent la même idée.',
+  voltage: 'Tension de la source',
+  resistance: 'Résistance',
+  words: 'Mots',
+  sketch: 'Croquis',
+  maths: 'Mathématiques',
+  measurement: 'Mesure',
+  legend: 'Les points montrent le courant conventionnel : plus ils vont vite, plus le courant est élevé. La lueur cuivrée montre la puissance transformée en chaleur.',
+  note: `Explication originale de ${siteConfig.brand.name}. Modèle idéal : résistance constante et fils sans résistance.`,
+  sentence: 'Une source de {V} fait circuler {I} dans {R}. La résistance transforme {P} en chaleur.',
+  noVoltage: 'Sans différence de potentiel, aucun courant ne circule dans {R}, et aucune puissance n’est transformée.',
+  diagram: 'Schéma : une source de {V} en série avec une résistance de {R} et un ampèremètre qui indique {I}.',
+  meter: 'Ampèremètre indiquant {I} sur une échelle de 0 à 4 A.',
+  volts: 'volts',
+  ohms: 'ohms',
+  },
+  root: {
+  title: 'One circuit, four views',
+  intro: 'Move a slider. Every view changes together, because they all describe the same idea.',
+  voltage: 'Source voltage',
+  resistance: 'Resistance',
+  words: 'Words',
+  sketch: 'Sketch',
+  maths: 'Maths',
+  measurement: 'Measurement',
+  legend: 'Dots show conventional current: faster dots mean more current. The copper glow shows power turned into heat.',
+  note: `Original ${siteConfig.brand.name} explainer. Ideal model: constant resistance and resistance-free wires.`,
+  sentence: 'A {V} source pushes {I} through {R}. The resistor turns {P} into heat.',
+  noVoltage: 'With no potential difference, no current flows through {R}, and no power is turned into heat.',
+  diagram: 'Schematic: a {V} source in series with a {R} resistor and an ammeter reading {I}.',
+  meter: 'Ammeter reading {I} on a 0 to 4 A scale.',
+  volts: 'volts',
+  ohms: 'ohms',
+  },
+}, locale);
+
+const initial = { voltage: 12, resistance: 24 };
+const meterMax = 4;
+const formatter = new Intl.NumberFormat(numberLocale, { maximumSignificantDigits: 3 });
+const unit = (value: number, symbol: string) => `${formatter.format(value)}\u00a0${symbol}`;
+const current = initial.voltage / initial.resistance;
+const power = initial.voltage * current;
+const values = { V: unit(initial.voltage, 'V'), R: unit(initial.resistance, 'Ω'), I: unit(current, 'A'), P: unit(power, 'W') };
+const fill = (template: string) => template.replace(/\{(V|R|I|P)\}/g, (_, key: keyof typeof values) => values[key]);
+const needleAngle = -90 + 180 * Math.min(current / meterMax, 1);
+const heat = Math.sqrt(power / 96);
+const ticks = Array.from({ length: meterMax * 2 + 1 }, (_, index) => {
+  const angle = Math.PI - (Math.PI * index) / (meterMax * 2);
+  const major = index % 2 === 0;
+  const inner = major ? 54 : 58;
+  return {
+    major,
+    label: index / 2,
+    x1: 80 + inner * Math.cos(angle), y1: 88 - inner * Math.sin(angle),
+    x2: 80 + 64 * Math.cos(angle), y2: 88 - 64 * Math.sin(angle),
+    tx: 80 + 75 * Math.cos(angle), ty: 92 - 75 * Math.sin(angle),
+  };
+});
+const id = `ohm-${Math.random().toString(36).slice(2, 8)}`;
+---
+
+<ohms-law-explainer
+  class="not-content"
+  data-locale={numberLocale}
+  data-sentence={copy.sentence}
+  data-no-voltage={copy.noVoltage}
+  data-diagram={copy.diagram}
+  data-meter={copy.meter}
+  data-volts={copy.volts}
+  data-ohms={copy.ohms}
+>
+  <figure aria-labelledby={`${id}-title`}>
+    <header>
+      <p class="explainer-title" id={`${id}-title`}>{copy.title}</p>
+      <p class="explainer-intro">{copy.intro}</p>
+      <fieldset class="controls" data-controls hidden>
+        <legend>{copy.title}</legend>
+        <label>
+          <span>{copy.voltage}<output data-show="V">{values.V}</output></span>
+          <input type="range" name="voltage" min="0" max="24" step="0.5" value={initial.voltage} aria-valuetext={`${initial.voltage} ${copy.volts}`} />
+        </label>
+        <label>
+          <span>{copy.resistance}<output data-show="R">{values.R}</output></span>
+          <input type="range" name="resistance" min="6" max="120" step="1" value={initial.resistance} aria-valuetext={`${initial.resistance} ${copy.ohms}`} />
+        </label>
+      </fieldset>
+    </header>
+
+    <div class="views">
+      <section class="view view-sketch" aria-labelledby={`${id}-sketch`}>
+        <h3 id={`${id}-sketch`}>{copy.sketch}</h3>
+        <svg viewBox="0 0 340 200" role="img" aria-label={fill(copy.diagram)} data-diagram>
+          <defs>
+            <filter id={`${id}-blur`} x="-50%" y="-100%" width="200%" height="300%">
+              <feGaussianBlur stdDeviation="7" />
+            </filter>
+          </defs>
+          <path class="wire" d="M60 100 V40 H260 V160 H60 Z" />
+          <path class="flow" d="M60 100 V40 H260 V160 H60 Z" data-flow />
+          <rect class="mask" x="40" y="84" width="40" height="32" />
+          <line class="plate" x1="42" y1="94" x2="78" y2="94" />
+          <line class="plate" x1="51" y1="106" x2="69" y2="106" />
+          <text class="sign" x="86" y="91">+</text>
+          <rect class="mask" x="124" y="28" width="72" height="24" />
+          <ellipse class="heat" cx="160" cy="40" rx="44" ry="14" filter={`url(#${id}-blur)`} style={`opacity:${heat}`} data-heat />
+          <polyline class="part" points="124,40 130,31 142,49 154,31 166,49 178,31 190,49 196,40" />
+          <circle class="mask meter-ring" cx="260" cy="100" r="16" />
+          <text class="meter-letter" x="260" y="105">A</text>
+          <text class="value" x="34" y="104" text-anchor="end" data-show="V">{values.V}</text>
+          <text class="value" x="160" y="76" text-anchor="middle" data-show="R">{values.R}</text>
+          <text class="value value-current" x="284" y="104" data-show="I">{values.I}</text>
+        </svg>
+        <p class="legend">{copy.legend}</p>
+      </section>
+
+      <section class="view view-words" aria-labelledby={`${id}-words`}>
+        <h3 id={`${id}-words`}>{copy.words}</h3>
+        <p class="sentence" data-sentence-target>{fill(copy.sentence)}</p>
+      </section>
+
+      <section class="view view-maths" aria-labelledby={`${id}-maths`}>
+        <h3 id={`${id}-maths`}>{copy.maths}</h3>
+        <div class="equations">
+          <p><var>I</var> = <var>V</var> ÷ <var>R</var> = <span data-show="V">{values.V}</span> ÷ <span data-show="R">{values.R}</span> = <strong class="is-current" data-show="I">{values.I}</strong></p>
+          <p><var>P</var> = <var>V</var> × <var>I</var> = <span data-show="V">{values.V}</span> × <span data-show="I">{values.I}</span> = <strong class="is-heat" data-show="P">{values.P}</strong></p>
+        </div>
+      </section>
+
+      <section class="view view-measurement" aria-labelledby={`${id}-measurement`}>
+        <h3 id={`${id}-measurement`}>{copy.measurement}</h3>
+        <svg viewBox="0 0 160 108" role="img" aria-label={fill(copy.meter)} data-meter-label>
+          <path class="dial" d="M16 88 A64 64 0 0 1 144 88" />
+          {ticks.map((tick) => (
+            <>
+              <line class:list={['tick', { major: tick.major }]} x1={tick.x1} y1={tick.y1} x2={tick.x2} y2={tick.y2} />
+              {tick.major && <text class="tick-label" x={tick.tx} y={tick.ty} text-anchor="middle">{tick.label}</text>}
+            </>
+          ))}
+          <text class="dial-unit" x="80" y="104" text-anchor="middle">A</text>
+          <line class="needle" x1="80" y1="88" x2="80" y2="30" style={`transform:rotate(${needleAngle}deg)`} data-needle />
+          <circle class="pivot" cx="80" cy="88" r="4" />
+        </svg>
+      </section>
+    </div>
+
+    <figcaption>{copy.note}</figcaption>
+  </figure>
+</ohms-law-explainer>
+
+<script>
+  const METER_MAX = 4;
+  const MAX_POWER = 96;
+  const DOT_SPACING = 16;
+
+  class OhmsLawExplainer extends HTMLElement {
+    private formatter = new Intl.NumberFormat('en-CA', { maximumSignificantDigits: 3 });
+    private speed = 0;
+    private offset = 0;
+    private frame = 0;
+    private lastTime = 0;
+    private visible = false;
+    private reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    connectedCallback(): void {
+      if (this.dataset.ready === 'true') return;
+      this.dataset.ready = 'true';
+      this.formatter = new Intl.NumberFormat(this.dataset.locale || 'en-CA', { maximumSignificantDigits: 3 });
+      const controls = this.querySelector<HTMLFieldSetElement>('[data-controls]');
+      if (!controls) return;
+      controls.hidden = false;
+      controls.addEventListener('input', () => this.update());
+      new IntersectionObserver(([entry]) => {
+        this.visible = Boolean(entry?.isIntersecting);
+        this.runFlow();
+      }).observe(this);
+      this.reducedMotion.addEventListener('change', () => this.runFlow());
+      this.update();
+    }
+
+    disconnectedCallback(): void {
+      cancelAnimationFrame(this.frame);
+    }
+
+    private input(name: string): HTMLInputElement | null {
+      return this.querySelector<HTMLInputElement>(`input[name="${name}"]`);
+    }
+
+    private unit(value: number, symbol: string): string {
+      return `${this.formatter.format(value)}\u00a0${symbol}`;
+    }
+
+    private update(): void {
+      const voltageInput = this.input('voltage');
+      const resistanceInput = this.input('resistance');
+      if (!voltageInput || !resistanceInput) return;
+      const voltage = Number(voltageInput.value);
+      const resistance = Number(resistanceInput.value);
+      const current = voltage / resistance;
+      const power = voltage * current;
+      const values: Record<string, string> = {
+        V: this.unit(voltage, 'V'),
+        R: this.unit(resistance, 'Ω'),
+        I: this.unit(current, 'A'),
+        P: this.unit(power, 'W'),
+      };
+      const fill = (template = '') => template.replace(/\{(V|R|I|P)\}/g, (_, key: string) => values[key] ?? '');
+
+      voltageInput.setAttribute('aria-valuetext', `${this.formatter.format(voltage)} ${this.dataset.volts}`);
+      resistanceInput.setAttribute('aria-valuetext', `${this.formatter.format(resistance)} ${this.dataset.ohms}`);
+      this.querySelectorAll<HTMLElement | SVGElement>('[data-show]').forEach((element) => {
+        element.textContent = values[element.dataset.show ?? ''] ?? '';
+      });
+
+      const sentence = this.querySelector('[data-sentence-target]');
+      if (sentence) sentence.textContent = fill(voltage === 0 ? this.dataset.noVoltage : this.dataset.sentence);
+      this.querySelector('[data-diagram]')?.setAttribute('aria-label', fill(this.dataset.diagram));
+      this.querySelector('[data-meter-label]')?.setAttribute('aria-label', fill(this.dataset.meter));
+
+      const needle = this.querySelector<SVGLineElement>('[data-needle]');
+      if (needle) needle.style.transform = `rotate(${-90 + 180 * Math.min(current / METER_MAX, 1)}deg)`;
+      const heat = this.querySelector<SVGEllipseElement>('[data-heat]');
+      if (heat) heat.style.opacity = String(Math.sqrt(power / MAX_POWER));
+
+      // Dot speed in SVG units per second, proportional to current.
+      this.speed = current * 40;
+      this.runFlow();
+    }
+
+    private runFlow(): void {
+      cancelAnimationFrame(this.frame);
+      if (!this.visible || this.reducedMotion.matches || this.speed === 0) return;
+      this.lastTime = performance.now();
+      const flow = this.querySelector<SVGPathElement>('[data-flow]');
+      const step = (time: number) => {
+        this.offset = (this.offset - (this.speed * (time - this.lastTime)) / 1000) % DOT_SPACING;
+        this.lastTime = time;
+        flow?.style.setProperty('stroke-dashoffset', String(this.offset));
+        this.frame = requestAnimationFrame(step);
+      };
+      this.frame = requestAnimationFrame(step);
+    }
+  }
+
+  if (!customElements.get('ohms-law-explainer')) {
+    customElements.define('ohms-law-explainer', OhmsLawExplainer);
+  }
+</script>
+
+<style>
+  ohms-law-explainer {
+    --ohm-current: var(--ff-lime);
+    --ohm-heat: var(--ff-copper);
+    --ohm-ground: color-mix(in srgb, var(--sl-color-bg) 88%, var(--ff-visual));
+    display: block;
+    container-type: inline-size;
+    margin-block: 2rem 2.5rem;
+  }
+
+  :global(:root[data-theme='light']) ohms-law-explainer {
+    --ohm-current: var(--ff-green);
+  }
+
+  figure {
+    margin: 0;
+    border: 1px solid var(--sl-color-hairline);
+    background: var(--ohm-ground);
+    box-shadow: 0.6rem 0.6rem 0 color-mix(in srgb, var(--sl-color-text) 8%, transparent);
+  }
+
+  header {
+    display: grid;
+    gap: 0.35rem 2rem;
+    padding: 1.1rem clamp(1rem, 4cqi, 1.5rem) 1.25rem;
+    border-bottom: 1px solid var(--sl-color-hairline);
+  }
+
+  .explainer-title {
+    margin: 0;
+    color: var(--sl-color-white);
+    font-family: var(--sl-font-heading);
+    font-size: 1.2rem;
+    font-weight: 720;
+    letter-spacing: -0.03em;
+  }
+
+  .explainer-intro { margin: 0; color: var(--sl-color-gray-2); font-size: 0.92rem; }
+
+  .controls {
+    display: grid;
+    gap: 0.9rem 1.5rem;
+    margin: 0.75rem 0 0;
+    padding: 0;
+    border: 0;
+  }
+
+  legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+  label { display: grid; gap: 0.35rem; margin: 0; }
+
+  label > span {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    color: var(--sl-color-gray-2);
+    font-size: 0.82rem;
+    font-weight: 650;
+  }
+
+  output {
+    color: var(--sl-color-white);
+    font-family: var(--sl-font-heading);
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+  }
+
+  input[type='range'] {
+    width: 100%;
+    height: 1.75rem;
+    margin: 0;
+    accent-color: var(--sl-color-accent);
+    cursor: pointer;
+  }
+
+  input[type='range']:focus-visible { border-radius: 999px; outline: 2px solid var(--sl-color-accent); outline-offset: 3px; }
+
+  .views { display: grid; }
+
+  .view {
+    min-width: 0;
+    margin: 0;
+    padding: 1rem clamp(1rem, 4cqi, 1.5rem) 1.15rem;
+    border-bottom: 1px solid var(--sl-color-hairline);
+  }
+
+  .view:last-child { border-bottom: 0; }
+
+  .view h3 {
+    margin: 0 0 0.6rem;
+    color: var(--sl-color-gray-3);
+    font-family: var(--sl-font);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+
+  svg { display: block; width: 100%; height: auto; overflow: visible; }
+
+  .view-sketch svg { max-width: 26rem; margin-inline: auto; }
+  .wire { fill: none; stroke: var(--sl-color-gray-4); stroke-width: 2; }
+  .flow { fill: none; stroke: var(--ohm-current); stroke-width: 5; stroke-linecap: round; stroke-dasharray: 0 16; }
+  .mask { fill: var(--ohm-ground); }
+  .plate, .part, .meter-ring { fill: none; stroke: var(--sl-color-white); stroke-width: 2.5; stroke-linejoin: round; }
+  .meter-ring { fill: var(--ohm-ground); }
+  .heat { fill: var(--ohm-heat); transition: opacity 160ms ease-out; }
+  .sign, .meter-letter { fill: var(--sl-color-white); font-family: var(--sl-font-heading); font-size: 13px; font-weight: 700; }
+  .meter-letter { text-anchor: middle; }
+  .value { fill: var(--sl-color-gray-2); font-family: var(--sl-font-heading); font-size: 13px; font-weight: 650; font-variant-numeric: tabular-nums; }
+  .value-current { fill: var(--ohm-current); }
+
+  .legend { margin: 0.75rem 0 0; color: var(--sl-color-gray-3); font-size: 0.8rem; line-height: 1.5; }
+
+  .sentence {
+    margin: 0;
+    color: var(--sl-color-white);
+    font-family: var(--ff-font-quote);
+    font-size: 1.15rem;
+    line-height: 1.55;
+  }
+
+  .equations { display: grid; gap: 0.5rem; }
+
+  .equations p {
+    margin: 0;
+    color: var(--sl-color-gray-2);
+    font-family: var(--sl-font-heading);
+    font-size: 1rem;
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+  }
+
+  .equations var { color: var(--sl-color-white); font-family: var(--ff-font-quote); font-size: 1.08em; }
+  .equations strong { font-weight: 750; }
+  .is-current { color: var(--ohm-current); }
+  .is-heat { color: var(--ohm-heat); }
+
+  .view-measurement svg { max-width: 13rem; }
+  .dial { fill: none; stroke: var(--sl-color-gray-4); stroke-width: 1.5; }
+  .tick { stroke: var(--sl-color-gray-3); stroke-width: 1; }
+  .tick.major { stroke: var(--sl-color-gray-2); stroke-width: 1.75; }
+  .tick-label { fill: var(--sl-color-gray-2); font-family: var(--sl-font-heading); font-size: 10px; font-weight: 650; }
+  .dial-unit { fill: var(--sl-color-gray-3); font-family: var(--sl-font-heading); font-size: 11px; font-weight: 700; }
+  .needle { stroke: var(--ohm-current); stroke-width: 2.5; stroke-linecap: round; transform-origin: 80px 88px; transition: transform 200ms ease-out; }
+  .pivot { fill: var(--sl-color-white); }
+
+  figcaption {
+    padding: 0.75rem clamp(1rem, 4cqi, 1.5rem);
+    border-top: 1px solid var(--sl-color-hairline);
+    background: var(--sl-color-bg);
+    color: var(--sl-color-gray-3);
+    font-size: 0.78rem;
+  }
+
+  @container (min-width: 36rem) {
+    header { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+    .controls { grid-row: 1 / span 2; grid-column: 2; margin-top: 0; }
+    .views { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); }
+    .view-sketch { grid-row: 1 / span 3; border-right: 1px solid var(--sl-color-hairline); border-bottom: 0; }
+    .view-measurement { border-bottom: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .heat, .needle { transition: none; }
+  }
+</style>
