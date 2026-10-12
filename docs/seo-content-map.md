@@ -10,6 +10,7 @@ This map gives every public page one primary search intent. Use the supporting c
 | `/tools/` | electrical theory calculators | RLC circuit calculator, three-phase power calculator | Help learners choose a focused, transparent theory model without field-design claims. |
 | `/tools/series-rlc/` | series RLC circuit calculator | complex impedance, reactance, phase angle, RMS current, AC power | Provide an interactive ideal series-circuit model with formulas and assumptions in view. |
 | `/tools/three-phase-power/` | three-phase power calculator | apparent power, real power, reactive power, power factor | Provide an interactive ideal balanced-system model with formulas and assumptions in view. |
+| `/ohms-law/` | ohm's law | voltage, current, resistance, V = IR, ohmic vs non-ohmic, power | Explain the relationship with the OhmsLawExplainer. |
 | `/publishing-method/` | electrical education publishing standards | source policy, technical review, code edition, jurisdiction, original practice questions | Establish trust and define what can be published. |
 | `/share/` | share electrical knowledge | electrical questions, source suggestions, corrections, community discussion | Help contributors provide context that can be checked and improved. |
 
