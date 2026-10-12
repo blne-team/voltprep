@@ -1,0 +1,19 @@
+---
+import { SITE_URL } from 'astro:env/server';
+import { adsenseClientId } from '../../config/ads';
+
+// Loads the AdSense script once per page, from the shared head. Only production builds with a
+// configured SITE_URL and publisher ID load it; the 404 page never does.
+const route = Astro.locals.starlightRoute;
+const isNotFound = route.entry.id === '404' || route.entry.id.endsWith('/404');
+const loadAdsense = import.meta.env.PROD && Boolean(SITE_URL) && !isNotFound && Boolean(adsenseClientId);
+---
+
+{loadAdsense && <meta name="google-adsense-account" content={adsenseClientId} />}
+{loadAdsense && (
+  <script
+    async
+    src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClientId}`}
+    crossorigin="anonymous"
+  ></script>
+)}

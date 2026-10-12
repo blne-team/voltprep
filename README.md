@@ -27,7 +27,8 @@ The generated site is written to `dist/` and must not be committed. The verifica
 - `src/components/Homepage.astro` contains the homepage: a flat SVG notebook plate (a circuit sketch and its worked current), every post with a kind filter, and the topic list.
 - Site settings and text live in data files under `src/config/`: `site.json` (brand, homepage, footer and interface text), `menus.json` (header menu and footer links) and `taxonomy.json` (topics and tags). Each has a `.schema.json` for editor hints and is checked at build time; see [docs/maintaining.md](docs/maintaining.md). Posts set `topic`, `kind` and `tags` in frontmatter; `/topics/<key>/` and `/tags/<key>/` listing pages are generated from them.
 - `src/components/ToolDirectory.astro` presents the calculator index, while `src/components/ElectricalCalculator.astro` provides the focused browser-only RLC and balanced three-phase workbenches.
-- `src/components/AdSlot.astro` provides reusable home, content, and footer ad placements.
+- `src/components/ads/AdsenseLoader.astro` loads the AdSense script from the shared head.
+- `src/components/ads/AdSlot.astro` provides reusable home, content, and footer ad placements.
 - `src/components/Comments.astro` embeds giscus discussions on documentation pages when configured.
 - `src/config/ads.ts` validates the AdSense publisher and slot IDs.
 - `src/config/comments.ts` validates the public giscus repository and category identifiers.
@@ -61,10 +62,10 @@ PUBLIC_GOOGLE_ADSENSE_CONTENT_SLOT=0000000000
 PUBLIC_GOOGLE_ADSENSE_FOOTER_SLOT=0000000000
 ```
 
-The shared head loads the AdSense script once, `src/pages/ads.txt.ts` generates `/ads.txt`, and `AdSlot` renders a unit only when its placement has a configured slot. To add a deliberate placement to an MDX page:
+`AdsenseLoader` (in the shared head) loads the AdSense script once, `src/pages/ads.txt.ts` generates `/ads.txt`, and `AdSlot` renders a unit only when its placement has a configured slot. To add a deliberate placement to an MDX page:
 
 ```mdx
-import AdSlot from '../../components/AdSlot.astro';
+import AdSlot from '../../components/ads/AdSlot.astro';
 
 <AdSlot placement="content" />
 ```
