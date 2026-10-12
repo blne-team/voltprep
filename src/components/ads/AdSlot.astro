@@ -1,0 +1,78 @@
+---
+import { SITE_URL } from 'astro:env/server';
+import AsciiBox from '../ascii/AsciiBox.astro';
+import { adPlacements, adsenseClientId, type AdPlacement } from '../../config/ads';
+import { getLocalizedSiteConfig } from '../../config/site';
+
+// One ad unit in a dashed text-mode frame. `home` sits at the end of listing pages,
+// `content` after the text of reading and tool pages. Production builds render the unit
+// only when its slot ID is set; the dev server shows a placeholder in its place.
+interface Props {
+  placement: AdPlacement;
+}
+
+const { placement } = Astro.props;
+const config = adPlacements[placement];
+const { adLabel } = getLocalizedSiteConfig(Astro.url.pathname);
+const showLiveAd = import.meta.env.PROD && Boolean(SITE_URL && adsenseClientId && config.slot);
+const showPreview = import.meta.env.DEV;
+---
+
+{(showLiveAd || showPreview) && (
+  <aside class:list={['ad-placement', 'not-content', `ad-placement--${placement}`]} aria-label={adLabel} data-pagefind-ignore>
+    <AsciiBox variant="dashed">
+      <span slot="label" class="ad-label">{adLabel}</span>
+      <div class="ad-frame">
+        {showLiveAd ? (
+          <ins
+            class="adsbygoogle"
+            style="display:block"
+            data-ad-client={adsenseClientId}
+            data-ad-slot={config.slot}
+            data-ad-format={config.format}
+            data-full-width-responsive="true"
+          ></ins>
+        ) : (
+          <div class="ad-preview" aria-hidden="true">{placement} · {config.slot ?? 'no slot ID'}</div>
+        )}
+      </div>
+    </AsciiBox>
+    {showLiveAd && <script is:inline>(window.adsbygoogle = window.adsbygoogle || []).push({});</script>}
+  </aside>
+)}
+
+<style>
+  .ad-placement {
+    clear: both;
+    width: 100%;
+    max-width: var(--sl-content-width);
+    margin: 3rem auto;
+  }
+
+  .ad-placement--home { max-width: none; margin-block: clamp(3rem, 6vw, 4.5rem) 0; }
+
+  /* Google marks a unit it could not fill; hide the empty frame. */
+  .ad-placement:has(ins[data-ad-status='unfilled']) { display: none; }
+
+  .ad-label {
+    color: var(--sl-color-gray-3);
+    font-family: var(--ff-font-mono);
+    font-size: 0.72rem;
+    text-transform: lowercase;
+  }
+
+  /* Reserved height keeps the page from jumping when the ad loads. */
+  .ad-frame { display: grid; min-height: 100px; place-items: center; overflow: hidden; }
+  .ad-placement--content .ad-frame { min-height: 250px; }
+  .adsbygoogle { width: 100%; }
+
+  .ad-preview {
+    color: var(--sl-color-gray-3);
+    font-family: var(--ff-font-mono);
+    font-size: 0.72rem;
+  }
+
+  @media print {
+    .ad-placement { display: none; }
+  }
+</style>

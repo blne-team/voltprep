@@ -1,6 +1,6 @@
 ---
 import DefaultFooter from '@astrojs/starlight/components/Footer.astro';
-import AdSlot from './AdSlot.astro';
+import AdSlot from './ads/AdSlot.astro';
 import Comments from './Comments.astro';
 import AsciiRule from './ascii/AsciiRule.astro';
 import { getLocalizedPath, getLocalizedSiteConfig, getSiteLocale, siteConfig } from '../config/site';
@@ -13,8 +13,7 @@ const localeKey = getSiteLocale(Astro.url.pathname);
 const content = getLocalizedSiteConfig(Astro.url.pathname);
 const isHomepage = Astro.url.pathname === siteConfig.locales[localeKey].homeHref;
 const isNotFound = pageId === '404' || pageId.endsWith('/404');
-const showFooterAd = !isHomepage && !isNotFound;
-const showComments = route.entry.data.template === 'doc' && ['article', 'tool'].includes(route.entry.data.pageType) && !isNotFound;
+const isReadingPage = route.entry.data.template === 'doc' && ['article', 'tool'].includes(route.entry.data.pageType) && !isNotFound;
 const posts = await getPosts(localeKey);
 const topicCounts = topicKeys.map((key) => ({ key, count: posts.filter((post) => post.topic === key).length }));
 const tagCounts = tagKeys
@@ -24,9 +23,9 @@ const otherLanguages = siteConfig.localeKeys.filter((key) => key !== localeKey).
 const year = new Date().getUTCFullYear();
 ---
 
-{showFooterAd && <AdSlot placement="footer" />}
+{isReadingPage && <AdSlot placement="content" />}
 {!isHomepage && <DefaultFooter />}
-{showComments && <Comments />}
+{isReadingPage && <Comments />}
 
 <footer class="site-footer">
   <AsciiRule variant="double" class="footer-rule" />

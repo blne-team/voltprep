@@ -14,6 +14,7 @@ Fieldbook is a personal, multi-topic site of learning notes, built as a static A
 - `src/content/docs/`: study pages, tools and their translations under `fr/` and `zh/`. Each page needs a unique title and description. Use `.md` unless the page imports a component, then use `.mdx`.
 - `src/components/`: Starlight overrides (Head, Header, Footer, PageTitle, SiteTitle) and site components (Homepage, PostList, TaxonomyPage, NotePlate, ElectricalCalculator, ToolNotes, Comments).
 - `src/components/explainers/`: interactive teaching components used inside reading pages.
+- `src/components/ads/`: Google AdSense. `AdsenseLoader` loads the script from `Head.astro`; `AdSlot` renders the two placements: `home` at the end of listing pages that have posts (Homepage, TaxonomyPage), `content` after the text of article and tool pages (Footer). Do not add ad units elsewhere or inside page content. IDs come from the `PUBLIC_GOOGLE_ADSENSE_*` environment variables, validated in `src/config/ads.ts`; nothing loads without a production `SITE_URL`.
 - Editable settings are data, not code, so a site manager can maintain them (guide: `docs/maintaining.md`). Do not hard-code text, names or lists in components that belong in these files:
   - `src/config/site.json`: brand, structured-data subjects, and all homepage, footer, comments and interface text for every locale. Templates use `{brand}`, `{count}`, `{tag}` and `{topic}`. Keep the brand name only here (components read `siteConfig.brand`).
   - `src/config/menus.json`: header menu and footer links.

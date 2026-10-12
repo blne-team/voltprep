@@ -1,11 +1,11 @@
 import {
   PUBLIC_GOOGLE_ADSENSE_CLIENT_ID,
   PUBLIC_GOOGLE_ADSENSE_CONTENT_SLOT,
-  PUBLIC_GOOGLE_ADSENSE_FOOTER_SLOT,
   PUBLIC_GOOGLE_ADSENSE_HOME_SLOT,
 } from 'astro:env/client';
 
-export type AdPlacement = 'home' | 'content' | 'footer';
+// `home` ends listing pages (homepage, topics, tags); `content` follows the text of reading and tool pages.
+export type AdPlacement = 'home' | 'content';
 
 interface AdPlacementConfig {
   format: 'auto' | 'horizontal';
@@ -36,9 +36,5 @@ export const adPlacements = {
   content: {
     format: 'auto',
     slot: validateSlot('PUBLIC_GOOGLE_ADSENSE_CONTENT_SLOT', PUBLIC_GOOGLE_ADSENSE_CONTENT_SLOT),
-  },
-  footer: {
-    format: 'horizontal',
-    slot: validateSlot('PUBLIC_GOOGLE_ADSENSE_FOOTER_SLOT', PUBLIC_GOOGLE_ADSENSE_FOOTER_SLOT),
   },
 } satisfies Record<AdPlacement, AdPlacementConfig>;

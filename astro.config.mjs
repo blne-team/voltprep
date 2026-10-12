@@ -48,7 +48,6 @@ export default defineConfig({
       }),
       PUBLIC_GOOGLE_ADSENSE_HOME_SLOT: envField.string({ context: 'client', access: 'public', optional: true, min: 1, max: 20 }),
       PUBLIC_GOOGLE_ADSENSE_CONTENT_SLOT: envField.string({ context: 'client', access: 'public', optional: true, min: 1, max: 20 }),
-      PUBLIC_GOOGLE_ADSENSE_FOOTER_SLOT: envField.string({ context: 'client', access: 'public', optional: true, min: 1, max: 20 }),
       GISCUS_REPO: envField.string({ context: 'server', access: 'public', optional: true, min: 3 }),
       GISCUS_REPO_ID: envField.string({ context: 'server', access: 'public', optional: true, min: 1 }),
       GISCUS_CATEGORY: envField.string({ context: 'server', access: 'public', optional: true, min: 1 }),

@@ -1,7 +1,7 @@
 ---
 import { SITE_URL } from 'astro:env/server';
 import { getCollection } from 'astro:content';
-import { adsenseClientId } from '../config/ads';
+import AdsenseLoader from './ads/AdsenseLoader.astro';
 import { getLocalizedPath, getSiteLocale, siteConfig, type SiteLocale } from '../config/site';
 const route = Astro.locals.starlightRoute;
 const production = Boolean(SITE_URL);
@@ -9,7 +9,6 @@ const localeKey = getSiteLocale(Astro.url.pathname);
 const locale = siteConfig.locales[localeKey];
 const isHomepage = Astro.url.pathname === locale.homeHref;
 const isNotFound = route.entry.id === '404' || route.entry.id.endsWith('/404');
-const loadAdsense = import.meta.env.PROD && production && !isNotFound && Boolean(adsenseClientId);
 // Starlight's own hreflang links are replaced by ours below, which list only real translations.
 const isStarlightAlternate = (tag: string, attrs?: Record<string, unknown>) => tag === 'link' && attrs?.rel === 'alternate' && Boolean(attrs?.hreflang);
 const head = route.head
@@ -83,12 +82,5 @@ const schema = {
 {alternates.length > 0 && (
   <link rel="alternate" hreflang="x-default" href={new URL(getLocalizedPath(Astro.url.pathname, siteConfig.defaultLocale), Astro.site).href} />
 )}
-{loadAdsense && <meta name="google-adsense-account" content={adsenseClientId} />}
-{loadAdsense && (
-  <script
-    async
-    src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClientId}`}
-    crossorigin="anonymous"
-  ></script>
-)}
+<AdsenseLoader />
 <script type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g, '\\u003c')} />
