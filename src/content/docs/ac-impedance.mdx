@@ -39,7 +39,7 @@ A capacitor does the opposite. On DC an ideal capacitor is an open circuit, and 
 
 - *X*<sub>C</sub> = 1 ÷ (2π*fC*), with *C* in farads [[2]](#source-2) [[5]](#source-5)
 
-The hertz, henry and farad are all SI units with special names, and the ohm sits in the same table [[1]](#source-1). Here is the original coil example worked through. A 30 mH coil at 60 Hz has *X*<sub>L</sub> = 2π × 60 Hz × 0.03 H ≈ 11.31 Ω [[2]](#source-2). The same coil at 1 kHz has *X*<sub>L</sub> ≈ 188.5 Ω [[2]](#source-2), while its wire resistance stays where it was [[3]](#source-3).
+The hertz, henry and farad are all SI units with special names, and the ohm sits in the same table [[1]](#source-1). Here is the original coil example worked through. A 30 mH coil at 60 Hz has *X*<sub>L</sub> = 2π × 60 Hz × 0.03 H ≈ 11.31 Ω. The same coil at 1 kHz has *X*<sub>L</sub> ≈ 188.5 Ω, while its wire resistance stays where it was.
 
 <Predict question="Double the frequency through a capacitor. Does the current go up or down?">
 
@@ -57,11 +57,11 @@ In a circuit with resistance and reactance together, the shift lands somewhere b
 
 A positive angle means the inductor's reactance is larger, and the current lags [[6]](#source-6). The site's [series RLC circuit calculator](/tools/series-rlc/) uses the same sign convention: positive reactance gives a positive phase angle and lagging current, negative reactance a negative angle and leading current.
 
-Back to the coil at 60 Hz: θ = arctan(11.31 Ω ÷ 4 Ω) ≈ 70.5° [[6]](#source-6). The current peaks about seven-tenths of the way to a full quarter cycle after the voltage. At 1 kHz the reactance swamps the resistance and the angle climbs to about 88.8°, nearly a pure inductor [[2]](#source-2) [[6]](#source-6).
+Back to the coil at 60 Hz: θ = arctan(11.31 Ω ÷ 4 Ω) ≈ 70.5°. The current peaks about eight-tenths of the way to a full quarter cycle (70.5° of 90°) after the voltage. At 1 kHz the reactance swamps the resistance and the angle climbs to about 88.8°, nearly a pure inductor [[6]](#source-6).
 
 <Predict question="A series circuit has equal resistance and reactance. What is the phase angle?">
 
-45°. θ = arctan(*X* ÷ *R*), and when *X* = *R* the ratio is 1, so θ = arctan(1) = 45°. On the impedance triangle below, that's a right triangle with two equal short sides. Try *R* = 10 Ω and an inductive *X* of 10 Ω in the series RLC calculator and read the angle. (Original practice prompt.)
+45°. θ = arctan(*X* ÷ *R*), and when *X* = *R* the ratio is 1, so θ = arctan(1) = 45°. Drawn as an impedance triangle, that's a right triangle with two equal short sides. In the series RLC calculator, try 10 Ω with about 26.5 mH at 60 Hz (that gives *X*<sub>L</sub> ≈ 10 Ω) and read the angle. (Original practice prompt.)
 
 </Predict>
 
@@ -73,7 +73,7 @@ For a series circuit:
 
 - |*Z*| = √(*R*² + *X*²) [[6]](#source-6)
 
-Draw it and the coil example becomes a picture. At 60 Hz the base is 4 Ω, the upright side is 11.31 Ω, and the long side is √(4² + 11.31²) Ω ≈ 12.0 Ω [[6]](#source-6). Dividing, 12 V ÷ 12.0 Ω ≈ 1.0 A, which solves the opening puzzle [[2]](#source-2). At 1 kHz the triangle is a tall sliver: |*Z*| ≈ 188.5 Ω and the current falls to about 0.064 A [[2]](#source-2) [[6]](#source-6).
+Draw it and the coil example becomes a picture. At 60 Hz the base is 4 Ω, the upright side is 11.31 Ω, and the long side is √(4² + 11.31²) Ω ≈ 12.0 Ω. Dividing, 12 V ÷ 12.0 Ω ≈ 1.0 A, which solves the opening puzzle. At 1 kHz the triangle is a tall sliver: |*Z*| ≈ 188.5 Ω and the current falls to about 0.064 A [[6]](#source-6).
 
 Treat the triangle as a sketch of what is going on, not a formula to memorize. A short upright side means the circuit behaves mostly like a resistor. A tall one means reactance runs the show and the angle heads toward a quarter cycle [[5]](#source-5) [[6]](#source-6). When inductive and capacitive reactance cancel, the upright side vanishes, the impedance falls to *R*, and current and voltage line up again.
 
@@ -81,21 +81,21 @@ Treat the triangle as a sketch of what is going on, not a formula to memorize. A
 
 The same part has a different impedance at every frequency [[2]](#source-2), so an impedance value without a frequency is incomplete. That is the biggest practical difference from resistance.
 
-Canadian mains supply runs at 60 Hz: Hydro-Québec, for example, states its nominal supply frequency as 60 Hz, which makes one cycle about 16.67 ms long [[4]](#source-4). So the 60 Hz figures above are the mains-frequency case [[4]](#source-4), and the 1 kHz figures show how quickly a coil changes once you leave it [[2]](#source-2).
+Canadian mains supply runs at 60 Hz: Hydro-Québec, for example, states its nominal supply frequency as 60 Hz, which makes one cycle about 16.67 ms long [[4]](#source-4). So the 60 Hz figures above are the mains-frequency case, and the 1 kHz figures show how quickly a coil changes once you leave it.
 
-Capacitors run the other way. An original example: a 10 µF capacitor has *X*<sub>C</sub> ≈ 265.3 Ω at 60 Hz and about 132.6 Ω at 120 Hz [[2]](#source-2). With 12 V across it, the current is about 45.2 mA at 60 Hz and about 90.5 mA at 120 Hz [[2]](#source-2).
+Capacitors run the other way. An original example: a 10 µF capacitor has *X*<sub>C</sub> ≈ 265.3 Ω at 60 Hz and about 132.6 Ω at 120 Hz. With 12 V across it, the current is about 45.2 mA at 60 Hz and about 90.5 mA at 120 Hz [[2]](#source-2).
 
 You'll also see impedance printed on headphones and speakers. It is the same idea: ohms at a stated frequency. This page stays with circuits.
 
 ## What a meter shows
 
-A typical AC meter shows the size of a voltage or current, not its timing. Measure the coil's voltage and current and divide one by the other, and you get the size of the impedance, |*Z*| ≈ 12.0 Ω at 60 Hz, not the DC resistance [[2]](#source-2). The angle needs an instrument that compares the two waveforms. That is also why a DC resistance reading can mislead you about how a coil behaves on AC.
+A typical AC meter shows the size of a voltage or current, not its timing. Measure the coil's voltage and current and divide one by the other, and you get the size of the impedance, |*Z*| ≈ 12.0 Ω at 60 Hz, not the DC resistance. The angle needs an instrument that compares the two waveforms. That is also why a DC resistance reading can mislead you about how a coil behaves on AC.
 
 This stays at the level of theory: what the numbers mean, not how to measure a live circuit.
 
 ## Try your own values
 
-The [series RLC circuit calculator](/tools/series-rlc/) takes any resistance, inductance, capacitance and frequency and shows the impedance, phase angle and current with the formulas in view. Put in the coil example (4 Ω, 30 mH, 60 Hz, no capacitor) and check the 70.5° angle against the triangle above [[6]](#source-6). Then raise the frequency and watch the angle head toward a quarter cycle [[2]](#source-2) [[6]](#source-6).
+The [series RLC circuit calculator](/tools/series-rlc/) takes any resistance, inductance, capacitance and frequency and shows the impedance, phase angle and current with the formulas in view. Put in the coil example (4 Ω, 30 mH, 60 Hz, no capacitor) and check the 70.5° angle against the triangle above [[6]](#source-6). Then raise the frequency and watch the angle head toward a quarter cycle [[6]](#source-6).
 
 If you come to three-phase systems next, power factor is the cosine of this same phase angle. The [three-phase power calculator](/tools/three-phase-power/) shows it at work.
 
