@@ -15,6 +15,9 @@ const indexablePaths = new Set();
 const noindexPaths = new Set();
 const alternateLinks = [];
 let fallbackPages = 0;
+// Series navigation found on posts, grouped by page language and series: the parts must run 1…total.
+const seriesParts = new Map();
+const taxonomy = JSON.parse(await readFile('src/config/taxonomy.json', 'utf8'));
 
 function addUnique(map, value, file, label) {
   assert.ok(value, `${file}: missing ${label}`);
@@ -75,6 +78,11 @@ for (const file of htmlFiles) {
     assert.doesNotMatch(html, /rel="canonical"/, `${file}: local canonical should be omitted`);
     assert.doesNotMatch(html, /<link rel="alternate" hreflang=/, `${file}: local head hreflang should be omitted`);
   }
+  for (const [, series, part, total] of html.matchAll(/<nav class="series-nav[^"]*"[^>]*data-series="([^"]+)" data-part="(\d+)" data-total="(\d+)"/g)) {
+    const key = `${pageLanguage} ${series}`;
+    if (!seriesParts.has(key)) seriesParts.set(key, []);
+    seriesParts.get(key).push({ file, part: Number(part), total: Number(total) });
+  }
   for (const match of html.matchAll(/href="([^"#]+)(?:#[^"]*)?"/g)) {
     const href = match[1].replace(/&amp;/g, '&');
     if (/^(?:[a-z]+:|\/\/)/i.test(href)) continue;
@@ -86,6 +94,13 @@ for (const file of htmlFiles) {
   checked++;
 }
 assert.ok(checked >= 1, 'Expected at least one content page');
+// Every series has a hub (English only for now, site-profile hard rule 6a); the Series menu links to each.
+for (const { id } of taxonomy.series) await access(join('dist', 'series', id, 'index.html'));
+for (const [key, parts] of seriesParts) {
+  const total = parts[0].total;
+  assert.ok(parts.every(item => item.total === total), `series ${key}: pages disagree on the number of parts`);
+  assert.deepEqual(parts.map(item => item.part).sort((a, b) => a - b), Array.from({ length: total }, (_, i) => i + 1), `series ${key}: parts should run 1…${total} once each (${parts.map(item => item.file).join(', ')})`);
+}
 if (productionBuild) {
   const robots = await readFile('dist/robots.txt', 'utf8');
   assert.match(robots, /^User-agent: \*\nAllow: \/\nSitemap: https:\/\/.+\/sitemap-index\.xml\n$/, 'robots.txt: invalid production directives');
@@ -98,4 +113,4 @@ if (productionBuild) {
     assert.ok(indexablePaths.has(new URL(href).pathname), `${file}: ${language} alternate ${href} is not an indexable page`);
   }
 }
-console.log(`Verified ${checked} content pages (${fallbackPages} untranslated): unique metadata, headings, structured data, language alternates and internal links.`);
+console.log(`Verified ${checked} content pages (${fallbackPages} untranslated): unique metadata, headings, structured data, language alternates, internal links, ${taxonomy.series.length} series hubs and ${seriesParts.size} series sequences.`);

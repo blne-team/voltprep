@@ -1,0 +1,13 @@
+---
+// Series hubs for every language other than English (/fr/series/…, /zh/series/…).
+// Their copy is English for now (site-profile hard rule 6a), so TaxonomyRoute serves them as untranslated pages.
+import TaxonomyRoute from '../../../components/TaxonomyRoute.astro';
+import { defaultLocale, localeKeys, type SiteLocale } from '../../../config/locales';
+import { seriesPaths } from '../../../lib/taxonomy-routes';
+
+export function getStaticPaths() {
+  return seriesPaths(localeKeys.filter((key) => key !== defaultLocale)).map((params) => ({ params }));
+}
+---
+
+<TaxonomyRoute locale={Astro.params.locale as SiteLocale} kind="series" series={Astro.params.series} />

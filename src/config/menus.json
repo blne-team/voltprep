@@ -3,6 +3,7 @@
   "header": {
     "root": [
       { "label": "Topics", "topics": true },
+      { "label": "Series", "series": true },
       {
         "label": "Tools",
         "href": "/tools/",
@@ -16,6 +17,7 @@
     ],
     "fr": [
       { "label": "Sujets", "topics": true },
+      { "label": "Séries", "series": true },
       {
         "label": "Outils",
         "href": "/fr/tools/",
@@ -29,6 +31,7 @@
     ],
     "zh": [
       { "label": "主题", "topics": true },
+      { "label": "系列", "series": true },
       {
         "label": "工具",
         "href": "/zh/tools/",

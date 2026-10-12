@@ -3,6 +3,7 @@ import { SITE_URL } from 'astro:env/server';
 import { getCollection } from 'astro:content';
 import AdsenseLoader from './ads/AdsenseLoader.astro';
 import { getLocalizedPath, getSiteLocale, siteConfig, type SiteLocale } from '../config/site';
+import { seriesHref, seriesKeys } from '../config/taxonomy';
 const route = Astro.locals.starlightRoute;
 const production = Boolean(SITE_URL);
 const localeKey = getSiteLocale(Astro.url.pathname);
@@ -22,12 +23,15 @@ const localeEntries = Object.entries(siteConfig.locales) as [
 const isFallback = Boolean(route.isFallback);
 // Pages kept out of search (untranslated, or an empty topic) list no language alternates either.
 const isNoindex = isFallback || route.head.some(({ tag, attrs }) => tag === 'meta' && attrs?.name === 'robots' && String(attrs?.content).startsWith('noindex'));
-// A content page links only to the languages it is translated into; generated pages (topics, tags) exist in every language.
+// A content page links only to the languages it is translated into; generated pages (topics, tags) exist in every language,
+// except series hubs, which are English only for now (site-profile hard rule 6a; see TaxonomyRoute.astro).
 const docUrls = new Set((await getCollection('docs')).map(({ id }) => (id === 'index' ? '/' : `/${id.replace(/\/?index$/, '')}/`.replace(/\/\/$/, '/'))));
-const isContentPage = docUrls.has(getLocalizedPath(Astro.url.pathname, siteConfig.defaultLocale));
+const englishPath = getLocalizedPath(Astro.url.pathname, siteConfig.defaultLocale);
+const isContentPage = docUrls.has(englishPath);
+const isSeriesHub = seriesKeys.some((key) => seriesHref(key, siteConfig.defaultLocale) === englishPath);
 const alternates = production && !isNotFound && !isNoindex
   ? localeEntries
-      .filter(([key]) => !isContentPage || docUrls.has(getLocalizedPath(Astro.url.pathname, key)))
+      .filter(([key]) => (isSeriesHub ? key === siteConfig.defaultLocale : !isContentPage || docUrls.has(getLocalizedPath(Astro.url.pathname, key))))
       .map(([key, alternateLocale]) => ({
         language: alternateLocale.language,
         href: new URL(getLocalizedPath(Astro.url.pathname, key), Astro.site).href,

@@ -161,12 +161,33 @@
             "$ref": "#/$defs/topics"
           },
           {
+            "$ref": "#/$defs/series"
+          },
+          {
             "$ref": "#/$defs/group"
           },
           {
             "$ref": "#/$defs/link"
           }
         ]
+      }
+    },
+    "series": {
+      "description": "A dropdown filled automatically with every series in src/config/taxonomy.json.",
+      "type": "object",
+      "required": [
+        "label",
+        "series"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "series": {
+          "const": true
+        }
       }
     }
   }

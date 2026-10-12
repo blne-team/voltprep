@@ -4,21 +4,22 @@ import AdSlot from './ads/AdSlot.astro';
 import PcbBackground from './PcbBackground.astro';
 import PostList from './PostList.astro';
 import { getLocalizedSiteConfig, getSiteLocale, siteConfig } from '../config/site';
-import { tagHref, tags, topics, type TagKey, type TopicKey } from '../config/taxonomy';
+import { series, tagHref, tags, topics, type SeriesKey, type TagKey, type TopicKey } from '../config/taxonomy';
 import { getPosts } from '../lib/posts';
+import { getSeriesPosts } from '../lib/series';
 
-type Props = { kind: 'topic'; topic: TopicKey } | { kind: 'tag'; tag: TagKey };
+type Props = { kind: 'topic'; topic: TopicKey } | { kind: 'tag'; tag: TagKey } | { kind: 'series'; series: SeriesKey };
 
 const props = Astro.props;
 const locale = getSiteLocale(Astro.url.pathname);
 const { home } = getLocalizedSiteConfig(Astro.url.pathname);
 const homeHref = siteConfig.locales[locale].homeHref;
 const all = await getPosts(locale);
-const posts = props.kind === 'topic' ? all.filter((post) => post.topic === props.topic) : all.filter((post) => post.tags.includes(props.tag));
-const heading = props.kind === 'topic' ? topics[props.topic].name[locale] : `#${tags[props.tag][locale]}`;
-const summary = props.kind === 'topic' ? topics[props.topic].summary[locale] : home.tagDescription(tags[props.tag][locale]);
-const crumb = props.kind === 'topic' ? home.topicPath : home.tagPath;
-const slug = props.kind === 'topic' ? props.topic : props.tag;
+// Series hubs list their posts in reading order; topics and tags keep the newest-first listing.
+const { posts, heading, summary, crumb, slug } =
+  props.kind === 'topic' ? { posts: all.filter((post) => post.topic === props.topic), heading: topics[props.topic].name[locale], summary: topics[props.topic].summary[locale], crumb: home.topicPath, slug: props.topic }
+  : props.kind === 'series' ? { posts: await getSeriesPosts(locale, props.series), heading: series[props.series].name[locale], summary: series[props.series].summary[locale], crumb: home.seriesPath, slug: props.series }
+  : { posts: all.filter((post) => post.tags.includes(props.tag)), heading: `#${tags[props.tag][locale]}`, summary: home.tagDescription(tags[props.tag][locale]), crumb: home.tagPath, slug: props.tag };
 const topicTags = props.kind === 'topic' ? [...new Set(posts.flatMap((post) => post.tags))] : [];
 ---
 

@@ -86,6 +86,7 @@
         "adLabel",
         "home",
         "topicBarLabel",
+        "series",
         "allEntries",
         "community",
         "footer"
@@ -166,6 +167,8 @@
             "tagTitle",
             "tagDescription",
             "topicTitle",
+            "seriesPath",
+            "seriesTitle",
             "topicsInTag",
             "untranslated"
           ],
@@ -299,6 +302,15 @@
               "type": "string",
               "minLength": 1
             },
+            "seriesPath": {
+              "type": "string",
+              "minLength": 1
+            },
+            "seriesTitle": {
+              "description": "Title of a series hub. {series} is the series name.",
+              "type": "string",
+              "minLength": 1
+            },
             "topicsInTag": {
               "type": "string",
               "minLength": 1
@@ -313,6 +325,36 @@
         "topicBarLabel": {
           "type": "string",
           "minLength": 1
+        },
+        "series": {
+          "description": "Series navigation on posts that belong to a series.",
+          "type": "object",
+          "required": [
+            "label",
+            "part",
+            "previous",
+            "next"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "label": {
+              "type": "string",
+              "minLength": 1
+            },
+            "part": {
+              "description": "{part} is the 1-based part number, {series} the series name.",
+              "type": "string",
+              "minLength": 1
+            },
+            "previous": {
+              "type": "string",
+              "minLength": 1
+            },
+            "next": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
         },
         "allEntries": {
           "type": "string",

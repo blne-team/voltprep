@@ -1,22 +1,30 @@
 ---
-// A generated topic or tag page in one language. The route files in src/pages/ only list which pages exist.
+// A generated topic, tag or series page in one language. The route files in src/pages/ only list which pages exist.
 import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
 import TaxonomyPage from './TaxonomyPage.astro';
 import { siteConfig, type SiteLocale } from '../config/site';
-import { tags, topics, type TagKey, type TopicKey } from '../config/taxonomy';
+import { defaultLocale, locales } from '../config/locales';
+import { series, tags, topics, type SeriesKey, type TagKey, type TopicKey } from '../config/taxonomy';
 import { getPosts } from '../lib/posts';
 
-type Props = { locale: SiteLocale } & ({ kind: 'topic'; topic: TopicKey } | { kind: 'tag'; tag: TagKey });
+type Props = { locale: SiteLocale } & ({ kind: 'topic'; topic: TopicKey } | { kind: 'tag'; tag: TagKey } | { kind: 'series'; series: SeriesKey });
 
 const props = Astro.props;
 const copy = siteConfig.localized[props.locale].home;
-const title = props.kind === 'topic' ? copy.topicTitle(topics[props.topic].name[props.locale]) : copy.tagTitle(tags[props.tag][props.locale]);
-const description = props.kind === 'topic' ? topics[props.topic].summary[props.locale] : copy.tagDescription(tags[props.tag][props.locale]);
-// An empty topic stays out of search results until its first post (and out of the sitemap, see astro.config.mjs).
-const isEmpty = props.kind === 'topic' && !(await getPosts(props.locale)).some((post) => post.topic === props.topic);
+const posts = await getPosts(props.locale);
+const { title, description, isEmpty } =
+  props.kind === 'topic' ? { title: copy.topicTitle(topics[props.topic].name[props.locale]), description: topics[props.topic].summary[props.locale], isEmpty: !posts.some((post) => post.topic === props.topic) }
+  : props.kind === 'series' ? { title: copy.seriesTitle(series[props.series].name[props.locale]), description: series[props.series].summary[props.locale], isEmpty: !posts.some((post) => post.series === props.series) }
+  : { title: copy.tagTitle(tags[props.tag][props.locale]), description: copy.tagDescription(tags[props.tag][props.locale]), isEmpty: false };
+// An empty topic or series stays out of search results until its first post (and out of the sitemap, see astro.config.mjs).
+// Series copy is English only for now (site-profile hard rule 6a): outside English a hub is served as an
+// untranslated page, like Starlight's fallbacks (English content language, noindex, no language alternates; see Head.astro).
+const untranslated = props.kind === 'series' && props.locale !== defaultLocale ? { isFallback: true, lang: locales[defaultLocale].language } : {};
 const head = isEmpty ? [{ tag: 'meta' as const, attrs: { name: 'robots', content: 'noindex, follow' } }] : [];
 ---
 
-<StarlightPage frontmatter={{ title, description, template: 'splash', pageType: 'landing', head }}>
-  {props.kind === 'topic' ? <TaxonomyPage kind="topic" topic={props.topic} /> : <TaxonomyPage kind="tag" tag={props.tag} />}
+<StarlightPage frontmatter={{ title, description, template: 'splash', pageType: 'landing', head }} {...untranslated}>
+  {props.kind === 'topic' ? <TaxonomyPage kind="topic" topic={props.topic} />
+    : props.kind === 'series' ? <TaxonomyPage kind="series" series={props.series} />
+    : <TaxonomyPage kind="tag" tag={props.tag} />}
 </StarlightPage>

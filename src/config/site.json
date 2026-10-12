@@ -55,10 +55,18 @@
         "tagTitle": "Entries tagged {tag}",
         "tagDescription": "Every {brand} guide and tool tagged {tag}, across all topics.",
         "topicTitle": "{topic} notes",
+        "seriesPath": "series",
+        "seriesTitle": "{series} series",
         "topicsInTag": "Tags in this topic",
         "untranslated": "Not yet translated"
       },
       "topicBarLabel": "Topics",
+      "series": {
+        "label": "Series",
+        "part": "Part {part} of {series}",
+        "previous": "Previous",
+        "next": "Next"
+      },
       "allEntries": "All",
       "community": {
         "heading": "Discuss this page",
@@ -124,10 +132,18 @@
         "tagTitle": "Entrées avec l’étiquette {tag}",
         "tagDescription": "Tous les guides et outils de {brand} portant l’étiquette {tag}, tous sujets confondus.",
         "topicTitle": "Notes : {topic}",
+        "seriesPath": "séries",
+        "seriesTitle": "Série : {series}",
         "topicsInTag": "Étiquettes de ce sujet",
         "untranslated": "En anglais"
       },
       "topicBarLabel": "Sujets",
+      "series": {
+        "label": "Série",
+        "part": "Partie {part} de la série {series}",
+        "previous": "Précédent",
+        "next": "Suivant"
+      },
       "allEntries": "Tout",
       "community": {
         "heading": "Discuter de cette page",
@@ -193,10 +209,18 @@
         "tagTitle": "标签：{tag}",
         "tagDescription": "{brand} 中所有带有“{tag}”标签的指南和工具，涵盖全部主题。",
         "topicTitle": "{topic}笔记",
+        "seriesPath": "系列",
+        "seriesTitle": "{series}系列",
         "topicsInTag": "本主题的标签",
         "untranslated": "英文"
       },
       "topicBarLabel": "主题",
+      "series": {
+        "label": "系列",
+        "part": "{series} 第 {part} 部分",
+        "previous": "上一篇",
+        "next": "下一篇"
+      },
       "allEntries": "全部",
       "community": {
         "heading": "讨论本页",

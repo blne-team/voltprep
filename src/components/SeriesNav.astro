@@ -1,0 +1,36 @@
+---
+// "Part n of <series>" with previous/next links, on a post that belongs to a series.
+// The data attributes let scripts/check-build.mjs verify part numbering across the built site.
+import { getSiteLocale, siteConfig } from '../config/site';
+import { series, seriesHref } from '../config/taxonomy';
+import { getSeriesPlace } from '../lib/series';
+
+const locale = getSiteLocale(Astro.url.pathname);
+const copy = siteConfig.localized[locale].series;
+const place = await getSeriesPlace(locale, Astro.url.pathname);
+---
+
+{place && (
+  <nav class="series-nav" aria-label={copy.label} data-series={place.key} data-part={place.position.part} data-total={place.position.total}>
+    <a class="series-part" href={seriesHref(place.key, locale)}>{copy.part(place.position.part, series[place.key].name[locale])}</a>
+    {place.position.previous && <a rel="prev" href={place.position.previous.href}><span>{copy.previous}</span>{place.position.previous.title}</a>}
+    {place.position.next && <a rel="next" href={place.position.next.href}><span>{copy.next}</span>{place.position.next.title}</a>}
+  </nav>
+)}
+
+<style>
+  .series-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 1.25rem;
+    margin: 0.9rem 0 0;
+    font-family: var(--ff-font-mono);
+    font-size: 0.74rem;
+  }
+
+  .series-nav a { color: var(--sl-color-gray-2); text-underline-offset: 0.2em; }
+  .series-nav a:hover { color: var(--sl-color-text-accent); }
+  .series-nav .series-part { color: var(--sl-color-text-accent); }
+  .series-nav span { margin-right: 0.4rem; color: var(--sl-color-gray-3); }
+  .series-nav span::after { content: ':'; }
+</style>

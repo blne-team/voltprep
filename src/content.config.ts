@@ -2,7 +2,7 @@ import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
 import { docsLoader, i18nLoader } from '@astrojs/starlight/loaders';
 import { docsSchema, i18nSchema } from '@astrojs/starlight/schema';
-import { postKinds, tagKeys, topicKeys } from './config/taxonomy';
+import { postKinds, seriesKeys, tagKeys, topicKeys } from './config/taxonomy';
 
 export const collections = {
   docs: defineCollection({
@@ -21,6 +21,12 @@ export const collections = {
           error: (issue) => `Unknown tag "${issue.input}". Use one of: ${tagKeys.join(', ')} (or add it to src/config/taxonomy.json).`,
         })).default([]),
         kind: z.enum(postKinds).default('guide'),
+        // Optional reading path from taxonomy.json `series`; `seriesOrder` sets the post's place in it
+        // (lowest first, posts without one follow by title; a seriesOrder without a series fails in src/lib/series.ts).
+        series: z.string().refine((id) => seriesKeys.includes(id), {
+          error: (issue) => `Unknown series "${issue.input}". Use one of: ${seriesKeys.join(', ')} (or add it to src/config/taxonomy.json).`,
+        }).optional(),
+        seriesOrder: z.number().int().nonnegative().optional(),
         // Leave unset until the real publication date is known; it is shown only when present.
         published: z.coerce.date().optional(),
       }),

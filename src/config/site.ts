@@ -61,6 +61,8 @@ for (const locale of localeKeys) {
     ['home.tagTitle', home.tagTitle, ['tag']],
     ['home.tagDescription', home.tagDescription, ['tag']],
     ['home.topicTitle', home.topicTitle, ['topic']],
+    ['home.seriesTitle', home.seriesTitle, ['series']],
+    ['series.part', data.text[locale].series.part, ['part', 'series']],
   ];
   for (const [where, template, keys] of needs) {
     for (const key of keys) {
@@ -83,6 +85,11 @@ function localize(locale: SiteLocale) {
       tagTitle: (tag: string) => fill(text.home.tagTitle, { tag, brand: brand.name }),
       tagDescription: (tag: string) => fill(text.home.tagDescription, { tag, brand: brand.name }),
       topicTitle: (topic: string) => fill(text.home.topicTitle, { topic, brand: brand.name }),
+      seriesTitle: (series: string) => fill(text.home.seriesTitle, { series, brand: brand.name }),
+    },
+    series: {
+      ...text.series,
+      part: (part: number, series: string) => fill(text.series.part, { part, series }),
     },
     navigation: menus.header[locale],
     footer: {

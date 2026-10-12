@@ -1,11 +1,12 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Topics and tags",
-  "description": "Topics are categories (each post has one); tags cut across topics. A post refers to them by id in its frontmatter: `topic: electrical`, `tags: [ac-circuits]`. `root` is English, `fr` French, `zh` Simplified Chinese.",
+  "description": "Topics are categories (each post has one); tags cut across topics. A post refers to them by id in its frontmatter: `topic: electrical`, `tags: [ac-circuits]`. `root` is English, `fr` French, `zh` Simplified Chinese. Series are ordered reading paths (a post joins one with `series: electrical-theory` and an optional `seriesOrder`).",
   "type": "object",
   "required": [
     "topics",
-    "tags"
+    "tags",
+    "series"
   ],
   "additionalProperties": false,
   "properties": {
@@ -53,6 +54,31 @@
             "$ref": "#/$defs/id"
           },
           "name": {
+            "$ref": "#/$defs/localized"
+          }
+        }
+      }
+    },
+    "series": {
+      "description": "Every series, in menu order. Each gets a hub at /series/<id>/, even before it has posts (noindex until the first post).",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "summary"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/id"
+          },
+          "name": {
+            "$ref": "#/$defs/localized"
+          },
+          "summary": {
+            "description": "One sentence, used on the homepage card and as the topic page description.",
             "$ref": "#/$defs/localized"
           }
         }
