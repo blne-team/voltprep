@@ -89,7 +89,21 @@ All four variables must be supplied together. They are public identifiers, not c
 
 ## Cloudflare
 
-`wrangler.jsonc` serves `dist/` through Workers Static Assets. Wrangler is pinned locally; use the repository scripts rather than a global installation.
+`wrangler.jsonc` serves `dist/` through Workers Static Assets, as the `faraday-fieldbook` Worker on `https://notes.tokenflake.com/`.
+
+### Deploying
+
+The Worker is connected to this GitHub repository through Cloudflare Workers Builds. Every push to `main` builds and deploys the site; merge work into `main` through a pull request.
+
+- Build command `npm run verify`, so a failed check stops the deploy; deploy command `npx wrangler deploy`.
+- `.env` is not committed, so Cloudflare builds read their settings from Workers & Pages → `faraday-fieldbook` → Settings → Build → Variables and secrets: `SITE_URL`, `PUBLIC_GOOGLE_ADSENSE_*` and `GISCUS_*`. These are build variables; the Worker's runtime variables have no effect on a static site. A new value applies from the next build.
+- Node comes from `.nvmrc`.
+
+After a deploy, check that the live homepage has a canonical URL and no `noindex`, and that `/robots.txt` and `/ads.txt` are filled in. A `noindex` page means the build ran without `SITE_URL`.
+
+### Local scripts
+
+Wrangler is pinned locally; use the repository scripts rather than a global installation. A local deploy uses `.env` and bypasses the GitHub flow, so keep it for emergencies.
 
 ```bash
 npm run cf:check   # Verify and dry-run the package
