@@ -1,0 +1,20 @@
+---
+// Supply, a long out-and-back run drawn in copper (the heat), and the load.
+interface Props { labels: Record<string, string>; description: string; title: string }
+const { labels, description, title } = Astro.props;
+---
+
+<figure class="view sketch">
+  <figcaption>{title}</figcaption>
+  <svg viewBox="0 0 360 220" role="img" aria-label={description} data-sketch-svg>
+    <g class="cell"><line x1="32" y1="100" x2="68" y2="100" /><line class="short" x1="40" y1="120" x2="60" y2="120" /></g>
+    <path class="wire" d="M50 100 V60 H80 M50 120 V160 H80 M280 60 H310 V90 M280 160 H310 V130" />
+    <path class="run heat" d="M80 60 H280 M80 160 H280" />
+    <rect class="part" x="296" y="90" width="28" height="40" />
+    <path class="flow" d="M150 76 H210 m-10 -6 l10 6 l-10 6" />
+    <text x="8" y="140" data-sketch="supply">{labels.supply}</text>
+    <text x="180" y="96" text-anchor="middle" class="flow-label" data-sketch="current">{labels.current}</text>
+    <text x="180" y="186" text-anchor="middle" class="heat-label" data-sketch="drop">{labels.drop}</text>
+    <text x="350" y="150" text-anchor="end" data-sketch="load">{labels.load}</text>
+  </svg>
+</figure>

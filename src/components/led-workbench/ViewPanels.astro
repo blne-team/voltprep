@@ -1,0 +1,44 @@
+---
+// The readout, flags and the four views for one scenario, rendered from a ScenarioView.
+import type { CommonCopy } from './copy/common';
+import type { ScenarioView } from './views';
+
+interface Props {
+  view: ScenarioView;
+  labels: Record<string, string>;
+  primary: string;
+  common: CommonCopy;
+}
+
+const { view, labels, primary, common } = Astro.props;
+---
+
+<section class="readout" aria-live="polite">
+  <h3>{common.readout}</h3>
+  <dl>
+    {Object.entries(labels).map(([key, label]) => (
+      <div class:list={{ primary: key === primary }}>
+        <dt>{label}</dt>
+        <dd data-out={key}>{view.readout[key]}</dd>
+      </div>
+    ))}
+  </dl>
+  <h3>{common.flags}</h3>
+  <ul class="flags" data-flags data-all-clear={common.allClear}>
+    {view.flags.length === 0 ? <li class="clear">{common.allClear}</li> : view.flags.map((flag) => <li>{flag}</li>)}
+  </ul>
+</section>
+<div class="view words">
+  <h3>{common.views.words}</h3>
+  <p data-view="words">{view.words}</p>
+</div>
+<div class="view maths">
+  <h3>{common.views.maths}</h3>
+  <ol data-steps>
+    {view.steps.map((step) => <li><span>{step.label}</span><code>{step.maths}</code></li>)}
+  </ol>
+</div>
+<div class="view meter">
+  <h3>{common.views.meter}</h3>
+  <p data-view="meter">{view.meter}</p>
+</div>

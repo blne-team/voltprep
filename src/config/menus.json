@@ -9,7 +9,8 @@
         "overview": "All theory tools",
         "children": [
           { "label": "Series RLC analyzer", "href": "/tools/series-rlc/", "description": "Impedance, phase and AC power" },
-          { "label": "Three-phase power", "href": "/tools/three-phase-power/", "description": "Apparent, real and reactive power" }
+          { "label": "Three-phase power", "href": "/tools/three-phase-power/", "description": "Apparent, real and reactive power" },
+          { "label": "LED resistor calculator", "href": "/tools/led-resistor-calculator/", "description": "Resistor value, wattage, wire drop and battery sag" }
         ]
       }
     ],
@@ -21,7 +22,8 @@
         "overview": "Tous les outils théoriques",
         "children": [
           { "label": "Analyseur RLC série", "href": "/fr/tools/series-rlc/", "description": "Impédance, phase et puissances CA" },
-          { "label": "Puissance triphasée", "href": "/fr/tools/three-phase-power/", "description": "Puissances apparente, active et réactive" }
+          { "label": "Puissance triphasée", "href": "/fr/tools/three-phase-power/", "description": "Puissances apparente, active et réactive" },
+          { "label": "Résistance pour LED", "href": "/fr/tools/led-resistor-calculator/", "description": "Valeur, puissance, chute de ligne et pile sous charge" }
         ]
       }
     ],
@@ -33,7 +35,8 @@
         "overview": "全部理论工具",
         "children": [
           { "label": "RLC 串联分析器", "href": "/zh/tools/series-rlc/", "description": "阻抗、相位和交流功率" },
-          { "label": "三相功率", "href": "/zh/tools/three-phase-power/", "description": "视在功率、有功功率和无功功率" }
+          { "label": "三相功率", "href": "/zh/tools/three-phase-power/", "description": "视在功率、有功功率和无功功率" },
+          { "label": "LED 限流电阻计算", "href": "/zh/tools/led-resistor-calculator/", "description": "电阻值、功率、线路压降和电池压降" }
         ]
       }
     ]

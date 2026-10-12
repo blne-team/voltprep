@@ -1,0 +1,160 @@
+/* LED resistor scenario workbench. Self-contained instrument panel: the readout keeps local colour
+   variables like ElectricalCalculator; everything else uses the site tokens. */
+led-workbench {
+  --lw-current: var(--ff-lime);
+  --lw-heat: var(--ff-copper);
+  --lw-instrument: #173e47;
+  --lw-screen: #d9eea8;
+  --lw-signal: #e06d3f;
+  --lw-on-instrument: #eef6f2;
+  --lw-on-screen: #17352f;
+  --lw-readout: #d9eea8;
+  --lw-ok: #a8c95f;
+  display: block;
+  container-type: inline-size;
+  margin-block: 2rem 2.75rem;
+  border: 1px solid var(--sl-color-hairline);
+  box-shadow: 0.6rem 0.6rem 0 color-mix(in srgb, var(--sl-color-text) 8%, transparent);
+}
+
+:root[data-theme='light'] led-workbench { --lw-current: var(--ff-green); }
+
+led-workbench [hidden] { display: none !important; }
+
+led-workbench .tabs {
+  display: flex;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--sl-color-hairline);
+  background: color-mix(in srgb, var(--sl-color-bg) 90%, var(--ff-visual));
+}
+
+led-workbench .tabs button {
+  padding: 0.75rem 1.1rem;
+  border: 0;
+  border-right: 1px solid var(--sl-color-hairline);
+  background: transparent;
+  color: var(--sl-color-gray-2);
+  font: inherit;
+  font-family: var(--ff-font-mono);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+led-workbench .tabs button[aria-selected='true'] { background: var(--sl-color-text); color: var(--sl-color-bg); }
+led-workbench .tabs button:focus-visible,
+led-workbench a:focus-visible,
+led-workbench input:focus-visible,
+led-workbench select:focus-visible { outline: 2px solid var(--sl-color-accent); outline-offset: 2px; }
+
+led-workbench .scenario + .scenario { border-top: 1px solid var(--sl-color-hairline); }
+led-workbench .scenario > header { padding: 1.25rem clamp(1rem, 3vw, 1.75rem) 0; }
+led-workbench h2 { margin: 0; font-size: clamp(1.2rem, 3vw, 1.5rem); }
+led-workbench header p { max-width: 48rem; margin: 0.4rem 0 0; color: var(--sl-color-gray-2); }
+led-workbench h3 { margin: 0 0 0.75rem; font-size: 0.85rem; font-weight: 700; }
+
+led-workbench .bench {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: 'controls' 'readout' 'sketch' 'words' 'maths' 'meter';
+  gap: 1px;
+  margin-top: 1rem;
+  border-top: 1px solid var(--sl-color-hairline);
+  background: var(--sl-color-hairline);
+}
+
+led-workbench .bench > * { min-width: 0; margin: 0; padding: clamp(1rem, 3vw, 1.5rem); background: var(--sl-color-bg); }
+led-workbench .controls { grid-area: controls; }
+led-workbench .inputs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.85rem; align-content: start; }
+led-workbench .inputs .wide { grid-column: 1 / -1; }
+led-workbench .static-values { display: grid; gap: 0.5rem; margin: 0; }
+led-workbench .static-values div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.25rem 1rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--sl-color-hairline); font-size: 0.85rem; }
+led-workbench .static-values dt { color: var(--sl-color-gray-3); }
+led-workbench .static-values dd { margin: 0; font-family: var(--sl-font-heading); font-weight: 650; }
+led-workbench .readout { grid-area: readout; }
+led-workbench .sketch { grid-area: sketch; }
+led-workbench .words { grid-area: words; }
+led-workbench .maths { grid-area: maths; }
+led-workbench .meter { grid-area: meter; }
+
+led-workbench .field { display: grid; gap: 0.35rem; color: var(--sl-color-white); font-size: 0.8rem; font-weight: 650; }
+led-workbench .field small { margin-left: 0.4rem; color: var(--sl-color-gray-3); font-weight: 500; }
+led-workbench .field-input { display: grid; grid-template-columns: minmax(0, 1fr) auto; }
+led-workbench .field-input b { display: grid; min-width: 2.6rem; padding-inline: 0.4rem; place-items: center; border: 1px solid var(--sl-color-hairline); border-left: 0; color: var(--sl-color-gray-3); font-size: 0.75rem; }
+led-workbench input,
+led-workbench select {
+  width: 100%;
+  min-width: 0;
+  min-height: 2.75rem;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--sl-color-hairline);
+  border-radius: 0;
+  background: var(--sl-color-bg);
+  color: var(--sl-color-text);
+  font: inherit;
+  font-size: 1rem;
+}
+led-workbench input[aria-invalid='true'] { border-color: var(--sl-color-red); }
+led-workbench .source { margin: 0; color: var(--sl-color-gray-3); font-size: 0.75rem; }
+led-workbench .field-error { margin: 0; padding: 0.6rem 0.75rem; border: 1px solid var(--sl-color-red); color: var(--sl-color-text); font-weight: 650; }
+
+led-workbench .readout {
+  background-color: var(--lw-instrument);
+  background-image: radial-gradient(circle at 1px 1px, rgb(255 255 255 / 0.06) 1px, transparent 0);
+  background-size: 1rem 1rem;
+  color: var(--lw-on-instrument);
+}
+led-workbench .readout dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0 0 1.25rem; border-top: 1px solid rgb(255 255 255 / 0.18); border-left: 1px solid rgb(255 255 255 / 0.18); }
+led-workbench .readout dl > div { min-width: 0; padding: 0.75rem; border-right: 1px solid rgb(255 255 255 / 0.18); border-bottom: 1px solid rgb(255 255 255 / 0.18); }
+led-workbench .readout dl > div.primary { grid-column: 1 / -1; background: var(--lw-screen); color: var(--lw-on-screen); }
+led-workbench .readout dt { opacity: 0.8; font-size: 0.7rem; font-weight: 650; }
+led-workbench .readout dd { margin: 0.3rem 0 0; color: var(--lw-readout); font-family: var(--sl-font-heading); font-size: clamp(1rem, 3vw, 1.2rem); font-variant-numeric: tabular-nums; font-weight: 700; overflow-wrap: anywhere; }
+led-workbench .readout .primary dd { color: var(--lw-on-screen); font-size: clamp(1.4rem, 5vw, 2rem); }
+led-workbench .flags { display: grid; gap: 0.5rem; margin: 0; padding: 0; list-style: none; }
+led-workbench .flags li { padding: 0.55rem 0.7rem; border-left: 3px solid var(--lw-signal); background: rgb(0 0 0 / 0.18); font-size: 0.85rem; line-height: 1.45; }
+led-workbench .flags li.clear { border-left-color: var(--lw-ok); }
+
+led-workbench .sketch figcaption { margin-bottom: 0.5rem; font-size: 0.85rem; font-weight: 700; }
+led-workbench .sketch svg { display: block; width: 100%; max-width: 30rem; height: auto; margin-inline: auto; }
+led-workbench .sketch text { fill: var(--sl-color-text); font-family: var(--sl-font-heading); font-size: 13px; }
+led-workbench .sketch .wire,
+led-workbench .sketch .cell line,
+led-workbench .sketch .part,
+led-workbench .sketch .box { fill: none; stroke: var(--sl-color-gray-2); stroke-width: 2; }
+led-workbench .sketch .cell .short { stroke-width: 5; }
+led-workbench .sketch .box { stroke-dasharray: 5 4; stroke-width: 1; }
+led-workbench .sketch .heat,
+led-workbench .sketch .run { stroke: var(--lw-heat); }
+led-workbench .sketch .run { fill: none; stroke-width: 4; }
+led-workbench .sketch .emit { fill: none; stroke: var(--sl-color-gray-3); stroke-width: 1.5; }
+led-workbench .sketch .flow { fill: none; stroke: var(--lw-current); stroke-width: 2.5; }
+led-workbench .sketch .terminal { fill: var(--sl-color-bg); stroke: var(--sl-color-gray-2); stroke-width: 2; }
+led-workbench .sketch .flow-label { fill: var(--lw-current); }
+led-workbench .sketch .heat-label { fill: var(--lw-heat); }
+
+led-workbench .words p { margin: 0; font-family: var(--ff-font-quote); font-size: 1.05rem; line-height: 1.6; }
+led-workbench .meter p { margin: 0; line-height: 1.55; }
+led-workbench .maths ol { display: grid; gap: 0.7rem; margin: 0; padding-left: 1.25rem; }
+led-workbench .maths li span { display: block; color: var(--sl-color-gray-3); font-size: 0.78rem; }
+led-workbench .maths code { display: inline-block; margin-top: 0.15rem; padding: 0; background: none; color: var(--sl-color-text); font-family: var(--ff-font-quote); font-size: 0.95rem; overflow-wrap: anywhere; white-space: normal; }
+
+led-workbench .educational-note { display: flex; gap: 0.75rem; margin: 0; padding: 0.9rem 1rem; border-top: 1px solid var(--sl-color-hairline); color: var(--sl-color-gray-2); font-size: 0.78rem; }
+led-workbench .educational-note span { display: grid; flex: 0 0 1.2rem; height: 1.2rem; place-items: center; border-radius: 50%; background: var(--lw-signal); color: white; font-weight: 800; }
+
+@container (min-width: 44rem) {
+  led-workbench .bench {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas: 'controls readout' 'sketch words' 'maths meter';
+  }
+}
+
+@container (min-width: 68rem) {
+  led-workbench .bench {
+    grid-template-columns: minmax(16rem, 0.9fr) minmax(0, 1.1fr) minmax(18rem, 1fr);
+    grid-template-areas: 'controls sketch readout' 'controls words readout' 'maths maths meter';
+  }
+}
+
+@container (max-width: 30rem) {
+  led-workbench .inputs,
+  led-workbench .readout dl { grid-template-columns: minmax(0, 1fr); }
+}

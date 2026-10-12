@@ -1,0 +1,10 @@
+---
+// The values the server-rendered answer was worked out from. Shown without JavaScript in place of the
+// live form (controls stay hidden until the script runs); the script hides this list.
+interface Props { items: { label: string; value: string }[] }
+const { items } = Astro.props;
+---
+
+<dl class="static-values" data-static>
+  {items.map((item) => <div><dt>{item.label}</dt><dd>{item.value}</dd></div>)}
+</dl>

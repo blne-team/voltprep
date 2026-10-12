@@ -1,0 +1,23 @@
+---
+// A cell drawn as an ideal EMF behind its internal resistance (dashed box), feeding the load.
+interface Props { labels: Record<string, string>; description: string; title: string }
+const { labels, description, title } = Astro.props;
+---
+
+<figure class="view sketch">
+  <figcaption>{title}</figcaption>
+  <svg viewBox="0 0 360 220" role="img" aria-label={description} data-sketch-svg>
+    <rect class="box" x="24" y="30" width="130" height="160" />
+    <g class="cell"><line x1="42" y1="100" x2="78" y2="100" /><line class="short" x1="50" y1="120" x2="70" y2="120" /></g>
+    <path class="wire" d="M60 100 V60 H90 M130 60 H250 V90 M250 130 V170 H60 V120" />
+    <rect class="part heat" x="90" y="50" width="40" height="20" />
+    <rect class="part" x="236" y="90" width="28" height="40" />
+    <circle class="terminal" cx="154" cy="60" r="4" /><circle class="terminal" cx="154" cy="170" r="4" />
+    <path class="flow" d="M180 60 H230 m-10 -6 l10 6 l-10 6" />
+    <text x="30" y="150" data-sketch="emf">{labels.emf}</text>
+    <text x="110" y="44" text-anchor="middle" class="heat-label" data-sketch="internal">{labels.internal}</text>
+    <text x="272" y="114" data-sketch="load">{labels.load}</text>
+    <text x="164" y="120" data-sketch="terminal">{labels.terminal}</text>
+    <text x="205" y="196" text-anchor="middle" class="flow-label" data-sketch="current">{labels.current}</text>
+  </svg>
+</figure>
