@@ -15,7 +15,7 @@ const root = {
   },
   colours: { red: 'Red', yellow: 'Yellow', blue: 'Blue', white: 'White' } as Record<string, string>,
   presetOption: (colour: string, part: string, vf: string, at: string) => `${colour}: ${part} (${vf} typical at ${at})`,
-  seriesOption: { E24: 'E24 (5 % parts)', E12: 'E12 (10 % parts)' },
+  seriesOption: { E24: 'E24 (5% parts)', E12: 'E12 (10% parts)' },
   maxBelowTyp: 'The maximum forward voltage can’t be below the typical one.',
   readout: {
     resistance: 'Resistor to fit',
@@ -74,7 +74,7 @@ const fr: LedCopy = {
   },
   colours: { red: 'Rouge', yellow: 'Jaune', blue: 'Bleue', white: 'Blanche' },
   presetOption: (colour, part, vf, at) => `${colour} : ${part} (${vf} typique à ${at})`,
-  seriesOption: { E24: 'E24 (pièces à 5 %)', E12: 'E12 (pièces à 10 %)' },
+  seriesOption: { E24: 'E24 (pièces à 5\u00a0%)', E12: 'E12 (pièces à 10\u00a0%)' },
   maxBelowTyp: 'La tension directe maximale ne peut pas être inférieure à la typique.',
   readout: {
     resistance: 'Résistance à poser',

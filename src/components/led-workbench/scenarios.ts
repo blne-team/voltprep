@@ -37,6 +37,11 @@ export function readLed(raw: (name: string) => string, series: SeriesName): Read
 export const readWire = (raw: (name: string) => string): Read<WireInput> => readFields(wireFields, raw);
 export const readBattery = (raw: (name: string) => string): Read<BatteryInput> => readFields(batteryFields, raw);
 
+/** The single state path: a valid read is solved into its view; an invalid one gets the unavailable view. */
+export function viewFor<T, V>(read: Read<T>, solve: (input: T) => V, unavailable: (problem: FieldProblem) => V): { view: V; problem: FieldProblem | null } {
+  return read.ok ? { view: solve(read.input), problem: null } : { view: unavailable(read.problem), problem: read.problem };
+}
+
 /** The value a field is rendered with, as text (empty for an optional field without a default). */
 export const defaultText = (spec: FieldSpec) => (spec.value === null ? '' : String(spec.value));
 export const defaults = (specs: Record<string, FieldSpec>) => (name: string) => defaultText(specs[name]);

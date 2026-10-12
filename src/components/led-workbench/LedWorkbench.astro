@@ -3,7 +3,7 @@
 // and shown in four views. Fully rendered on the server; the script makes it live.
 import { getContentLocale, pick, siteConfig } from '../../config/site';
 import { createFormatter } from '../../lib/led-workbench/format';
-import { batteryFields, ledFields, wireFields } from '../../lib/led-workbench/fields';
+import { batteryFields, ledFields, wireFields, type FieldSpec } from '../../lib/led-workbench/fields';
 import { batteryPresets, ledPresets } from '../../lib/led-workbench/data';
 import { sources } from '../../lib/led-workbench/sources';
 import { eSeries } from '../../lib/led-workbench/e-series';
@@ -18,6 +18,7 @@ import { batteryView, ledView, wireView } from './views';
 import { defaults, readBattery, readLed, readWire } from './scenarios';
 import NumberField from './NumberField.astro';
 import ViewPanels from './ViewPanels.astro';
+import StaticValues from './StaticValues.astro';
 import LedSketch from './sketches/LedSketch.astro';
 import WireSketch from './sketches/WireSketch.astro';
 import BatterySketch from './sketches/BatterySketch.astro';
@@ -55,6 +56,18 @@ const batteryOptions = batteryPresets.map((preset) => ({
 }));
 const ledSource = sources[ledPresets[0].source];
 const batterySource = sources[batteryPresets[0].source];
+// Label/value pairs for the no-JS list, read from the same field defaults the answer was solved with.
+const fieldItems = (specs: Record<string, FieldSpec>, labels: Record<string, string>) =>
+  Object.entries(specs).flatMap(([name, spec]) =>
+    spec.value === null ? [] : [{ label: labels[name], value: spec.unit ? f.exact(spec.value, spec.unit) : f.count(spec.value) }],
+  );
+const { preset: ledPresetLabel, series: seriesLabel, ...ledLabels } = led.fields;
+const { preset: batteryPresetLabel, ...batteryLabels } = battery.fields;
+const staticItems = {
+  led: [{ label: ledPresetLabel, value: ledOptions[0].text }, ...fieldItems(ledFields, ledLabels), { label: seriesLabel, value: led.seriesOption.E24 }],
+  wire: fieldItems(wireFields, wire.fields),
+  battery: [{ label: batteryPresetLabel, value: batteryOptions[0].text }, ...fieldItems(batteryFields, batteryLabels)],
+};
 const tabs = [
   { id: 'led', label: led.tab },
   { id: 'wire', label: wire.tab },
@@ -74,8 +87,10 @@ const tabs = [
   <section class="scenario" id="lw-panel-led" role="tabpanel" aria-labelledby="lw-tab-led" data-scenario="led">
     <header><h2>{led.title}</h2><p>{led.intro}</p></header>
     <div class="bench">
-      <form class="controls" data-form="led" novalidate>
-        <h3>{common.controls}</h3>
+      <div class="controls">
+      <h3>{common.controls}</h3>
+      <StaticValues items={staticItems.led} />
+      <form class="inputs" data-form="led" novalidate hidden>
         <NumberField name="supplyVoltage" label={led.fields.supplyVoltage} spec={ledFields.supplyVoltage} />
         <label class="field wide">
           <span class="field-label">{led.fields.preset}</span>
@@ -98,6 +113,7 @@ const tabs = [
         </label>
         <p class="field-error wide" data-error role="alert" hidden></p>
       </form>
+      </div>
       <LedSketch labels={views.led.sketch} description={views.led.sketchLabel} title={common.views.sketch} />
       <ViewPanels view={views.led} labels={led.readout} primary="resistance" common={common} />
     </div>
@@ -106,14 +122,17 @@ const tabs = [
   <section class="scenario" id="lw-panel-wire" role="tabpanel" aria-labelledby="lw-tab-wire" data-scenario="wire">
     <header><h2>{wire.title}</h2><p>{wire.intro}</p></header>
     <div class="bench">
-      <form class="controls" data-form="wire" novalidate>
-        <h3>{common.controls}</h3>
+      <div class="controls">
+      <h3>{common.controls}</h3>
+      <StaticValues items={staticItems.wire} />
+      <form class="inputs" data-form="wire" novalidate hidden>
         {Object.entries(wireFields).map(([name, spec]) => (
           <NumberField name={name} label={wire.fields[name as keyof typeof wireFields]} spec={spec} />
         ))}
         <p class="source wide">{common.source}: <a href={sources.nbsCopper.url}>{sources.nbsCopper.title}</a></p>
         <p class="field-error wide" data-error role="alert" hidden></p>
       </form>
+      </div>
       <WireSketch labels={views.wire.sketch} description={views.wire.sketchLabel} title={common.views.sketch} />
       <ViewPanels view={views.wire} labels={wire.readout} primary="drop" common={common} />
     </div>
@@ -122,8 +141,10 @@ const tabs = [
   <section class="scenario" id="lw-panel-battery" role="tabpanel" aria-labelledby="lw-tab-battery" data-scenario="battery">
     <header><h2>{battery.title}</h2><p>{battery.intro}</p></header>
     <div class="bench">
-      <form class="controls" data-form="battery" novalidate>
-        <h3>{common.controls}</h3>
+      <div class="controls">
+      <h3>{common.controls}</h3>
+      <StaticValues items={staticItems.battery} />
+      <form class="inputs" data-form="battery" novalidate hidden>
         <label class="field wide">
           <span class="field-label">{battery.fields.preset}</span>
           <select name="preset" data-preset>
@@ -138,6 +159,7 @@ const tabs = [
         <NumberField name="cutoffVoltage" label={battery.fields.cutoffVoltage} spec={batteryFields.cutoffVoltage} note={common.optional} />
         <p class="field-error wide" data-error role="alert" hidden></p>
       </form>
+      </div>
       <BatterySketch labels={views.battery.sketch} description={views.battery.sketchLabel} title={common.views.sketch} />
       <ViewPanels view={views.battery} labels={battery.readout} primary="terminalVoltage" common={common} />
     </div>

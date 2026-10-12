@@ -1,7 +1,7 @@
 // Turns a solver result into the text of the four views (words, sketch, maths, meter) plus the readout and flags.
 // The server renders the default state with these and the browser script refreshes them, so both stay identical.
 import type { Formatter } from '../../lib/led-workbench/format.ts';
-import { copper } from '../../lib/led-workbench/data.ts';
+import { copper, rulesOfThumb } from '../../lib/led-workbench/data.ts';
 import type { LedInput, LedResult } from '../../lib/led-workbench/led.ts';
 import type { WireInput, WireResult } from '../../lib/led-workbench/wire.ts';
 import type { BatteryInput, BatteryResult } from '../../lib/led-workbench/battery.ts';
@@ -25,6 +25,12 @@ export interface ScenarioView {
 }
 
 const DASH = '—';
+const dashes = (keys: string[]) => Object.fromEntries(keys.map((key) => [key, DASH]));
+
+/** The view when the inputs can't be solved: every number cleared, the reason in the flags and words. */
+export function unavailableView(readoutKeys: string[], sketchKeys: string[], message: string): ScenarioView {
+  return { readout: dashes(readoutKeys), flags: [message], words: message, steps: [], meter: DASH, sketch: dashes(sketchKeys), sketchLabel: message };
+}
 
 export function ledView(input: LedInput, result: LedResult, copy: LedCopy, f: Formatter): ScenarioView {
   const supply = f.volts(input.supplyVoltage);
@@ -34,7 +40,7 @@ export function ledView(input: LedInput, result: LedResult, copy: LedCopy, f: Fo
 
   if (result.status === 'no-headroom') {
     return {
-      readout: Object.fromEntries(Object.keys(copy.readout).map((key) => [key, DASH])),
+      readout: dashes(Object.keys(copy.readout)),
       flags: [copy.flags.noHeadroom(string, supply)],
       words: copy.wordsNoHeadroom({ supply, leds, string }),
       steps: [{ label: copy.steps.headroom, maths: `${supply} − ${vfSketch} = ${f.volts(result.headroom)}` }],
@@ -112,7 +118,7 @@ export function wireView(input: WireInput, result: WireResult, copy: WireCopy, f
   const heat = f.watts(result.heat);
   const load = f.volts(result.loadVoltage);
   const flags = [copy.flags.heat(heat, conductor)];
-  if (result.flags.includes('high-loss')) flags.unshift(copy.flags.highLoss(f.percent(result.dropFraction)));
+  if (result.flags.includes('high-loss')) flags.unshift(copy.flags.highLoss(f.percent(rulesOfThumb.lossFraction), f.percent(result.dropFraction)));
   return {
     readout: { resistance: f.ohms(result.resistance), drop, dropFraction: f.percent(result.dropFraction), heat, loadVoltage: load },
     flags,
@@ -139,7 +145,7 @@ export function batteryView(input: BatteryInput, result: BatteryResult, copy: Ba
   const sag = f.volts(result.sag);
   const flags: string[] = [];
   if (result.flags.includes('brownout') && input.cutoffVoltage !== null) flags.push(copy.flags.brownout(terminal, f.volts(input.cutoffVoltage)));
-  if (result.flags.includes('high-internal-loss')) flags.push(copy.flags.highLoss(f.percent(result.lostFraction)));
+  if (result.flags.includes('high-internal-loss')) flags.push(copy.flags.highLoss(f.percent(rulesOfThumb.lossFraction), f.percent(result.lostFraction)));
 
   return {
     readout: {

@@ -12,8 +12,8 @@ import { commonCopy, type CommonCopy } from './copy/common';
 import { ledCopy } from './copy/led';
 import { wireCopy } from './copy/wire';
 import { batteryCopy } from './copy/battery';
-import { batteryView, ledView, wireView, type ScenarioView } from './views';
-import { readBattery, readLed, readWire, type FieldProblem, type Read } from './scenarios';
+import { batteryView, ledView, unavailableView, wireView, type ScenarioView } from './views';
+import { readBattery, readLed, readWire, viewFor, type FieldProblem, type Read } from './scenarios';
 
 type Scenario = 'led' | 'wire' | 'battery';
 
@@ -34,24 +34,34 @@ class LedWorkbench extends HTMLElement {
 
     const f = createFormatter(language);
     const common = pick(commonCopy, locale);
+    const copies = { led: pick(ledCopy, locale), wire: pick(wireCopy, locale), battery: pick(batteryCopy, locale) };
     const solvers: Record<Scenario, (form: HTMLFormElement) => Read<ScenarioView>> = {
       led: (form) => {
         const series = eSeriesName(field(form, 'series'));
-        return mapRead(readLed((name) => field(form, name), series), (input) => ledView(input, solveLed(input), pick(ledCopy, locale), f));
+        return mapRead(readLed((name) => field(form, name), series), (input) => ledView(input, solveLed(input), copies.led, f));
       },
-      wire: (form) => mapRead(readWire((name) => field(form, name)), (input) => wireView(input, solveWire(input), pick(wireCopy, locale), f)),
-      battery: (form) => mapRead(readBattery((name) => field(form, name)), (input) => batteryView(input, solveBattery(input), pick(batteryCopy, locale), f)),
+      wire: (form) => mapRead(readWire((name) => field(form, name)), (input) => wireView(input, solveWire(input), copies.wire, f)),
+      battery: (form) => mapRead(readBattery((name) => field(form, name)), (input) => batteryView(input, solveBattery(input), copies.battery, f)),
     };
-    const maxBelowTyp = pick(ledCopy, locale).maxBelowTyp;
 
     for (const panel of this.querySelectorAll<HTMLElement>('[data-scenario]')) {
       const scenario = panel.dataset.scenario as Scenario;
       const form = panel.querySelector<HTMLFormElement>('form');
       if (!form) throw new Error(`Scenario ${scenario} has no form`);
+      const readoutKeys = Object.keys(copies[scenario].readout);
+      const sketchKeys = [...panel.querySelectorAll<SVGTextElement>('[data-sketch]')].map((text) => text.dataset.sketch ?? '');
       const update = () => {
-        const read = solvers[scenario](form);
-        showProblem(panel, form, read.ok ? null : read.problem, fieldSpecs[scenario], common, f, maxBelowTyp);
-        if (read.ok) render(panel, read.input);
+        let message = '';
+        const { view, problem } = viewFor(
+          solvers[scenario](form),
+          (solved) => solved,
+          (found) => {
+            message = problemMessage(form, found, fieldSpecs[scenario], common, f, copies.led.maxBelowTyp);
+            return unavailableView(readoutKeys, sketchKeys, message);
+          },
+        );
+        markProblem(form, problem, message);
+        render(panel, view);
       };
       form.addEventListener('submit', (event) => event.preventDefault());
       form.addEventListener('input', (event) => {
@@ -60,6 +70,9 @@ class LedWorkbench extends HTMLElement {
         else if (target instanceof HTMLInputElement && target.matches('[data-preset-bound]')) setCustom(form);
         update();
       });
+      // Static values were the no-JS fallback; the live form replaces them.
+      panel.querySelector<HTMLElement>('[data-static]')?.setAttribute('hidden', '');
+      form.hidden = false;
     }
     this.setupTabs();
   }
@@ -129,27 +142,28 @@ function setCustom(form: HTMLFormElement): void {
   if (source) source.hidden = true;
 }
 
-function showProblem(panel: HTMLElement, form: HTMLFormElement, problem: FieldProblem | null, specs: Record<string, FieldSpec>, common: CommonCopy, f: Formatter, maxBelowTyp: string): void {
-  const error = form.querySelector<HTMLElement>('[data-error]');
-  for (const input of form.querySelectorAll('input')) input.removeAttribute('aria-invalid');
-  panel.toggleAttribute('data-stale', problem !== null);
-  if (!error) return;
-  error.hidden = problem === null;
-  if (!problem) return;
+function problemMessage(form: HTMLFormElement, problem: FieldProblem, specs: Record<string, FieldSpec>, common: CommonCopy, f: Formatter, maxBelowTyp: string): string {
   const input = form.elements.namedItem(problem.field) as HTMLInputElement;
-  input.setAttribute('aria-invalid', 'true');
   const label = input.dataset.label ?? problem.field;
   const spec = specs[problem.field];
-  error.textContent =
-    problem.reason === 'max-below-typ' ? maxBelowTyp
+  return problem.reason === 'max-below-typ' ? maxBelowTyp
     : problem.reason === 'empty' ? common.invalid.empty(label)
     : problem.reason === 'not-a-number' ? common.invalid.notNumber(label)
     : common.invalid.range(label, f.exact(spec.min, spec.unit), f.exact(spec.max, spec.unit));
 }
 
+function markProblem(form: HTMLFormElement, problem: FieldProblem | null, message: string): void {
+  for (const input of form.querySelectorAll('input')) input.removeAttribute('aria-invalid');
+  if (problem) (form.elements.namedItem(problem.field) as HTMLInputElement).setAttribute('aria-invalid', 'true');
+  const error = form.querySelector<HTMLElement>('[data-error]');
+  if (!error) return;
+  error.hidden = problem === null;
+  error.textContent = message;
+}
+
 function render(panel: HTMLElement, view: ScenarioView): void {
-  for (const out of panel.querySelectorAll<HTMLElement>('[data-out]')) out.textContent = view.readout[out.dataset.out ?? ''] ?? '—';
-  for (const text of panel.querySelectorAll<SVGTextElement>('[data-sketch]')) text.textContent = view.sketch[text.dataset.sketch ?? ''] ?? '';
+  for (const out of panel.querySelectorAll<HTMLElement>('[data-out]')) out.textContent = view.readout[out.dataset.out ?? ''];
+  for (const text of panel.querySelectorAll<SVGTextElement>('[data-sketch]')) text.textContent = view.sketch[text.dataset.sketch ?? ''];
   panel.querySelector('[data-sketch-svg]')?.setAttribute('aria-label', view.sketchLabel);
   const words = panel.querySelector('[data-view="words"]');
   if (words) words.textContent = view.words;

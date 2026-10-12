@@ -21,7 +21,7 @@ const root = {
   },
   flags: {
     brownout: (terminal: string, cutoff: string) => `The terminal voltage falls to ${terminal}, below the device’s ${cutoff}: this is why it browns out under load.`,
-    highLoss: (share: string) => `More than 10 % of the power is heating the battery (${share}) instead of the load.`,
+    highLoss: (limit: string, share: string) => `More than ${limit} of the power is heating the battery (${share}) instead of the load.`,
   },
   words: (v: { emf: string; current: string; internal: string; sag: string; terminal: string; load: string }) =>
     `With no load the battery reads its ${v.emf}. Connect the load and ${v.current} flows through the battery’s own ${v.internal} too, which takes ${v.sag}. The load is left with ${v.terminal}, and it receives ${v.load}.`,
@@ -61,7 +61,7 @@ const fr: BatteryCopy = {
   },
   flags: {
     brownout: (terminal, cutoff) => `La tension aux bornes tombe à ${terminal}, sous les ${cutoff} de l’appareil : voilà pourquoi il décroche sous charge.`,
-    highLoss: (share) => `Plus de 10 % de la puissance chauffe la pile (${share}) au lieu d’aller à la charge.`,
+    highLoss: (limit, share) => `Plus de ${limit} de la puissance chauffe la pile (${share}) au lieu d’aller à la charge.`,
   },
   words: (v) =>
     `À vide, la pile affiche sa f.é.m. de ${v.emf}. Branchez la charge : ${v.current} traverse aussi la résistance interne de ${v.internal}, qui prend ${v.sag}. Il reste ${v.terminal} à la charge, qui reçoit ${v.load}.`,

@@ -18,7 +18,7 @@ const root = {
     loadVoltage: 'Voltage left at the load',
   },
   flags: {
-    highLoss: (share: string) => `More than 10 % of the supply is lost in the wire (${share}). The load sees noticeably less than the supply.`,
+    highLoss: (limit: string, share: string) => `More than ${limit} of the supply is lost in the wire (${share}). The load sees noticeably less than the supply.`,
     heat: (heat: string, length: string) => `The wire is turning ${heat} into heat along its ${length} of conductor.`,
     exceedsSupply: (current: string, drop: string, supply: string) =>
       `At ${current} this run would drop ${drop}, more than the ${supply} supply. That current can’t flow here; the load would get almost nothing.`,
@@ -60,7 +60,7 @@ const fr: WireCopy = {
     loadVoltage: 'Tension restante à la charge',
   },
   flags: {
-    highLoss: (share) => `Plus de 10 % de l’alimentation se perd dans le câble (${share}). La charge reçoit nettement moins que l’alimentation.`,
+    highLoss: (limit, share) => `Plus de ${limit} de l’alimentation se perd dans le câble (${share}). La charge reçoit nettement moins que l’alimentation.`,
     heat: (heat, length) => `Le câble transforme ${heat} en chaleur sur ses ${length} de conducteur.`,
     exceedsSupply: (current, drop, supply) =>
       `À ${current}, cette ligne ferait chuter ${drop}, plus que les ${supply} de l’alimentation. Ce courant ne peut pas circuler ici; la charge ne recevrait presque rien.`,
