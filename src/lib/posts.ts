@@ -1,6 +1,6 @@
 import { getCollection } from 'astro:content';
 import { defaultLocale, localeKeys, localePrefix, locales, type SiteLocale } from '../config/locales';
-import { topicKeys, type PostKind, type TagKey, type TopicKey } from '../config/taxonomy';
+import { topicKeys, type PostKind, type SeriesKey, type TagKey, type TopicKey } from '../config/taxonomy';
 
 export interface Post {
   title: string;
@@ -9,6 +9,8 @@ export interface Post {
   topic: TopicKey;
   tags: TagKey[];
   kind: PostKind;
+  series?: SeriesKey;
+  seriesOrder?: number;
   published?: Date;
   /** Not translated into this language yet: the page shows the English text. */
   untranslated: boolean;
@@ -33,16 +35,23 @@ export async function getPosts(locale: SiteLocale): Promise<Post[]> {
     ...own.map((entry) => ({ entry, href: `/${entry.id}/`, untranslated: false })),
     ...fallback.map((entry) => ({ entry, href: `${localePrefix(locale)}/${entry.id}/`, untranslated: true })),
   ]
-    .map(({ entry, href, untranslated }) => ({
+    .map(({ entry, href, untranslated }) => {
+      if (entry.data.seriesOrder !== undefined && entry.data.series === undefined) {
+        throw new Error(`${entry.filePath}: seriesOrder is set but series is not; add a series or remove seriesOrder`);
+      }
+      return {
       title: entry.data.title,
       description: entry.data.description ?? '',
       href,
       topic: entry.data.topic as TopicKey,
       tags: entry.data.tags,
       kind: entry.data.kind,
+      series: entry.data.series,
+      seriesOrder: entry.data.seriesOrder,
       published: entry.data.published,
       untranslated,
-    }))
+      };
+    })
     .sort((a, b) => (b.published?.getTime() ?? 0) - (a.published?.getTime() ?? 0) || a.title.localeCompare(b.title, locales[locale].language));
 }
 

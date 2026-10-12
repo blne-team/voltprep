@@ -1,0 +1,11 @@
+---
+import TaxonomyRoute from '../../components/TaxonomyRoute.astro';
+import { defaultLocale } from '../../config/locales';
+import { seriesPaths } from '../../lib/taxonomy-routes';
+
+export function getStaticPaths() {
+  return seriesPaths([defaultLocale]).map(({ series }) => ({ params: { series } }));
+}
+---
+
+<TaxonomyRoute locale={defaultLocale} kind="series" series={Astro.params.series} />

@@ -1,5 +1,6 @@
 ---
 import DefaultPageTitle from '@astrojs/starlight/components/PageTitle.astro';
+import SeriesNav from './SeriesNav.astro';
 import { getSiteLocale, localePrefix } from '../config/site';
 import { kindLabels, tagHref, tags, topicHref, topics } from '../config/taxonomy';
 
@@ -20,6 +21,7 @@ const toolsHref = `${localePrefix(locale)}/tools/`;
       </p>
     )}
     <DefaultPageTitle />
+    {topic && <SeriesNav />}
     {postTags.length > 0 && (
       <p class="post-tags">
         {postTags.map((tag) => <a href={tagHref(tag, locale)}>#{tags[tag][locale]}</a>)}

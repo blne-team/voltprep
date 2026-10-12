@@ -1,5 +1,6 @@
-// Loads topics and tags from taxonomy.json (edit that file, not this one). Topics are categories:
+// Loads topics, tags and series from taxonomy.json (edit that file, not this one). Topics are categories:
 // every post belongs to exactly one, and every topic gets a page. Tags cut across topics.
+// Series are ordered reading paths: a post may join one, and every series gets a hub page.
 // The file is checked when the site builds, and post frontmatter is checked against it in content.config.ts.
 import data from './taxonomy.json';
 import { localeKeys, localePrefix, type SiteLocale } from './locales';
@@ -10,6 +11,8 @@ type Localized = Record<SiteLocale, string>;
 export type TopicKey = string;
 /** A tag id from taxonomy.json, such as `ac-circuits`. */
 export type TagKey = string;
+/** A series id from taxonomy.json, such as `electrical-theory`. */
+export type SeriesKey = string;
 
 const fail = (where: string, message: string): never => {
   throw new Error(`src/config/taxonomy.json → ${where}: ${message}`);
@@ -31,7 +34,7 @@ function localized(value: unknown, where: string): Localized {
   return value as Localized;
 }
 
-function entries<T>(name: 'topics' | 'tags', fields: string[], parse: (item: Record<string, unknown>, where: string) => T): [string, T][] {
+function entries<T>(name: 'topics' | 'tags' | 'series', fields: string[], parse: (item: Record<string, unknown>, where: string) => T): [string, T][] {
   const value = (data as Record<string, unknown>)[name];
   if (!Array.isArray(value)) return fail(name, 'expected a list');
   const seen = new Set<string>();
@@ -49,10 +52,12 @@ function entries<T>(name: 'topics' | 'tags', fields: string[], parse: (item: Rec
   });
 }
 
-const topicEntries = entries('topics', ['id', 'name', 'summary'], (item, where) => ({
+const named = (item: Record<string, unknown>, where: string) => ({
   name: localized(item.name, `${where}.name`),
   summary: localized(item.summary, `${where}.summary`),
-}));
+});
+const topicEntries = entries('topics', ['id', 'name', 'summary'], named);
+const seriesEntries = entries('series', ['id', 'name', 'summary'], named);
 const tagEntries = entries('tags', ['id', 'name'], (item, where) => localized(item.name, `${where}.name`));
 if (topicEntries.length === 0) fail('topics', 'add at least one topic');
 
@@ -63,6 +68,10 @@ export const topics: Record<TopicKey, { name: Localized; summary: Localized }> =
 /** Tag ids in display order. */
 export const tagKeys = tagEntries.map(([id]) => id) as TagKey[];
 export const tags: Record<TagKey, Localized> = Object.fromEntries(tagEntries);
+
+/** Series ids in menu order. */
+export const seriesKeys = seriesEntries.map(([id]) => id) as SeriesKey[];
+export const series: Record<SeriesKey, { name: Localized; summary: Localized }> = Object.fromEntries(seriesEntries);
 
 // Kinds stay in code: they change how a post is laid out (`tool` pages get the workbench frame), not just a label.
 export const postKinds = ['guide', 'tool'] as const;
@@ -75,3 +84,4 @@ export const kindLabels: Record<PostKind, Localized> = {
 
 export const topicHref = (key: TopicKey, locale: SiteLocale) => `${localePrefix(locale)}/topics/${key}/`;
 export const tagHref = (key: TagKey, locale: SiteLocale) => `${localePrefix(locale)}/tags/${key}/`;
+export const seriesHref = (key: SeriesKey, locale: SiteLocale) => `${localePrefix(locale)}/series/${key}/`;

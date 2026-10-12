@@ -79,5 +79,59 @@
         "zh": "欧姆定律"
       }
     }
+  ],
+  "series": [
+    {
+      "id": "electrical-equipment",
+      "name": {
+        "root": "Electrical equipment",
+        "fr": "Electrical equipment",
+        "zh": "Electrical equipment"
+      },
+      "summary": {
+        "root": "How everyday electrical equipment works, one device at a time: what is inside it and the theory that makes it do its job.",
+        "fr": "How everyday electrical equipment works, one device at a time: what is inside it and the theory that makes it do its job.",
+        "zh": "How everyday electrical equipment works, one device at a time: what is inside it and the theory that makes it do its job."
+      }
+    },
+    {
+      "id": "electrical-theory",
+      "name": {
+        "root": "Electrical theory",
+        "fr": "Electrical theory",
+        "zh": "Electrical theory"
+      },
+      "summary": {
+        "root": "Electrical theory explained in order, from voltage, current and resistance upward, with every relationship shown several ways.",
+        "fr": "Electrical theory explained in order, from voltage, current and resistance upward, with every relationship shown several ways.",
+        "zh": "Electrical theory explained in order, from voltage, current and resistance upward, with every relationship shown several ways."
+      }
+    },
+    {
+      "id": "electricity-experiments",
+      "name": {
+        "root": "Electricity experiments",
+        "fr": "Electricity experiments",
+        "zh": "Electricity experiments"
+      },
+      "summary": {
+        "root": "The experiments that showed how electricity behaves, retold with what was measured and what it proved.",
+        "fr": "The experiments that showed how electricity behaves, retold with what was measured and what it proved.",
+        "zh": "The experiments that showed how electricity behaves, retold with what was measured and what it proved."
+      }
+    },
+    {
+      "id": "red-seal-electrician",
+      "name": {
+        "root": "Red Seal electrician theory",
+        "fr": "Red Seal electrician theory",
+        "zh": "Red Seal electrician theory"
+      },
+      "summary": {
+        "root": "Theory review for the Red Seal electrician exam: key points, the theory behind them and original prep tips. Not affiliated with the Red Seal program.",
+        "fr": "Theory review for the Red Seal electrician exam: key points, the theory behind them and original prep tips. Not affiliated with the Red Seal program.",
+        "zh": "Theory review for the Red Seal electrician exam: key points, the theory behind them and original prep tips. Not affiliated with the Red Seal program."
+      }
+    }
   ]
 }

@@ -2,7 +2,7 @@
 // The file is checked when the site builds, so a mistake stops the build with a readable message.
 import data from './menus.json';
 import { defaultLocale, localeKeys, locales, type SiteLocale } from './locales';
-import { topicHref, topicKeys, topics } from './taxonomy';
+import { series, seriesHref, seriesKeys, topicHref, topicKeys, topics } from './taxonomy';
 
 type LocaleKey = SiteLocale;
 
@@ -69,14 +69,21 @@ function link(item: unknown, where: string, locale: LocaleKey): NavLink {
   };
 }
 
+const generated = {
+  topics: { keys: topicKeys, entries: topics, href: topicHref },
+  series: { keys: seriesKeys, entries: series, href: seriesHref },
+};
+
 function headerItem(item: unknown, where: string, locale: LocaleKey): NavItem {
   if (!isObject(item)) return fail(where, 'expected a menu item');
-  if ('topics' in item) {
-    only(item, ['label', 'topics'], where);
-    if (item.topics !== true) fail(`${where}.topics`, 'expected true');
+  // Dropdowns filled from taxonomy.json: `{ "label": …, "topics": true }` or `{ "label": …, "series": true }`.
+  for (const [flag, source] of Object.entries(generated)) {
+    if (!(flag in item)) continue;
+    only(item, ['label', flag], where);
+    if (item[flag] !== true) fail(`${where}.${flag}`, 'expected true');
     return {
       label: text(item.label, `${where}.label`)!,
-      children: topicKeys.map((key) => ({ label: topics[key].name[locale], href: topicHref(key, locale) })),
+      children: source.keys.map((key) => ({ label: source.entries[key].name[locale], href: source.href(key, locale) })),
     };
   }
   if (!('children' in item)) return link(item, where, locale);
