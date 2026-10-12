@@ -1,0 +1,112 @@
+---
+title: "La loi d’Ohm : le lien entre tension, courant et résistance"
+description: Ce que dit la loi d’Ohm, pourquoi U = RI vaut pour une résistance mais pas pour une DEL, et comment l’appliquer à un vrai circuit, avec un explicatif interactif.
+editUrl: false
+pageType: article
+topic: electrical
+kind: guide
+tags: [ohms-law]
+---
+
+import OhmsLawExplainer from '../../../components/explainers/OhmsLawExplainer.astro';
+import Predict from '../../../components/explainers/Predict.astro';
+
+Branchez une résistance de 24 Ω sur une alimentation de 12 V, avec un ampèremètre dans la boucle : il indique 0,5 A. Remplacez-la par une résistance de 48 Ω et l’aiguille descend à 0,25 A. Ce rapport régulier entre la poussée et l’opposition, c’est la loi d’Ohm, la première relation que l’on apprend en théorie électrique. Cette page la montre sous quatre angles à la fois, puis montre où elle cesse de s’appliquer.
+
+Il s’agit de matériel d’étude original sur la théorie des circuits. Ce n’est ni un guide du code ni une marche à suivre pour le câblage.
+
+## Ce que dit la loi d’Ohm
+
+Pour une résistance maintenue à température constante, le courant qui la traverse est proportionnel à la tension à ses bornes. Doublez la tension et le courant double. Le rapport entre la tension et le courant ne change pas, et ce rapport fixe, c’est la résistance.
+
+Sous forme de formule, avec la tension en volts, le courant *I* en ampères et *R* en ohms (en anglais on écrit *V* = *IR*, en français souvent *U* = *RI*) :
+
+- *U* = *R* × *I*
+- *I* = *U* ÷ *R*
+- *R* = *U* ÷ *I*
+
+Les unités concordent grâce à la façon dont le SI les définit. La brochure sur le SI du BIPM présente l’ohm (Ω) comme l’unité dérivée cohérente de la résistance électrique, exprimée en V/A, un volt par ampère ([Brochure sur le SI, 9ᵉ édition, tableau 4](https://www.bipm.org/fr/si-brochure-9)). Son annexe historique reprend la définition de 1946 : un ohm est la résistance entre deux points lorsqu’une tension de 1 V entre ces points produit un courant de 1 A dans le conducteur, à condition que celui-ci ne contienne aucune source. Ainsi, « 12 V ÷ 24 Ω = 0,5 A » n’est pas qu’un calcul : les unités disent la même chose.
+
+## Un circuit, quatre représentations
+
+L’explicatif ci-dessous est un explicatif original de Fieldbook. Il contient un seul circuit idéal : une source, une résistance et un ampèremètre, avec des fils sans résistance et une résistance qui ne varie jamais. Déplacez un curseur : la phrase, le croquis, les mathématiques et l’appareil de mesure changent ensemble.
+
+<OhmsLawExplainer />
+
+Partez du réglage par défaut, 12 V aux bornes de 24 Ω. La vue mathématique donne 0,5 A, et la résistance transforme 6 W en chaleur. Essayez maintenant de prédire avant de toucher quoi que ce soit.
+
+<Predict question="Gardez la source à 12 V et doublez la résistance, de 24 Ω à 48 Ω. Qu’arrive-t-il au courant ?">
+
+Il est divisé par deux, de 0,5 A à 0,25 A. À tension fixe, *I* = *U* ÷ *R* : le courant et la résistance varient en sens inverse, du même facteur. Réglez le curseur sur 48 Ω et lisez l’ampèremètre pour vérifier. (Question d’exercice originale.)
+
+</Predict>
+
+## Le triangle aide la mémoire, mais ce n’est pas l’idée
+
+Beaucoup de manuels dessinent un triangle avec la tension en haut, *I* et *R* en bas : cachez la grandeur cherchée et les deux autres indiquent s’il faut multiplier ou diviser. Ça marche, et si cela vous aide pendant un examen, servez-vous-en.
+
+Le problème, c’est que le triangle cache la physique. Il donne l’impression que les trois lettres sont interchangeables. Dans un vrai circuit, on fixe d’habitude deux grandeurs (une pile fixe la tension, un composant fixe la résistance) et la troisième en découle. Le dire en phrase (« le courant, c’est ce que la tension parvient à faire passer dans cette résistance ») garde la cause et l’effet dans le bon ordre, ce qui compte dès que les circuits ne sont plus idéaux.
+
+## La puissance : où va l’énergie
+
+Un courant qui traverse une résistance transforme l’énergie électrique en chaleur. La puissance vaut *P* = *U* × *I*, en watts. En y substituant la loi d’Ohm, on obtient deux autres formes, pratiques quand on ne connaît que deux grandeurs :
+
+- *P* = *R* × *I*²
+- *P* = *U*² ÷ *R*
+
+Au réglage par défaut, 12 V × 0,5 A = 6 W. La lueur cuivrée de l’explicatif représente cette puissance.
+
+<Predict question="De retour à 24 Ω, doublez la tension, de 12 V à 24 V. Qu’arrive-t-il à la puissance ?">
+
+Elle est multipliée par quatre, de 6 W à 24 W. Doubler la tension double le courant (de 0,5 A à 1 A), et la puissance est le produit des deux : les deux facteurs doublent. *P* = *U*² ÷ *R* dit la même chose : on met au carré la tension doublée. Vérifiez avec les curseurs. (Question d’exercice originale.)
+
+</Predict>
+
+Si vous abordez plus tard les réseaux triphasés, la même idée de puissance (tension fois courant) s’applique, avec quelques facteurs de plus ; le [calculateur de puissance triphasée](/fr/tools/three-phase-power/) les garde à l’écran.
+
+## Où la loi d’Ohm s’arrête : composants ohmiques et non ohmiques
+
+Voici la distinction que la plupart des explications rapides brouillent. On peut toujours diviser une tension par un courant et appeler le résultat « résistance en ce point » : c’est simplement la définition de la résistance. La loi d’Ohm affirme davantage : ce rapport reste constant quand la tension change. Les composants qui la respectent sont dits ohmiques, les autres non ohmiques.
+
+La diode électroluminescente (DEL) est l’exemple non ohmique le plus net. La fiche technique de Kingbright pour sa DEL rouge WP7113SRD-D donne une tension directe de 1,85 V typique et 2,5 V maximale pour un courant direct de 20 mA ([fiche technique Kingbright WP7113SRD-D](https://www.kingbrightusa.com/images/catalog/SPEC/WP7113SRD-D.pdf), en anglais). Sa courbe courant-tension est raide, pas une droite passant par zéro : sous sa zone de conduction, presque rien ne passe, et au-delà, un léger surplus de tension fait grimper le courant rapidement. La même fiche indique un coefficient de température de la tension directe de −1,9 mV/°C : la courbe elle-même se déplace quand le composant chauffe.
+
+<Predict question="On branche une DEL directement sur une alimentation de 5 V, sans résistance. La loi d’Ohm vous donne-t-elle le courant ?">
+
+Non. Il n’y a pas de *R* fixe par laquelle diviser. C’est la courbe courant-tension de la DEL qui fixe le courant, et au-delà de la tension directe il monte en flèche : sans rien d’autre dans la boucle, seuls l’alimentation et le câblage le limitent. La fiche technique de la WP7113SRD-D fixe le courant direct continu maximal absolu à 30 mA. La loi d’Ohm ne peut pas prédire ce circuit ; elle n’aide qu’une fois qu’on ajoute un composant qui la respecte. (Question d’exercice originale.)
+
+</Predict>
+
+## Exemple : la résistance obéit, la DEL non
+
+Placez cette DEL rouge en série avec une résistance sur une alimentation de 5 V, en visant 20 mA, le courant d’essai de la fiche technique. Les deux composants partagent le même courant, et leurs tensions s’additionnent pour donner celle de l’alimentation.
+
+1. Prenez la tension directe typique de la DEL à 20 mA : 1,85 V.
+2. La résistance reçoit le reste : 5 V − 1,85 V = 3,15 V.
+3. La résistance, elle, est ohmique : appliquez-lui la loi d’Ohm, à elle seule. *R* = 3,15 V ÷ 0,020 A = 157,5 Ω.
+
+Si la DEL est à sa tension maximale de 2,5 V, la résistance voit 2,5 V et le même calcul donne 125 Ω. Cet écart explique pourquoi une valeur calculée à partir du chiffre typique est un point de départ, pas une garantie. Ce qui compte en théorie, c’est la séparation : on n’a jamais appliqué la loi d’Ohm à la DEL. On l’a appliquée au seul composant qui la suit, et on a laissé la fiche technique de la DEL fournir le reste. Un outil dédié au calcul de la résistance d’une DEL est prévu sur le site.
+
+## La vérifier avec des appareils de mesure, en théorie
+
+Sur un schéma, les deux appareils ne vont pas au même endroit, et la raison, c’est la loi d’Ohm elle-même.
+
+- Le voltmètre se branche *aux bornes* de la résistance, en parallèle, parce qu’une tension est une différence entre deux points. Un voltmètre idéal ne consomme aucun courant : il ne modifie pas le circuit.
+- L’ampèremètre se place *en série*, dans la boucle, parce que le courant est ce qui circule dans le chemin. Un ampèremètre idéal n’a aucune résistance : il n’ajoute rien à *R*.
+
+Relevez la tension et le courant à plusieurs réglages et tracez-les. Pour une résistance ohmique, les points s’alignent sur une droite passant par zéro, dont la pente donne la résistance. Pour une DEL, ils dessinent une courbe. Cette page s’en tient là : elle décrit où se placent des appareils idéaux sur un schéma, pas comment mesurer une installation sous tension.
+
+## La loi d’Ohm vaut-elle en courant alternatif ?
+
+Pour une simple résistance, oui : la tension et le courant montent et descendent ensemble, et le même rapport tient à chaque instant. Ajoutez des bobines et des condensateurs, et l’opposition dépend de la fréquence et décale le courant par rapport à la tension. La résistance se généralise alors en impédance. Le [calculateur de circuit RLC série](/fr/tools/series-rlc/) montre ce modèle, avec l’angle de phase à l’écran.
+
+## D’où vient le nom
+
+Georg Simon Ohm a exposé cette relation dans *Die galvanische Kette, mathematisch bearbeitet* (Le circuit galvanique étudié mathématiquement), publié à Berlin en 1827 ([copie numérisée, Internet Archive](https://archive.org/details/bub_gb_tTVQAAAAcAAJ)). L’unité de résistance porte son nom, et le SI la conserve comme le volt par ampère.
+
+Pour d’autres pages du même genre, parcourez les [notes de théorie électrique](/fr/topics/electrical/).
+
+## Sources
+
+- BIPM, *Le Système international d’unités (Brochure sur le SI)*, 9ᵉ édition (2019) : tableau 4 (ohm, Ω = V/A) et annexe 1 (définition de l’ohm de 1946). [bipm.org/fr/si-brochure-9](https://www.bipm.org/fr/si-brochure-9). Consulté le 2026-10-11.
+- Kingbright, fiche technique *WP7113SRD-D*, lampe à semi-conducteur T-1 3/4 (5 mm) : tension directe, coefficient de température, valeurs maximales absolues. [kingbrightusa.com](https://www.kingbrightusa.com/images/catalog/SPEC/WP7113SRD-D.pdf). Consultée le 2026-10-11.
+- G. S. Ohm, *Die galvanische Kette, mathematisch bearbeitet*, Berlin, T. H. Riemann, 1827. [Internet Archive (exemplaire de la Bibliothèque d’État de Bavière)](https://archive.org/details/bub_gb_tTVQAAAAcAAJ). Consulté le 2026-10-11.
