@@ -86,7 +86,7 @@ Put that red LED in series with a resistor on a 5 V supply and aim for 20 mA, 
 2. The resistor gets the rest: 5 V − 1.85 V = 3.15 V.
 3. The resistor *is* ohmic, so use Ohm's law on it alone: *R* = 3.15 V ÷ 0.020 A = 157.5 Ω.
 
-If the LED sits at its 2.5 V maximum instead, the resistor sees 2.5 V and the same sum gives 125 Ω. That spread is why a resistor value from the typical figure is a starting point, not a guarantee. The point for theory is the split: you never applied Ohm's law to the LED. You applied it to the one part that follows it, and let the LED's datasheet supply the rest. A dedicated LED resistor tool for this calculation is planned for the site.
+If the LED sits at its 2.5 V maximum instead, the resistor sees 2.5 V and the same sum gives 125 Ω. That spread is why a resistor value from the typical figure is a starting point, not a guarantee. The point for theory is the split: you never applied Ohm's law to the LED. You applied it to the one part that follows it, and let the LED's datasheet supply the rest. The [LED resistor calculator](/tools/led-resistor-calculator/) runs this same split and picks a standard resistor value and wattage.
 
 ## Checking it with meters, in theory
 
@@ -99,7 +99,7 @@ Read *V* and *I* at several settings and plot them. For an ohmic resistor the po
 
 ## Does Ohm's law work for AC?
 
-For a plain resistor, yes: voltage and current rise and fall together, and the same ratio holds moment to moment. Add inductors and capacitors and the opposition depends on frequency and shifts current out of step with voltage. Resistance then generalizes to impedance. The [series RLC circuit calculator](/tools/series-rlc/) shows that model, with the phase angle in view.
+For a plain resistor, yes: voltage and current rise and fall together, and the same ratio holds moment to moment. Add inductors and capacitors and the opposition depends on frequency and shifts current out of step with voltage. Resistance then generalizes to impedance, which [What is impedance?](/ac-impedance/) builds up step by step. The [series RLC circuit calculator](/tools/series-rlc/) shows that model, with the phase angle in view.
 
 ## Where the name comes from
 
