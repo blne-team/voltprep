@@ -1,0 +1,141 @@
+---
+title: "Three-phase power explained: single vs three phase and √3"
+description: "What three-phase power is, how it differs from single phase, and where √3 comes from in line and phase voltages and the power formula, with Canadian examples."
+editUrl: false
+pageType: "article"
+topic: "electrical"
+kind: "guide"
+tags: ["three-phase", "ac-circuits"]
+series: "electrical-theory"
+seriesOrder: 2
+---
+
+import Predict from '../../components/explainers/Predict.astro';
+import Figure1 from '../../components/figures/three-phase-power-explained/Figure1.astro';
+
+Open the panel in a typical Canadian house and the service is single phase, 120/240 V [[2]](#source-2). Walk into a small commercial building and the nameplate on the panel often reads 120/208 V, three phase, wye [[2]](#source-2). Both voltage pairs appear in the supply-voltage table Hydro-Québec publishes under CSA CAN3-C235-83, alongside a three-phase 347/600 V wye service [[2]](#source-2). The second pair is the puzzle: if each hot conductor is 120 V to neutral in both buildings, why is hot-to-hot 240 V in the house and 208 V in the shop [[2]](#source-2)?
+
+The answer is the number √3 [[5]](#source-5), and it shows up again in the power formula. This page explains what three-phase power is, how it compares with single phase, and where that factor comes from. It is theory only: it doesn't cover sizing, protection, connection procedures or code requirements. The worked numbers are original Fieldbook examples that use ideal, balanced parts.
+
+## Single phase vs three phase at a glance
+
+The comparison most readers need is between the two services they will actually meet. The rows below are explained, with sources, in the sections that follow.
+
+| | Single phase (120/240 V) | Three phase wye (120/208 V or 347/600 V) |
+|---|---|---|
+| Supply voltages in Canada | 120/240 V [[2]](#source-2) | 120/208 V and 347/600 V wye, plus 600 V three-wire [[2]](#source-2) |
+| Waveforms | One voltage waveform, at 60 Hz in Hydro-Québec territory [[3]](#source-3) | Three equal waveforms spaced a third of a cycle apart [[4]](#source-4) |
+| Hot-to-hot voltage | Twice the hot-to-neutral voltage | √3 times the hot-to-neutral voltage [[5]](#source-5) |
+| Instantaneous power | Pulses at twice the line frequency [[4]](#source-4) | Constant for a balanced load [[4]](#source-4) |
+| Power formula | *P* = *V*·*I*·cos φ | *P* = √3·*V*<sub>L</sub>·*I*<sub>L</sub>·cos φ (derived below) |
+| Conductor material | Reference: a two-wire line | A three-wire line needs three-quarters of the material under the stated assumptions (original derivation below; ignores a neutral) |
+| Motors | No rotating field from one winding set alone (not covered here) | A polyphase stator winding produces a rotating field [[6]](#source-6) |
+
+## Three voltages, a third of a cycle apart
+
+A balanced three-phase source is three AC voltages of the same size and frequency, each shifted by a third of a cycle, or 120°, from the next [[4]](#source-4). At 60 Hz [[3]](#source-3) one cycle lasts 1/60 of a second, so the three peaks arrive about 5.6 ms apart (original arithmetic).
+
+The useful property is that the three waves always add to zero. Kirtley's notes give it as an identity: cos *x* + cos(*x* − 2π/3) + cos(*x* + 2π/3) = 0 for any *x* [[4]](#source-4). Three equal currents into a balanced wye load therefore cancel at the star point, which is why a balanced load behaves the same whether or not the star point is tied to the source neutral [[4]](#source-4). If the three load impedances aren't equal, the load is unbalanced, and an ungrounded star point no longer sits at zero voltage [[4]](#source-4).
+
+<Predict question="A balanced wye load is disconnected from the neutral but stays on all three lines. Does it keep working the same way?">
+
+In theory, yes. The three equal currents are a third of a cycle apart, so they add to zero at the star point, and no current needs the neutral [[4]](#source-4). That stops being true once the three loads are unequal: the star point then drifts away from zero volts [[4]](#source-4). (Original practice prompt.)
+
+</Predict>
+
+## Where √3 comes from
+
+Draw each line-to-neutral voltage as an arrow (a phasor) from a common centre. The three arrows are the same length and 120° apart [[4]](#source-4). The line-to-line voltage between two hot conductors is the difference between two of those arrows, which is the straight gap from one tip to the other.
+
+<Figure1 />
+That gap is the third side of a triangle whose other two sides are equal and meet at 120° [[4]](#source-4). Using the law of cosines with each side equal to *V*, the gap is √(*V*² + *V*² − 2*V*²·cos 120°) = √(3*V*²) = √3·*V*, which matches the factor Kirtley gives [[5]](#source-5). Kirtley also notes that line-to-line voltages are larger than line-to-neutral voltages by √3 and are shifted 30° ahead of them [[5]](#source-5).
+
+So *V*<sub>LL</sub> = √3·*V*<sub>LN</sub> [[5]](#source-5). Check it against the two wye services in the Canadian table [[2]](#source-2):
+
+- 120 V × √3 ≈ 207.8 V, listed as 208 V.
+- 347 V × √3 ≈ 601 V, listed as 600 V.
+
+The nominal values are rounded, so the match isn't exact to the volt (original arithmetic). The house service is different. In the common textbook model, a single-phase service of this kind is one winding with its midpoint as the neutral, so its two hot conductors sit directly opposite each other instead of a third of a cycle apart, and its two halves add straight to double the hot-to-neutral voltage. That split-winding description is written here as theory rather than tied to a fetched utility document.
+
+<Predict question="A wye service has 120 V from each phase to neutral. What is the voltage phase to phase: 240 V or something else?">
+
+About 208 V. The two phase voltages are 120° apart, so the gap between them is 120 V × √3 ≈ 207.8 V [[5]](#source-5). You'd only get 240 V if the two voltages were directly opposite each other, as the two halves of a split single-phase service are. (Original practice prompt.)
+
+</Predict>
+
+## Wye and delta: where the √3 lands
+
+There are two ways to connect three loads, or three source windings, to three lines. In wye (star), each element sits between a line and the common star point. In delta, each element sits between two lines. A wye can have four terminals, the three lines plus the star point, while a delta has only three [[5]](#source-5).
+
+- In wye, each element sees the line-to-neutral voltage and carries the line current. The √3 sits on voltage: *V*<sub>LL</sub> = √3·*V*<sub>ph</sub> and *I*<sub>L</sub> = *I*<sub>ph</sub>.
+- In delta, each element sees the full line-to-line voltage, and each line current is the difference of two element currents that are 120° apart. That is the same geometry as the voltage triangle above, so the √3 sits on current: *V*<sub>LL</sub> = *V*<sub>ph</sub> and *I*<sub>L</sub> = √3·*I*<sub>ph</sub> (original derivation from the same triangle).
+
+The practical choice this creates is between element ratings. Kirtley works it through for a 6 kW resistive heater built from three elements on a 120/208 V system [[5]](#source-5). Each element delivers 2 kW, so the wye version needs elements of 120² ÷ 2000 = 7.2 Ω and the delta version needs 208² ÷ 2000 = 21.6 Ω [[5]](#source-5). Same heat, same three lines, different elements. This page doesn't describe how to make either connection.
+
+## Power: from three single phases to √3·V·I·cos φ
+
+Look at one phase on its own and its instantaneous power isn't steady. Kirtley's expression for one phase of a balanced load has a term that swings at twice the line frequency, so the power flow pulses, and the same is true of any single-phase load [[4]](#source-4). Add the three phases and the swinging terms cancel, by the same identity as before, leaving a constant total [[4]](#source-4). For a balanced three-phase load, the power delivered doesn't pulse at all.
+
+That constant total is three times the average power of one phase. Kirtley writes it with peak values as (3/2)·|*V*|²/|*Z*|·cos ψ [[4]](#source-4). With RMS values, where each peak is √2 times the RMS value, it becomes *P* = 3·*V*<sub>ph</sub>·*I*<sub>ph</sub>·cos φ, where φ is the angle between each element's voltage and current (original rewriting of [[4]](#source-4)).
+
+Now substitute the line quantities:
+
+- Wye: *V*<sub>ph</sub> = *V*<sub>LL</sub> ÷ √3 and *I*<sub>ph</sub> = *I*<sub>L</sub>, so *P* = 3·(*V*<sub>LL</sub> ÷ √3)·*I*<sub>L</sub>·cos φ = √3·*V*<sub>LL</sub>·*I*<sub>L</sub>·cos φ.
+- Delta: *V*<sub>ph</sub> = *V*<sub>LL</sub> and *I*<sub>ph</sub> = *I*<sub>L</sub> ÷ √3, so *P* = 3·*V*<sub>LL</sub>·(*I*<sub>L</sub> ÷ √3)·cos φ = √3·*V*<sub>LL</sub>·*I*<sub>L</sub>·cos φ.
+
+Both connections give the same formula in line quantities, which is why nameplates and calculators can use line voltage and line current without asking which connection is inside (original derivation).
+
+The same substitution carries into the other two power quantities (original derivation, following the steps above):
+
+- Apparent power: each element's is *V*<sub>ph</sub>·*I*<sub>ph</sub>, so the three together give |*S*| = 3·*V*<sub>ph</sub>·*I*<sub>ph</sub>. Either substitution turns that into |*S*| = √3·*V*<sub>LL</sub>·*I*<sub>L</sub>, in volt-amperes (VA).
+- Real power is the cos φ part of the apparent power, *P* = |*S*|·cos φ, which matches the formula above.
+- Reactive power is the sin φ part, *Q* = |*S*|·sin φ = √3·*V*<sub>LL</sub>·*I*<sub>L</sub>·sin φ, in var.
+
+In the SI Brochure, var is simply another name for the volt-ampere, kept for reactive power, and it is written in lowercase [[1]](#source-1).
+
+## A worked example you can repeat
+
+Take a balanced load on 600 V line-to-line, drawing 40 A per line at a power factor of 0.85 lagging (original example; 600 V is one of the Canadian three-phase supply voltages [[2]](#source-2)). These are also the default inputs of the [three-phase power calculator](/tools/three-phase-power/), so you can check each step there.
+
+- Apparent power: |*S*| = √3 × 600 V × 40 A ≈ 41 569 VA, or about 41.6 kVA.
+- Real power: *P* = 41 569 VA × 0.85 ≈ 35 334 W, or about 35.3 kW.
+- Angle: φ = arccos 0.85 ≈ 31.8°.
+- Reactive power: *Q* = 41 569 VA × sin 31.8° ≈ 21 898 var, or about 21.9 kvar.
+
+Cross-check it per phase. On a wye supply, each phase sees 600 V ÷ √3 ≈ 346.4 V to neutral [[5]](#source-5), so three phases give 3 × 346.4 V × 40 A × 0.85 ≈ 35.3 kW, the same answer (original arithmetic). The calculator shows results to five significant figures, so expect 41.569 kVA, 35.334 kW and 21.898 kvar.
+
+<Predict question="Keep 600 V and a 0.85 power factor, but halve the line current to 20 A. What happens to real power?">
+
+It halves too, to about 17.7 kW: √3 × 600 V × 20 A × 0.85 ≈ 17 667 W. Power is proportional to line current when voltage and power factor stay fixed. The calculator should show 17.667 kW. (Original practice prompt.)
+
+</Predict>
+
+## The real decision: why three phase at all
+
+For a reader comparing the two services, the question is what three phase buys. Two answers follow from the theory above, and one comparison needs its assumptions stated.
+
+**Steady power.** A balanced three-phase load takes constant instantaneous power, while a single-phase load takes power that pulses at twice the line frequency [[4]](#source-4).
+
+**A rotating field.** A polyphase stator winding fed with balanced voltages sets up a magnetic field that travels around the machine. That field induces currents in the rotor, and those currents interact with it to make torque [[6]](#source-6). This page doesn't cover how single-phase motors start.
+
+**Less conductor material, under stated assumptions.** Compare a single-phase two-wire line with a three-phase three-wire line. Assume the same delivered power, the same voltage between conductors, the same length, unity power factor, the same total resistive loss, and conductor resistance inversely proportional to cross-section.
+
+- Single phase: power is *V*·*I*, so two conductors each carry *I*, and the loss is 2·*I*²·*R*<sub>1</sub>.
+- Three phase: power is √3·*V*·*I*<sub>L</sub>, so for the same power each line carries *I* ÷ √3, and the loss is 3·(*I* ÷ √3)²·*R*<sub>3</sub> = *I*²·*R*<sub>3</sub>.
+- Equal loss means *R*<sub>3</sub> = 2·*R*<sub>1</sub>, so each three-phase conductor needs half the cross-section of a single-phase one.
+- Material: three conductors at half the size is 1.5 single-phase conductors' worth, against 2 for single phase, which is three-quarters as much.
+
+That result is an original derivation from the formulas on this page. It holds only under those assumptions, it ignores the neutral of a four-wire wye, and it is not a sizing rule. Nor does it say three phase is "three times the power" of single phase; with the same conductors and currents the comparison depends on what is held equal.
+
+## Next in the series
+
+This is part of the electrical theory series, which starts with [Ohm's law](/ohms-law/) and continues with [impedance and phase angle](/ac-impedance/), the source of the power-factor angle φ used here. To see the per-phase angle in a single circuit, try the [series RLC calculator](/tools/series-rlc/). The full reading order is on the [electrical theory series page](/series/electrical-theory/).
+
+## Sources
+
+- <span id="source-1"></span>[1] [The International System of Units (SI Brochure), 9th edition](https://www.bipm.org/en/si-brochure-9), BIPM, published 2019, accessed 2026-10-18.
+- <span id="source-2"></span>[2] [Influencing factors of power quality](https://www.hydroquebec.com/business/customer-space/power-quality/factors-power-quality.html), Hydro-Québec, date unknown, accessed 2026-10-18.
+- <span id="source-3"></span>[3] [Caractéristiques de la tension fournie par les réseaux moyenne et basse tension d’Hydro-Québec (in French)](https://www.hydroquebec.com/data/documents-donnees/pdf/caracteristiques-moyenne-basse-tension.pdf), Hydro-Québec, published 2016-07, accessed 2026-10-18.
+- <span id="source-4"></span>[4] [Introduction to Electric Power Systems, 3.2 Three Phase Systems (teaching reference)](https://eng.libretexts.org/Bookshelves/Electrical_Engineering/Electro-Optics/Introduction_to_Electric_Power_Systems_%28Kirtley%29/03%3A_Polyphase_Networks/3.02%3A_Three_Phase_Systems), James Kirtley, MIT OpenCourseWare via LibreTexts, date unknown, accessed 2026-10-18.
+- <span id="source-5"></span>[5] [Introduction to Electric Power Systems, 3.3 Line-Line Voltages (teaching reference)](https://eng.libretexts.org/Bookshelves/Electrical_Engineering/Electro-Optics/Introduction_to_Electric_Power_Systems_%28Kirtley%29/03%3A_Polyphase_Networks/3.03%3A_Line-Line_Voltages), James Kirtley, MIT OpenCourseWare via LibreTexts, date unknown, accessed 2026-10-18.
+- <span id="source-6"></span>[6] [Introduction to Electric Power Systems, 10.1 Induction Motor Transformer Model (teaching reference)](https://eng.libretexts.org/Bookshelves/Electrical_Engineering/Electro-Optics/Introduction_to_Electric_Power_Systems_%28Kirtley%29/10%3A_Analytic_design_evaluation_of_induction_machines/10.01%3A_Induction_Motor_Transformer_Model), James Kirtley, MIT OpenCourseWare via LibreTexts, date unknown, accessed 2026-10-18.

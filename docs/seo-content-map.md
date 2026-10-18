@@ -20,6 +20,7 @@ This map gives every public page one primary search intent. Use the supporting c
 | `/how-a-multimeter-works/` | how does a multimeter work | how to use a multimeter, analog vs digital multimeter, auto ranging vs manual, true RMS meaning, CAT III vs CAT IV | Explain the three measurements as Ohm's law inside the meter, show bench-level use, and compare meter features without product picks. |
 | `/red-seal-electrician-exam-breakdown/` | red seal electrician exam breakdown | 100 questions, MWA weights, 2025 RSOS, pass mark, theory behind tasks | Official breakdown plus where the theory sits. |
 | `/309a-vs-442a/` | 309a vs 442a | construction and maintenance electrician, industrial electrician, C of Q, ESA licence, Red Seal titles | Side-by-side official comparison. |
+| `/three-phase-power-explained/` | three phase power | single phase vs three phase, line and phase voltage, √3, wye and delta, three-phase power formula | Explain where √3 comes from and compare single- and three-phase supply; the calculator stays with `/tools/three-phase-power/`. |
 | `/publishing-method/` | electrical education publishing standards | source policy, technical review, code edition, jurisdiction, original practice questions | Establish trust and define what can be published. |
 | `/share/` | share electrical knowledge | electrical questions, source suggestions, corrections, community discussion | Help contributors provide context that can be checked and improved. |
 
