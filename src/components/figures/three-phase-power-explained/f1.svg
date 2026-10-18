@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 330" class="sketch-svg" role="img" aria-label="Three equal arrows from a common centre, pointing up, down-right and down-left, 120 degrees apart, labelled V_a, V_b and V_c. A longer copper arrow joins the tip of V_b to the tip of V_a and is labelled V_ab, the line-to-line voltage, √3 times as long." focusable="false">
+<rect width="460" height="330" style="fill:var(--fig-paper)"/>
+<circle cx="210" cy="210" r="120" fill="none" stroke-width="1.5" stroke-dasharray="4 5" style="stroke:var(--fig-line)"/>
+<line x1="210.0" y1="210.0" x2="210.0" y2="90.0" stroke-width="3" stroke-linecap="round" style="stroke:var(--fig-ink)"/><polygon points="210.0,90.0 214.7,101.1 205.3,101.1" style="fill:var(--fig-ink)"/>
+<line x1="210.0" y1="210.0" x2="313.9" y2="270.0" stroke-width="3" stroke-linecap="round" style="stroke:var(--fig-ink)"/><polygon points="313.9,270.0 302.0,268.5 306.7,260.4" style="fill:var(--fig-ink)"/>
+<line x1="210.0" y1="210.0" x2="106.1" y2="270.0" stroke-width="3" stroke-linecap="round" style="stroke:var(--fig-ink)"/><polygon points="106.1,270.0 113.3,260.4 118.0,268.5" style="fill:var(--fig-ink)"/>
+<line x1="313.9" y1="270.0" x2="210.0" y2="90.0" stroke-width="3.5" stroke-linecap="round" style="stroke:var(--fig-energy)"/><polygon points="210.0,90.0 219.6,97.2 211.5,101.9" style="fill:var(--fig-energy)"/>
+<text x="220" y="96" font-size="17" style="font-family:var(--fig-font);fill:var(--fig-ink)">V<tspan dy="4" font-size="12">a</tspan></text>
+<text x="322" y="290" font-size="17" style="font-family:var(--fig-font);fill:var(--fig-ink)">V<tspan dy="4" font-size="12">b</tspan></text>
+<text x="68" y="290" font-size="17" style="font-family:var(--fig-font);fill:var(--fig-ink)">V<tspan dy="4" font-size="12">c</tspan></text>
+<text x="296" y="160" font-size="17" style="font-family:var(--fig-font);fill:var(--fig-energy)">V<tspan dy="4" font-size="12">ab</tspan></text>
+<text x="296" y="182" font-size="15" style="font-family:var(--fig-font);fill:var(--fig-energy)">√3 times as long</text>
+<text x="194" y="252" font-size="14" style="font-family:var(--fig-font);fill:var(--fig-muted)">120°</text>
+</svg>
