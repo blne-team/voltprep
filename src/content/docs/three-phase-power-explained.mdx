@@ -28,7 +28,7 @@ The comparison most readers need is between the two services they will actually 
 | Hot-to-hot voltage | Twice the hot-to-neutral voltage | √3 times the hot-to-neutral voltage [[5]](#source-5) |
 | Instantaneous power | Pulses at twice the line frequency [[4]](#source-4) | Constant for a balanced load [[4]](#source-4) |
 | Power formula | *P* = *V*·*I*·cos φ | *P* = √3·*V*<sub>L</sub>·*I*<sub>L</sub>·cos φ (derived below) |
-| Conductor material | Reference case | Under the stated assumptions, three-quarters of the material (derived below) |
+| Conductor material | Reference: a two-wire line | A three-wire line needs three-quarters of the material under the stated assumptions (original derivation below; ignores a neutral) |
 | Motors | No rotating field from one winding set alone (not covered here) | A polyphase stator winding produces a rotating field [[6]](#source-6) |
 
 ## Three voltages, a third of a cycle apart
@@ -55,7 +55,7 @@ So *V*<sub>LL</sub> = √3·*V*<sub>LN</sub> [[5]](#source-5). Check it against 
 - 120 V × √3 ≈ 207.8 V, listed as 208 V.
 - 347 V × √3 ≈ 601 V, listed as 600 V.
 
-The nominal values are rounded, so the match isn't exact to the volt (original arithmetic). The house service is different because its two hot conductors are not 120° apart [[4]](#source-4). A single-phase service of this kind is one winding with its midpoint as the neutral, so its two halves add straight to double the hot-to-neutral voltage. That description of a split winding is the common textbook model, written here as theory rather than tied to a fetched utility document.
+The nominal values are rounded, so the match isn't exact to the volt (original arithmetic). The house service is different. In the common textbook model, a single-phase service of this kind is one winding with its midpoint as the neutral, so its two hot conductors sit directly opposite each other instead of a third of a cycle apart, and its two halves add straight to double the hot-to-neutral voltage. That split-winding description is written here as theory rather than tied to a fetched utility document.
 
 <Predict question="A wye service has 120 V from each phase to neutral. What is the voltage phase to phase: 240 V or something else?">
 
@@ -85,7 +85,13 @@ Now substitute the line quantities:
 
 Both connections give the same formula in line quantities, which is why nameplates and calculators can use line voltage and line current without asking which connection is inside (original derivation).
 
-The same √3 carries into the other two power quantities [[5]](#source-5). Apparent power is |*S*| = √3·*V*<sub>LL</sub>·*I*<sub>L</sub> in volt-amperes (VA), and reactive power is *Q* = |*S*|·sin φ in var [[5]](#source-5). In the SI Brochure, var is simply another name for the volt-ampere, kept for reactive power, and it is written in lowercase [[1]](#source-1).
+The same substitution carries into the other two power quantities (original derivation, following the steps above):
+
+- Apparent power: each element's is *V*<sub>ph</sub>·*I*<sub>ph</sub>, so the three together give |*S*| = 3·*V*<sub>ph</sub>·*I*<sub>ph</sub>. Either substitution turns that into |*S*| = √3·*V*<sub>LL</sub>·*I*<sub>L</sub>, in volt-amperes (VA).
+- Real power is the cos φ part of the apparent power, *P* = |*S*|·cos φ, which matches the formula above.
+- Reactive power is the sin φ part, *Q* = |*S*|·sin φ = √3·*V*<sub>LL</sub>·*I*<sub>L</sub>·sin φ, in var.
+
+In the SI Brochure, var is simply another name for the volt-ampere, kept for reactive power, and it is written in lowercase [[1]](#source-1).
 
 ## A worked example you can repeat
 
