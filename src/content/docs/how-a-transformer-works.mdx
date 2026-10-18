@@ -1,0 +1,163 @@
+---
+title: "How a transformer works: step-up vs step-down explained"
+description: "How a transformer steps voltage up or down: one changing flux, the turns ratio, why current moves the other way, and why it only works on AC."
+editUrl: false
+pageType: "article"
+topic: "electrical"
+kind: "guide"
+tags: ["ac-circuits", "transformers"]
+series: "electrical-equipment"
+seriesOrder: 2
+---
+
+import Predict from '../../components/explainers/Predict.astro';
+import Figure1 from '../../components/figures/how-a-transformer-works/Figure1.astro';
+import Figure2 from '../../components/figures/how-a-transformer-works/Figure2.astro';
+import Figure3 from '../../components/figures/how-a-transformer-works/Figure3.astro';
+
+The grey can on a utility pole is an electrical transformer, and its job is to change voltage. Energy Education describes the distribution transformer as the last voltage change in the grid, bringing the line voltage down to one suited to homes, typically 240 V, delivered as two 120 V conductors that are 180° out of phase [[5]](#source-5). In Quebec, the line feeding that can is most often part of Hydro-Québec's 25 kV system, which means 14.4 kV between each phase and neutral, or 24.94 kV between phases [[4]](#source-4).
+
+So the can takes thousands of volts in and hands a few hundred out, with no moving parts. This page explains how: why one changing flux sets the voltage on both windings, what actually differs between a step-up and a step-down transformer, and why the current goes the opposite way to the voltage. It is an original Fieldbook theory explainer. It doesn't cover sizing, connections, protection or any installation work.
+
+## Two coils on one core
+
+A transformer is two separate windings of wire on a shared soft-iron core [[1]](#source-1). The primary winding is connected to an alternating voltage, and the secondary winding feeds the load [[1]](#source-1). The two windings aren't electrically connected; the only link between them is the magnetic flux in the core.
+
+The textbook model makes one assumption that the rest of the page depends on. In the ideal transformer, every magnetic field line stays inside the core, so the same flux passes through every turn of both windings [[1]](#source-1). The physics behind it goes back to Michael Faraday's experiments in 1831, which showed that a changing magnetic field induces an emf in a coil [[2]](#source-2).
+
+<Figure1 />
+## One flux through every turn
+
+Start with the primary. Faraday's law sets the voltage across it at minus its number of turns times the rate of change of the flux through one turn: *v*<sub>P</sub> = −*N*<sub>P</sub>·dΦ/dt [[1]](#source-1). The same flux passes through the secondary, so its voltage is *v*<sub>S</sub> = −*N*<sub>S</sub>·dΦ/dt [[1]](#source-1).
+
+Divide one by the other and the rate of change of flux cancels. What's left is the transformer equation: *V*<sub>S</sub> ÷ *V*<sub>P</sub> = *N*<sub>S</sub> ÷ *N*<sub>P</sub> [[1]](#source-1). Each turn on either side sees the same changing flux, so each turn gets the same volts, and a winding's voltage is simply its volts per turn times its number of turns.
+
+That also explains why a transformer needs AC. An emf is only induced while the magnetic field is changing [[2]](#source-2). Connect a battery to the primary and the current settles at a steady value, so after the first moment the flux stops changing and the secondary has nothing to induce. The same changing-flux idea gives a coil its opposition to AC, which [inductive reactance and impedance](/ac-impedance/) covers.
+
+<Predict question="You connect a battery to a transformer's primary and leave it connected. What does the secondary show once the first moment has passed?">
+
+Nothing. A steady current makes a steady flux, and an emf is only induced while the magnetic field is changing [[2]](#source-2). The secondary sees a brief kick when the circuit is switched on and then no voltage at all. That is why transformers are AC devices. (Original practice prompt, theory only.)
+
+</Predict>
+
+## Step-up vs step-down
+
+A step-up transformer has more turns on its secondary than on its primary, so its ratio *N*<sub>S</sub> ÷ *N*<sub>P</sub> is greater than one. A step-down transformer has fewer secondary turns, so the ratio is less than one [[1]](#source-1). The table puts the two side by side.
+
+| Property | Step-up | Step-down |
+|---|---|---|
+| Turns | More turns on the secondary [[1]](#source-1) | Fewer turns on the secondary [[1]](#source-1) |
+| Voltage | Raised [[1]](#source-1) | Lowered [[1]](#source-1) |
+| Current | Lowered [[1]](#source-1) | Raised [[1]](#source-1) |
+| Typical place | Power plants, raising voltage before transmission, sometimes as high as 500 kV [[1]](#source-1) | The last stage of distribution, down to household voltage [[5]](#source-5) |
+| Same physics? | Yes: one shared flux and the same transformer equation [[1]](#source-1) | Yes |
+
+The last row is the useful one for the reader. Maddox, a transformer manufacturer, states that any transformer can in theory be used for either step-up or step-down operation, though the two are usually designed somewhat differently [[6]](#source-6). The physics agrees: the transformer equation doesn't care which winding you call the primary [[1]](#source-1). "Step-up" and "step-down" describe which side is fed. This page doesn't describe feeding any real transformer backwards; that is installation work.
+
+### The pole transformer, worked through
+
+Take an illustrative pole transformer on Hydro-Québec's 25 kV system, connected between one phase and neutral at 14,400 V and delivering 240 V [[4]](#source-4). The transformer equation gives the turns ratio:
+
+- *N*<sub>P</sub> ÷ *N*<sub>S</sub> = 14,400 V ÷ 240 V = 60.
+
+So the primary has sixty turns for every secondary turn (original arithmetic). This is a theory example; Hydro-Québec's voltage document doesn't say how any particular transformer on its system is connected.
+
+<Figure2 />
+### Why the house gets both 120 V and 240 V
+
+The same per-turn idea explains the Canadian house supply. Hydro-Québec gives the nominal low-voltage supply as 120/240 V [[4]](#source-4), and Energy Education describes it as two 120 V conductors that are 180° out of phase, which together give 240 V [[5]](#source-5). In turns, one way to picture this is a single secondary winding across the full voltage, with a connection at its midpoint used as the neutral (original reasoning; neither source describes the winding). Each half has half the turns, so each half has half the voltage, 120 V, and the two ends sit on opposite sides of the midpoint (original reasoning from the transformer equation [[1]](#source-1)). In that picture, the two legs add straight to the full 240 V [[5]](#source-5).
+
+### Same 240 V, different primaries
+
+Hydro-Québec's most common distribution voltage is 25 kV, but it also runs a 12.4 kV system (7,200/12,470 V) and a 34.5 kV system (20,000/34,500 V), which are 7,200 V and 20,000 V phase to neutral [[4]](#source-4). Delivering the same 240 V [[5]](#source-5) from each one takes a different turns ratio:
+
+| System (phase to neutral) | Turns ratio for 240 V |
+|---|---|
+| 12.4 kV (7,200/12,470 V) [[4]](#source-4) | 30 : 1 |
+| 25 kV (14,400/24,940 V) [[4]](#source-4) | 60 : 1 |
+| 34.5 kV (20,000/34,500 V) [[4]](#source-4) | about 83 : 1 |
+
+The ratios are original arithmetic, primary voltage ÷ 240 V [[1]](#source-1). The higher the distribution voltage, the more primary turns each secondary turn needs, and the less current the primary carries for the same load.
+
+### From the power plant to the pole
+
+Both kinds of transformer appear on the same path. Generators produce AC at relatively low voltages, and transformers at the plant step it up to very high voltages for transmission [[1]](#source-1). A high-voltage line then carries a small current a long way to a substation [[1]](#source-1), and transformers along the way bring the voltage down in stages until a distribution transformer makes the last change to household voltage [[5]](#source-5). Every one of those steps uses the same equation; only the turns ratio and the side being fed change.
+
+## Power in, power out
+
+A transformer can't create energy. In the ideal model, the power the source puts into the primary at any instant equals the power the secondary delivers to the load: *i*<sub>P</sub>·*v*<sub>P</sub> = *i*<sub>S</sub>·*v*<sub>S</sub> [[1]](#source-1). Combine that with the transformer equation and the current comes out inverted: *I*<sub>S</sub> = (*N*<sub>P</sub> ÷ *N*<sub>S</sub>)·*I*<sub>P</sub> [[1]](#source-1). Raise the voltage and the current falls by the same factor; lower it and the current rises [[1]](#source-1).
+
+On the illustrative pole transformer, suppose the houses draw 100 A at 240 V [[5]](#source-5), or 24 kW (an original example). The primary then carries 100 A ÷ 60 ≈ 1.67 A at 14.4 kV, and 1.67 A × 14,400 V is the same 24 kW (original arithmetic using [[1]](#source-1)).
+
+<Predict question="A transformer has 50 primary turns for every secondary turn. If the primary carries 1 A, what current does the secondary carry?">
+
+About 50 A in the ideal model. The current ratio is the inverse of the turns ratio, so *I*<sub>S</sub> = (*N*<sub>P</sub> ÷ *N*<sub>S</sub>)·*I*<sub>P</sub> = 50 × 1 A [[1]](#source-1). The secondary voltage is fifty times lower, so the power on both sides is the same. (Original practice prompt.)
+
+</Predict>
+
+## What the turns ratio changes, and what it doesn't
+
+It helps to separate what a transformer trades from what it leaves alone. All of these follow from the two ideal-model equations [[1]](#source-1); the reasoning is original.
+
+- **Voltage changes** by the turns ratio *N*<sub>S</sub> ÷ *N*<sub>P</sub>.
+- **Current changes** by the inverse ratio, *N*<sub>P</sub> ÷ *N*<sub>S</sub>.
+- **Power doesn't change** in the ideal model, because the two changes cancel: *V*<sub>S</sub>·*I*<sub>S</sub> = *V*<sub>P</sub>·*I*<sub>P</sub>.
+- **Frequency doesn't change.** Both windings respond to the same changing flux, so the secondary voltage rises and falls in step with the primary's, at the same frequency.
+- **Impedance, as seen from the primary, changes by the square of the ratio.** A load *Z* on the secondary draws *I*<sub>S</sub> = *V*<sub>S</sub> ÷ *Z*. Seen from the primary, *V*<sub>P</sub> ÷ *I*<sub>P</sub> = (*N*<sub>P</sub> ÷ *N*<sub>S</sub>)²·*Z*, because the voltage goes up by the ratio and the current goes down by it. On the illustrative 60 : 1 pole transformer, each ohm of load on the secondary looks like 3,600 Ω from the primary side.
+
+That last point is why a transformer is sometimes described as matching a load to a source. It's the same equations again, applied to [impedance](/ac-impedance/) instead of to volts and amps separately.
+
+## Why the grid uses high voltage
+
+The same power can be sent as a large current at a modest voltage or a small current at a high voltage, because power is the product *I*<sub>rms</sub>·*V*<sub>rms</sub> [[1]](#source-1). What decides between them is the heat the line wastes. That ohmic loss is *I*²*R*, and on lines many kilometres long it can be significant [[1]](#source-1).
+
+Because the loss goes with the square of current, cutting current is worth far more than it looks. Here is an original example, with the line resistance chosen for illustration:
+
+- The houses take 24 kW, and the line, there and back, has 0.1 Ω of resistance (assumed).
+- Deliver it at 240 V and the line carries 100 A. The loss is 100² × 0.1 Ω = 1,000 W, about 4% of the 24 kW delivered. The line also drops 100 A × 0.1 Ω = 10 V, so the sending end has to sit about 10 V above the houses' 240 V.
+- Deliver it at 14.4 kV and the line carries about 1.67 A. The loss is 1.67² × 0.1 Ω ≈ 0.28 W, and the drop is only about 0.17 V.
+
+The current is sixty times smaller, so the loss is sixty squared, 3,600 times, smaller [[1]](#source-1). That scaling comes straight from *P* = *I*²*R*, which is [Ohm's law](/ohms-law/) combined with *P* = *V*·*I*.
+
+<Figure3 />
+Real grids still lose some energy along the way. In the United States, EIA estimates that transmission and distribution losses averaged about 5% of the electricity moved from 2018 through 2022 [[7]](#source-7). That figure covers whole networks, lines as well as transformers, and no Canadian equivalent was fetched for this page.
+
+## Where a real transformer loses energy
+
+The ideal model leaves out three losses. One happens in the core's magnetic material each time the flux reverses, one is the resistance of the copper, and one comes from currents induced in the iron itself [[1]](#source-1). A good transformer can keep the total as low as 1% of the power it carries, which is why the ideal model works so well [[1]](#source-1).
+
+Each loss has its own cause:
+
+- **Winding losses** are the same *I*²*R* heating as in a line, so they rise with the square of the load current (original reasoning from [[1]](#source-1)).
+- **Eddy currents** are loops of current that the changing flux induces in the iron core itself [[1]](#source-1). The standard way to limit them is to build the conductor from thin layers separated by insulating sheets, which keeps the loops small [[3]](#source-3). That is why transformer cores are laminated rather than solid.
+- **Hysteresis** is energy spent in the core's magnetic material each time the flux reverses [[1]](#source-1).
+
+
+## The ideal model vs a real transformer
+
+Every equation above comes from the ideal model, so it's worth setting out what that model assumes and what a real transformer does instead.
+
+| Ideal-model assumption | What a real transformer does |
+|---|---|
+| All the flux stays in the core and links both windings [[1]](#source-1) | The textbook treats this as an assumption; real designs aim to come close |
+| No energy is lost: power in equals power out [[1]](#source-1) | Good transformers lose as little as 1% of the power they carry [[1]](#source-1) |
+| Voltage ratio equals turns ratio [[1]](#source-1) | Close to the turns ratio, because losses are small [[1]](#source-1) |
+| Current ratio is the inverse of the turns ratio [[1]](#source-1) | Close to the inverse, for the same reason [[1]](#source-1) |
+
+For the theory on this page, the ideal model is a fair stand-in, and OpenStax calls neglecting the losses "not a bad assumption" [[1]](#source-1).
+
+Three-phase systems use transformers too, built on the same one-flux principle. Their connections are a separate topic that this page doesn't cover.
+
+## In the series
+
+This page belongs to the [electrical equipment series](/series/electrical-equipment/), which also explains how a multimeter works, including how AC voltage readings are made. For the AC behaviour of a single coil, see [impedance and phase](/ac-impedance/).
+
+## Sources
+
+- <span id="source-1"></span>[1] [University Physics Volume 2, 15.6 Transformers (teaching reference)](https://openstax.org/books/university-physics-volume-2/pages/15-6-transformers), OpenStax, date unknown, accessed 2026-10-18.
+- <span id="source-2"></span>[2] [University Physics Volume 2, 13.1 Faraday's Law (teaching reference)](https://openstax.org/books/university-physics-volume-2/pages/13-1-faradays-law), OpenStax, date unknown, accessed 2026-10-18.
+- <span id="source-3"></span>[3] [University Physics Volume 2, 13.5 Eddy Currents (teaching reference)](https://openstax.org/books/university-physics-volume-2/pages/13-5-eddy-currents), OpenStax, date unknown, accessed 2026-10-18.
+- <span id="source-4"></span>[4] [Caractéristiques de la tension fournie par les réseaux moyenne et basse tension d’Hydro-Québec (in French)](https://www.hydroquebec.com/data/documents-donnees/pdf/caracteristiques-moyenne-basse-tension.pdf), Hydro-Québec, published 2016-07, accessed 2026-10-18.
+- <span id="source-5"></span>[5] [Distribution transformer](https://energyeducation.ca/encyclopedia/Distribution_transformer), Energy Education, University of Calgary, date unknown, accessed 2026-10-18.
+- <span id="source-6"></span>[6] [Step up, step down transformers, and reverse feeding (manufacturer explanation)](https://www.maddox.com/resources/articles/step-up-step-down-transformers-and-reverse-feeding), Maddox Transformer, published 2023-07-31, accessed 2026-10-18.
+- <span id="source-7"></span>[7] [How much electricity is lost in electricity transmission and distribution in the United States?](https://www.eia.gov/tools/faqs/faq.php?id=105&t=3), U.S. Energy Information Administration, updated 2023-11-07, accessed 2026-10-18.
