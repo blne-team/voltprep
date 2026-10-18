@@ -9,7 +9,7 @@ export const sources = {
     url: 'https://www.vishay.com/docs/28372/e-series.pdf',
   },
   lumimaxCf: {
-    title: 'Lumimax Optoelectronic Technology, CF series carbon film fixed resistors datasheet, power rating at 70 °C',
+    title: 'Lumimax Optoelectronic Technology datasheet: CF series carbon film fixed resistors, power rating at 70 °C',
     url: 'https://media.digikey.com/pdf/Data%20Sheets/Lumimax%20Optoelectronic%20Tech%20PDFs/CF%20Series.pdf',
   },
   kingbrightRed: {
