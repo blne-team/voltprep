@@ -78,6 +78,14 @@
         "fr": "Loi d’Ohm",
         "zh": "欧姆定律"
       }
+    },
+    {
+      "id": "measurement",
+      "name": {
+        "root": "Measurement",
+        "fr": "Measurement",
+        "zh": "Measurement"
+      }
     }
   ],
   "series": [

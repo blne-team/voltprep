@@ -1,0 +1,122 @@
+---
+title: "How a Multimeter Works (and How to Use One)"
+description: "How a multimeter measures volts, amps and ohms, how to use one on a bench circuit, and what auto-ranging, true RMS and CAT ratings mean for your meter."
+editUrl: false
+pageType: "article"
+topic: "electrical"
+kind: "guide"
+tags: ["ohms-law", "measurement"]
+series: "electrical-equipment"
+seriesOrder: 1
+---
+
+import Predict from '../../components/explainers/Predict.astro';
+import Figure1 from '../../components/figures/how-a-multimeter-works/Figure1.astro';
+import Figure2 from '../../components/figures/how-a-multimeter-works/Figure2.astro';
+
+Build the simplest LED circuit on a bench: a low-voltage DC supply, a red LED and a series resistor. With the [LED resistor calculator](/tools/led-resistor-calculator/)'s default inputs (a 5 V supply), the resistor comes out at 160 Ω, the next standard value above 157.5 Ω, for a red LED that drops about 1.85 V at 20 mA [[7]](#source-7). Now pick up a multimeter and take three readings: the volts across the LED, the milliamps flowing round the loop, and the ohms of the resistor once it's out of the circuit.
+
+Those three readings use three different circuits inside the same meter, and each one is [Ohm's law](/ohms-law/) at work. This page explains what happens inside the meter for each measurement, how to take each reading on a low-voltage bench circuit like this one, and which of the features printed on a meter's box matter for the work you do. The bench numbers are original Fieldbook examples.
+
+Measuring on mains wiring, in panels or on any service equipment is a different job. It needs training, the meter's own manual and the rules where you work. This page explains how meters work; it does not teach live electrical work.
+
+## Three measurements, one law
+
+Every reading on a digital multimeter comes down to measuring a voltage. The meter's analog-to-digital converter turns a voltage into digits for the display [[1]](#source-1). What changes from function to function is the small circuit the meter puts in front of that converter.
+
+<Figure1 />
+### Voltage: a very high resistance in parallel
+
+A voltmeter connects in parallel with the part you're measuring, because parts in parallel share the same voltage [[1]](#source-1). To avoid disturbing the circuit, it needs a very large internal resistance. An ideal voltmeter would draw no current at all [[3]](#source-3). Real meters get close: inexpensive voltmeters sit around 10 MΩ and high-precision ones around 10 GΩ [[1]](#source-1), and NI describes typical DMM voltage inputs in the range of a few to tens of megohms [[3]](#source-3).
+
+On the bench circuit, 3.15 V across the resistor pushes only about 0.3 µA into a 10 MΩ meter, against roughly 19.7 mA through the resistor [[1]](#source-1). The meter takes about one part in sixty thousand of the current, so the reading barely changes the circuit (original arithmetic).
+
+### Current: a tiny shunt in series
+
+An ammeter has to carry the current it measures, so it goes in series, with the circuit opened up to let it in [[1]](#source-1). Inside the meter the current flows through a known low resistance called a shunt. The meter measures the voltage across the shunt and divides by its resistance [[2]](#source-2). That voltage drop is called the burden voltage [[2]](#source-2). It is the one way an ammeter changes the circuit it measures: the shunt adds a little resistance to the loop, and the current drops a little [[1]](#source-1).
+
+NIST's survey of hand-held meters found shunts of about 0.01 Ω on ampere ranges and up to 500 Ω on microampere ranges [[2]](#source-2). A larger shunt makes a small current easier to read, at the cost of more burden. At 19.7 mA, a 0.01 Ω shunt drops only about 0.2 mV, which is negligible next to the 160 Ω resistor (original arithmetic using [[2]](#source-2)).
+
+That low resistance is also why the current input is fused. Ammeters normally contain a fuse to protect against currents that are too high [[1]](#source-1). Fluke points out that if the leads are left in the amps jack and then touched across a voltage source, the low-resistance path becomes a short circuit, whatever the dial says [[4]](#source-4).
+
+### Resistance: the meter brings its own current
+
+An ohmmeter has to make its own current. A modern digital meter pushes a known, constant current through the part and measures the voltage across it, then divides voltage by current [[1]](#source-1) [[2]](#source-2). That is R = V ÷ I, and the ohm is defined as a volt per ampere [[8]](#source-8).
+
+Two rules follow from how it works. The part should be isolated from the rest of the circuit, or the meter reads the combined resistance of everything connected to it [[1]](#source-1). And the circuit must be unpowered, because an ohmmeter connected to a live circuit can be damaged [[1]](#source-1). If another source is driving current through the part, the meter's own known current is no longer the only one there.
+
+<Predict question="You leave the red lead in the amps jack, turn the dial to volts and touch the probes across a 9 V battery. What happens?">
+
+The dial doesn't save you. The leads are still connected to the low-resistance shunt, so the meter is a near short across the battery [[4]](#source-4). A large current flows until the fuse opens, which is exactly what the fuse is for [[1]](#source-1) [[4]](#source-4). On a small battery the cost is a blown fuse; it is the reason current inputs need the fuse the manufacturer specifies. (Original practice prompt. Don't try it.)
+
+</Predict>
+
+## Using a multimeter on a bench circuit
+
+Here are the three readings from the opening circuit, taken in the order that keeps the meter safe. All of them are on the low-voltage bench circuit, not on mains wiring.
+
+1. **Volts across the LED.** Set the dial to DC volts and put the leads in the COM and V jacks. Touch the probes across the LED. Expect about 1.85 V, the datasheet's typical figure at 20 mA; any particular LED will differ a little [[7]](#source-7). Across the resistor you'd read about 3.15 V. The two readings add up to the 5 V supply (original arithmetic).
+2. **Milliamps round the loop.** Switch the supply off, open the loop at one point, move the red lead to the mA jack and connect the meter in series across the gap [[1]](#source-1). Switch on. With the LED at its typical forward voltage, expect about 19.7 mA, which is 3.15 V ÷ 160 Ω [[8]](#source-8). Switch off and put the red lead back in the V jack before taking any voltage reading [[4]](#source-4).
+3. **Ohms of the resistor.** With the supply off, take the resistor out of the circuit and set the dial to ohms [[1]](#source-1). Expect a reading close to 160 Ω, within the resistor's tolerance.
+
+The calculator gives you the expected values before you measure, and the meter checks them. If the current reads well below the expected value, the LED may be from the high end of its forward-voltage spread, which the datasheet allows to reach 2.5 V [[7]](#source-7).
+
+<Predict question="The meter is in series on the mA range, reading about 19.7 mA. You move the red lead to the 10 A jack and switch to amps. What changes?">
+
+The current stays the same; how well you can read it is what changes. The ampere range is built for large currents, so a 19.7 mA reading shows fewer useful digits, and its shunt, about 0.01 Ω on ampere ranges [[2]](#source-2), adds even less burden than the mA range. For small currents, the mA range gives the better reading. (Original practice prompt.)
+
+</Predict>
+
+## The features on the box: which ones matter
+
+Comparing meters comes down to a handful of features. The table sets out what each one is, when it matters and when it doesn't.
+
+| Feature | What it is | When it matters | When it doesn't |
+|---|---|---|---|
+| Analog vs digital | A moving-coil needle (galvanometer) vs an analog-to-digital converter and digits [[1]](#source-1) | A needle or a DMM's bar graph shows a changing value as a trend [[5]](#source-5) | For steady readings, digits avoid estimating between scale lines, and analog accuracy is specified as a share of full scale [[5]](#source-5) |
+| Auto vs manual ranging | The meter picks the range for you, or you lock it to one [[5]](#source-5) | Manual ranging helps with repeated readings of the same size [[5]](#source-5) | For occasional checks, auto ranging saves dial turns [[5]](#source-5) |
+| Counts (resolution) | The largest number the display can show, e.g. 1,999 counts for 3½ digits [[5]](#source-5) | On a 3½-digit meter's 20 V range, 3.15 V shows as 3.15; a 3¾-digit meter's 4 V range has room for 3.150 [[3]](#source-3) | Readings that don't need the extra digit |
+| Average-responding vs true RMS | Rectified average × 1.11, or the actual heating value of the wave [[6]](#source-6) | Distorted waveforms: an average-responding reading can be up to 40 % off [[6]](#source-6) | Clean sine waves, where both methods agree [[6]](#source-6) |
+| Input resistance | The resistance the voltmeter puts across the circuit, about 10 MΩ on inexpensive meters [[1]](#source-1) | High-resistance circuits, where the meter's own current matters [[3]](#source-3) | Low-resistance bench circuits like the LED loop |
+| CAT rating and voltage | The transient-overvoltage environment the meter and leads are built for [[4]](#source-4) | Any work on building wiring, where a higher CAT means higher-energy transients [[4]](#source-4) | Battery and bench circuits, where there is no mains transient |
+
+### Average-responding vs true RMS
+
+An AC reading is normally an RMS value: the DC voltage that would heat a resistor the same amount [[6]](#source-6). NIST calls RMS the most meaningful measure because it indicates the effective power of the wave [[2]](#source-2). RMS is also the AC value used in [impedance and phase](/ac-impedance/) calculations.
+
+Many basic meters don't compute RMS. They measure the rectified average of the wave and multiply it by 1.11, which is correct only if the wave is a pure sine [[6]](#source-6). Here is where that factor comes from, worked from first principles:
+
+- For a sine wave, the rectified average is 2/π of the peak and the RMS value is 1/√2 of the peak.
+- The ratio RMS ÷ average is π ÷ (2√2) ≈ 1.111, which is the 1.11 the meter uses [[6]](#source-6).
+- For a square wave, the rectified average and the RMS value both equal the peak. The meter still multiplies by 1.11, so it reads about 11 % high.
+
+Distorted waves from electronic loads can go the other way. Their sharp current pulses have a high crest factor, the ratio of peak to RMS, and an average-responding meter often reads them low [[5]](#source-5). A true-RMS meter computes the heating value whatever the wave shape [[6]](#source-6), though only up to its specified crest factor [[5]](#source-5).
+
+<Figure2 />
+### CAT ratings: built for the environment as well as the voltage
+
+Measurement categories describe how much transient energy a meter may meet, based on where in the building it is used. A higher CAT number means an environment with more available power and higher-energy transients [[4]](#source-4). Fluke's summary of IEC 61010-1 places CAT IV at the origin of the installation, where the building connects to utility power; CAT III in the distribution wiring of a building; and CAT II at receptacle-connected loads [[4]](#source-4).
+
+Two points cause most of the confusion. Inside a single category, the meter with the bigger voltage figure survives bigger spikes, yet a CAT II 1000 V meter is not better protected than a CAT III 600 V meter [[4]](#source-4). And the rating covers the test leads as well: IEC 61010-1 applies to leads, which should be rated to at least the meter's category and voltage [[4]](#source-4). Matching a rating to real work on building wiring is part of the training this page doesn't replace.
+
+## Which features do you need?
+
+Treat these as questions to ask of any meter rather than a shopping list. This is original Fieldbook guidance, not a product recommendation.
+
+- **Bench electronics or study.** Will you measure small currents? Then look at the mA and µA ranges and the burden voltage in the manual [[2]](#source-2). Will you read high-resistance circuits? Then input resistance matters [[3]](#source-3). Do you want to watch a value drift? A bar graph helps [[5]](#source-5).
+- **Apprentice electrician.** What category and voltage will your training and job require, and are the leads rated to match [[4]](#source-4)? Will you meet distorted waveforms from electronic loads? Then true RMS matters [[6]](#source-6). Are the current inputs fused [[4]](#source-4)?
+
+## Next in the series
+
+This page opens the [electrical equipment series](/series/electrical-equipment/). The next part looks at how a transformer works, including what a meter shows on its secondary side. To see the law behind every reading laid out four ways, start with [Ohm's law](/ohms-law/), then try the expected bench values in the [LED resistor calculator](/tools/led-resistor-calculator/).
+
+## Sources
+
+- <span id="source-1"></span>[1] [University Physics Volume 2, 10.4 Electrical Measuring Instruments (teaching reference)](https://openstax.org/books/university-physics-volume-2/pages/10-4-electrical-measuring-instruments), OpenStax, date unknown, accessed 2026-10-18.
+- <span id="source-2"></span>[2] [NISTIR 88-4021 Electrical Performance Tests for Hand-Held Digital Multimeters](https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir88-4021.pdf), National Institute of Standards and Technology, published 1989-01, accessed 2026-10-18.
+- <span id="source-3"></span>[3] [DMM Measurement Fundamentals (manufacturer explanation)](https://www.ni.com/en/shop/electronic-test-instrumentation/digital-multimeters/dmm-measurement-fundamentals.html), National Instruments, date unknown, accessed 2026-10-18.
+- <span id="source-4"></span>[4] [ABCs of multimeter safety (manufacturer explanation)](https://media.fluke.com/51012112-8f43-4aa7-a30a-b2e3016e8f2f_original%20file.pdf), Fluke Corporation, published 2014, accessed 2026-10-18.
+- <span id="source-5"></span>[5] [ABCs of DMMs: Multimeter features and functions explained (manufacturer explanation)](https://media.fluke.com/ade6b718-4577-4b57-903b-b10600664c67_original%20file.pdf), Fluke Corporation, published 2016-04, accessed 2026-10-18.
+- <span id="source-6"></span>[6] [True measurements of non-linear loads require a true-rms measurement tool (manufacturer explanation)](https://www.fluke.com/en-gb/learn/blog/electrical/true-measurements-of-non-linear-loads-require-a-true-rms-measurement-tool), Fluke Corporation, date unknown, accessed 2026-10-18.
+- <span id="source-7"></span>[7] [WP7113SRD/D T-1 3/4 (5mm) Solid State Lamp datasheet](https://www.kingbrightusa.com/images/catalog/SPEC/WP7113SRD-D.pdf), Kingbright, published 2020-08-05, accessed 2026-10-18.
+- <span id="source-8"></span>[8] [The International System of Units (SI Brochure), 9th edition, Table 4](https://www.bipm.org/en/si-brochure-9), BIPM, published 2019, accessed 2026-10-18.

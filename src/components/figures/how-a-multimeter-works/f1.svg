@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 300" class="sketch-svg" role="img" aria-label="Three simple schematics side by side. Left: a voltmeter, drawn as a dashed meter box containing a large input resistance, connected in parallel across a resistor. Middle: an ammeter in series with the circuit, with current flowing through a fuse and a small shunt resistor inside the meter while the meter measures the voltage across the shunt. Right: an ohmmeter whose internal current source pushes a known current through an isolated resistor while the meter measures the voltage across it." focusable="false">
+<rect width="760" height="300" style="fill:var(--fig-paper)"/>
+<text x="130" y="24" font-size="15" text-anchor="middle" font-weight="600" style="font-family:var(--fig-font);fill:var(--fig-ink)">Voltmeter: in parallel</text>
+<line x1="80" y1="60" x2="80" y2="90" stroke-width="2" stroke-linecap="round" style="stroke:var(--fig-ink)"/>
+<polyline points="80.0,90.0 88.0,96.7 72.0,110.0 88.0,123.3 72.0,136.7 88.0,150.0 72.0,163.3 80.0,170.0" fill="none" stroke-width="2" style="stroke:var(--fig-ink)"/><text x="48" y="135.0" font-size="13" text-anchor="start" style="font-family:var(--fig-font);fill:var(--fig-ink)">R</text>
+<line x1="80" y1="170" x2="80" y2="200" stroke-width="2" stroke-linecap="round" style="stroke:var(--fig-ink)"/>
+<line x1="80" y1="60" x2="170" y2="60" stroke-width="2" stroke-linecap="round" style="stroke:var(--fig-ink)"/>
+<line x1="80" y1="200" x2="170" y2="200" stroke-width="2" stroke-linecap="round" style="stroke:var(--fig-ink)"/>
+<rect x="140" y="80" width="90" height="100" rx="8" fill="none" stroke-width="2" stroke-dasharray="5 4" style="stroke:var(--fig-muted)"/>
+<text x="190" y="172" font-size="12" text-anchor="middle" style="font-family:var(--fig-font);fill:var(--fig-muted)">meter</text>
+<polyline points="170.0,105.0 178.0,110.0 162.0,120.0 178.0,130.0 162.0,140.0 178.0,150.0 162.0,160.0 170.0,165.0" fill="none" stroke-width="2" style="stroke:var(--fig-ink)"/><text x="184" y="140.0" font-size="13" text-anchor="start" style="font-family:var(--fig-font);fill:var(--fig-ink)">R<tspan dy="4" font-size="10">in</tspan></text>
+<line x1="170" y1="60" x2="170" y2="105" stroke-width="2" stroke-linecap="round" style="stroke:var(--fig-ink)"/>
+<line x1="170" y1="165" x2="170" y2="200" stroke-width="2" stroke-linecap="round" style="stroke:var(--fig-ink)"/>
+<text x="130" y="236" font-size="13" text-anchor="middle" style="font-family:var(--fig-font);fill:var(--fig-ink)">Very high R<tspan dy="4" font-size="10">in</tspan><tspan dy="-4">: draws almost</tspan></text>
+<text x="130" y="254" font-size="13" text-anchor="middle" style="font-family:var(--fig-font);fill:var(--fig-ink)">no current from the circuit</text>
+<text x="380" y="24" font-size="15" text-anchor="middle" font-weight="600" style="font-family:var(--fig-font);fill:var(--fig-ink)">Ammeter: in series</text>
+<line x1="290" y1="130" x2="320" y2="130" stroke-width="2" stroke-linecap="round" style="stroke:var(--fig-ink)"/>
+<line x1="290" y1="112" x2="318" y2="112" stroke-width="2" stroke-linecap="round" style="stroke:var(--fig-current)"/><polygon points="318,112 309.9,115.9 309.9,108.1" style="fill:var(--fig-current)"/>
+<text x="292" y="104" font-size="13" text-anchor="start" style="font-family:var(--fig-font);fill:var(--fig-current)">I</text>
+<rect x="320" y="70" width="130" height="110" rx="8" fill="none" stroke-width="2" stroke-dasharray="5 4" style="stroke:var(--fig-muted)"/>
+<text x="385" y="88" font-size="12" text-anchor="middle" style="font-family:var(--fig-font);fill:var(--fig-muted)">meter</text>
+<line x1="320" y1="130" x2="332" y2="130" stroke-width="2" stroke-linecap="round" style="stroke:var(--fig-ink)"/>
+<rect x="332" y="123" width="22" height="14" rx="0" fill="none" stroke-width="2" style="stroke:var(--fig-ink)"/>
+<text x="343" y="156" font-size="11" text-anchor="middle" style="font-family:var(--fig-font);fill:var(--fig-muted)">fuse</text>
+<line x1="354" y1="130" x2="365" y2="130" stroke-width="2" stroke-linecap="round" style="stroke:var(--fig-ink)"/>
+<polyline points="365.0,130.0 369.6,138.0 378.8,122.0 387.9,138.0 397.1,122.0 406.2,138.0 415.4,122.0 420.0,130.0" fill="none" stroke-width="2" style="stroke:var(--fig-ink)"/><text x="392.5" y="116" font-size="13" text-anchor="middle" style="font-family:var(--fig-font);fill:var(--fig-ink)">R<tspan dy="4" font-size="10">shunt</tspan></text>
+<line x1="420" y1="130" x2="480" y2="130" stroke-width="2" stroke-linecap="round" style="stroke:var(--fig-ink)"/>
+<line x1="365" y1="140" x2="365" y2="166" stroke-width="1.5" stroke-dasharray="3 3" stroke-linecap="round" style="stroke:var(--fig-energy)"/>
+<line x1="420" y1="140" x2="420" y2="166" stroke-width="1.5" stroke-dasharray="3 3" stroke-linecap="round" style="stroke:var(--fig-energy)"/>
+<text x="392" y="172" font-size="12" text-anchor="middle" style="font-family:var(--fig-font);fill:var(--fig-energy)">measure V</text>
+<text x="380" y="236" font-size="13" text-anchor="middle" style="font-family:var(--fig-font);fill:var(--fig-ink)">Reading = V across shunt ÷ R<tspan dy="4" font-size="10">shunt</tspan></text>
+<text x="380" y="254" font-size="13" text-anchor="middle" style="font-family:var(--fig-font);fill:var(--fig-ink)">(the drop is the burden voltage)</text>
+<text x="630" y="24" font-size="15" text-anchor="middle" font-weight="600" style="font-family:var(--fig-font);fill:var(--fig-ink)">Ohmmeter: own current</text>
+<rect x="540" y="60" width="100" height="150" rx="8" fill="none" stroke-width="2" stroke-dasharray="5 4" style="stroke:var(--fig-muted)"/>
+<text x="590" y="78" font-size="12" text-anchor="middle" style="font-family:var(--fig-font);fill:var(--fig-muted)">meter</text>
+<circle cx="580" cy="135" r="18" fill="none" stroke-width="2" style="stroke:var(--fig-ink)"/>
+<line x1="580" y1="150" x2="580" y2="120" stroke-width="2" stroke-linecap="round" style="stroke:var(--fig-current)"/><polygon points="580,120 583.9,128.1 576.1,128.1" style="fill:var(--fig-current)"/>
+<text x="572" y="200" font-size="12" text-anchor="middle" style="font-family:var(--fig-font);fill:var(--fig-current)">known I</text>
+<line x1="580" y1="95" x2="580" y2="117" stroke-width="2" stroke-linecap="round" style="stroke:var(--fig-ink)"/>
+<line x1="580" y1="153" x2="580" y2="180" stroke-width="2" stroke-linecap="round" style="stroke:var(--fig-ink)"/>
+<line x1="580" y1="95" x2="700" y2="95" stroke-width="2" stroke-linecap="round" style="stroke:var(--fig-ink)"/>
+<line x1="580" y1="180" x2="700" y2="180" stroke-width="2" stroke-linecap="round" style="stroke:var(--fig-ink)"/>
+<polyline points="700.0,105.0 708.0,110.4 692.0,121.2 708.0,132.1 692.0,142.9 708.0,153.8 692.0,164.6 700.0,170.0" fill="none" stroke-width="2" style="stroke:var(--fig-ink)"/><text x="714" y="142.5" font-size="13" text-anchor="start" style="font-family:var(--fig-font);fill:var(--fig-ink)">R<tspan dy="4" font-size="10">x</tspan></text>
+<line x1="700" y1="95" x2="700" y2="105" stroke-width="2" stroke-linecap="round" style="stroke:var(--fig-ink)"/>
+<line x1="700" y1="170" x2="700" y2="180" stroke-width="2" stroke-linecap="round" style="stroke:var(--fig-ink)"/>
+<text x="630" y="236" font-size="13" text-anchor="middle" style="font-family:var(--fig-font);fill:var(--fig-ink)">Measure V, then R = V ÷ I.</text>
+<text x="630" y="254" font-size="13" text-anchor="middle" style="font-family:var(--fig-font);fill:var(--fig-ink)">Circuit unpowered, part isolated</text>
+</svg>
