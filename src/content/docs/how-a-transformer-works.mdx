@@ -44,7 +44,7 @@ Nothing. A steady current makes a steady flux, and an emf is only induced while 
 
 A step-up transformer has more turns on its secondary than on its primary, so its ratio *N*<sub>S</sub> ÷ *N*<sub>P</sub> is greater than one. A step-down transformer has fewer secondary turns, so the ratio is less than one [[1]](#source-1). The table puts the two side by side.
 
-| | Step-up | Step-down |
+| Property | Step-up | Step-down |
 |---|---|---|
 | Turns | More turns on the secondary [[1]](#source-1) | Fewer turns on the secondary [[1]](#source-1) |
 | Voltage | Raised [[1]](#source-1) | Lowered [[1]](#source-1) |
@@ -65,17 +65,17 @@ So the primary has sixty turns for every secondary turn (original arithmetic). T
 <Figure2 />
 ### Why the house gets both 120 V and 240 V
 
-The same per-turn idea explains the Canadian house supply. Energy Education describes it as two 120 V conductors that are 180° out of phase, which together give 240 V [[5]](#source-5). In turns, picture the secondary as one 240 V winding with a connection at its midpoint, used as the neutral [[5]](#source-5). Each half has half the turns, so each half has half the voltage, 120 V, and the two ends sit on opposite sides of the midpoint (original reasoning from the transformer equation [[1]](#source-1)). That is why a house's two legs add straight to the full 240 V [[5]](#source-5).
+The same per-turn idea explains the Canadian house supply. Hydro-Québec gives the nominal low-voltage supply as 120/240 V [[4]](#source-4), and Energy Education describes it as two 120 V conductors that are 180° out of phase, which together give 240 V [[5]](#source-5). In turns, one way to picture this is a single secondary winding across the full voltage, with a connection at its midpoint used as the neutral (original reasoning; neither source describes the winding). Each half has half the turns, so each half has half the voltage, 120 V, and the two ends sit on opposite sides of the midpoint (original reasoning from the transformer equation [[1]](#source-1)). In that picture, the two legs add straight to the full 240 V [[5]](#source-5).
 
 ### Same 240 V, different primaries
 
-Hydro-Québec's most common distribution voltage is 25 kV, but it also runs 12.47 kV and 34.5 kV systems, which are 7,200 V and 20,000 V phase to neutral [[4]](#source-4). Delivering the same 240 V [[5]](#source-5) from each one takes a different turns ratio:
+Hydro-Québec's most common distribution voltage is 25 kV, but it also runs a 12.4 kV system (7,200/12,470 V) and a 34.5 kV system (20,000/34,500 V), which are 7,200 V and 20,000 V phase to neutral [[4]](#source-4). Delivering the same 240 V [[5]](#source-5) from each one takes a different turns ratio:
 
 | System (phase to neutral) | Turns ratio for 240 V |
 |---|---|
-| 12.47 kV (7,200 V) [[4]](#source-4) | 30 : 1 |
-| 25 kV (14,400 V) [[4]](#source-4) | 60 : 1 |
-| 34.5 kV (20,000 V) [[4]](#source-4) | about 83 : 1 |
+| 12.4 kV (7,200/12,470 V) [[4]](#source-4) | 30 : 1 |
+| 25 kV (14,400/24,940 V) [[4]](#source-4) | 60 : 1 |
+| 34.5 kV (20,000/34,500 V) [[4]](#source-4) | about 83 : 1 |
 
 The ratios are original arithmetic, primary voltage ÷ 240 V [[1]](#source-1). The higher the distribution voltage, the more primary turns each secondary turn needs, and the less current the primary carries for the same load.
 
@@ -113,9 +113,9 @@ The same power can be sent as a large current at a modest voltage or a small cur
 
 Because the loss goes with the square of current, cutting current is worth far more than it looks. Here is an original example, with the line resistance chosen for illustration:
 
-- The line, there and back, has 2 Ω of resistance (assumed).
-- Send the 24 kW at 240 V and the line carries 100 A. The loss is 100² × 2 Ω = 20,000 W, almost as much as the houses use.
-- Send it at 14.4 kV and the line carries about 1.67 A. The loss is 1.67² × 2 Ω ≈ 5.6 W.
+- The houses take 24 kW, and the line, there and back, has 0.1 Ω of resistance (assumed).
+- Deliver it at 240 V and the line carries 100 A. The loss is 100² × 0.1 Ω = 1,000 W, about 4% of the 24 kW delivered. The line also drops 100 A × 0.1 Ω = 10 V, so the sending end has to sit about 10 V above the houses' 240 V.
+- Deliver it at 14.4 kV and the line carries about 1.67 A. The loss is 1.67² × 0.1 Ω ≈ 0.28 W, and the drop is only about 0.17 V.
 
 The current is sixty times smaller, so the loss is sixty squared, 3,600 times, smaller [[1]](#source-1). That scaling comes straight from *P* = *I*²*R*, which is [Ohm's law](/ohms-law/) combined with *P* = *V*·*I*.
 
@@ -148,9 +148,9 @@ For the theory on this page, the ideal model is a fair stand-in, and OpenStax ca
 
 Three-phase systems use transformers too, built on the same one-flux principle. Their connections are a separate topic that this page doesn't cover.
 
-## Next in the series
+## In the series
 
-This is part of the [electrical equipment series](/series/electrical-equipment/), after the multimeter explainer, which covers how AC voltage readings work. For the AC behaviour of a single coil, see [impedance and phase](/ac-impedance/).
+This page belongs to the [electrical equipment series](/series/electrical-equipment/), which also explains how a multimeter works, including how AC voltage readings are made. For the AC behaviour of a single coil, see [impedance and phase](/ac-impedance/).
 
 ## Sources
 
