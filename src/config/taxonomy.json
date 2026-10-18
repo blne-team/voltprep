@@ -56,6 +56,14 @@
   ],
   "tags": [
     {
+      "id": "transformers",
+      "name": {
+        "root": "Transformers",
+        "fr": "Transformers",
+        "zh": "Transformers"
+      }
+    },
+    {
       "id": "ac-circuits",
       "name": {
         "root": "AC circuits",

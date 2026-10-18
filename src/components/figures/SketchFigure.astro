@@ -1,0 +1,163 @@
+---
+// Hand-drawn figure for Starlight reading pages (storm-research publish.py --target starlight).
+// Framework-free custom element. Server output is complete without JavaScript: the full figure,
+// drawn inline as SVG in the site's theme tokens, plus its caption. Step/state controls are rendered
+// `hidden` and shown only once the script runs. Copy follows the page's content language.
+import { getContentLocale, pick } from '../../config/site';
+
+type Copy = { caption: string; frames: string[] };
+type Svgs = { full: string; frames: string[] };
+type Localized<T> = { root: T } & Record<string, T>;
+interface Props {
+  slug: string;
+  id: string;
+  number: number;
+  width: number;
+  mode?: 'none' | 'steps' | 'toggle';
+  defaultFrame?: number;
+  copy: Localized<Copy>;
+  svgs: Localized<Svgs>;
+}
+const { slug, id, number, width, mode = 'none', defaultFrame = 0, copy, svgs } = Astro.props;
+const locale = getContentLocale(Astro.url.pathname, Astro.locals.starlightRoute);
+const ui = pick({
+  root: { figure: 'Figure', back: 'Back', next: 'Next', step: 'Step {k} of {n}: {label}', steps: 'Figure steps', states: 'Figure states' },
+  fr: { figure: 'Figure', back: 'Précédent', next: 'Suivant', step: 'Étape {k} sur {n} : {label}', steps: 'Étapes de la figure', states: 'États de la figure' },
+}, locale);
+const c = pick(copy, locale);
+const s = pick(svgs, locale);
+const interactive = mode !== 'none' && s.frames.length > 1;
+---
+<sketch-figure
+  id={`fig-${slug}-${id}`}
+  class="not-content"
+  data-mode={interactive ? mode : 'none'}
+  data-default={defaultFrame}
+  data-step={ui.step}
+  style={`--fig-max: ${Math.round(width)}px`}
+>
+  <figure class="sketch-figure">
+    <div class="sketch-stage">
+      <div class="sketch-frame" data-frame="full" set:html={s.full} />
+      {interactive && s.frames.map((svg, i) => <div class="sketch-frame" data-frame={i} data-label={c.frames[i]} hidden set:html={svg} />)}
+    </div>
+    {interactive && (
+      <div class="sketch-controls" role="group" aria-label={mode === 'steps' ? ui.steps : ui.states} hidden>
+        {mode === 'steps' ? (
+          <Fragment>
+            <button type="button" data-go="prev">{ui.back}</button>
+            <button type="button" data-go="next">{ui.next}</button>
+          </Fragment>
+        ) : c.frames.map((label, i) => (
+          <button type="button" data-go={i} aria-pressed="false"><span class="sketch-radio" aria-hidden="true">( )</span> {label}</button>
+        ))}
+        <span class="sketch-status" aria-live="polite"></span>
+      </div>
+    )}
+    <figcaption><span class="sketch-num">{ui.figure} {number}.</span> {c.caption}</figcaption>
+  </figure>
+</sketch-figure>
+
+<script>
+  class SketchFigure extends HTMLElement {
+    #k = 0;
+    connectedCallback() {
+      if (this.dataset.ready || this.dataset.mode === 'none') return;
+      this.dataset.ready = 'true';
+      const frames = [...this.querySelectorAll<HTMLElement>('.sketch-frame:not([data-frame="full"])')];
+      const controls = this.querySelector<HTMLElement>('.sketch-controls');
+      if (frames.length < 2 || !controls) return;
+      const full = this.querySelector<HTMLElement>('[data-frame="full"]');
+      const status = controls.querySelector<HTMLElement>('.sketch-status');
+      const buttons = [...controls.querySelectorAll<HTMLButtonElement>('button')];
+      const steps = this.dataset.mode === 'steps';
+      const show = (i: number) => {
+        this.#k = Math.max(0, Math.min(frames.length - 1, i));
+        frames.forEach((frame, j) => { frame.hidden = j !== this.#k; });
+        const label = frames[this.#k].dataset.label ?? '';
+        if (status) status.textContent = steps
+          ? (this.dataset.step ?? '').replace('{k}', String(this.#k + 1)).replace('{n}', String(frames.length)).replace('{label}', label)
+          : label;
+        if (steps) {
+          buttons[0].disabled = this.#k === 0;
+          buttons[1].disabled = this.#k === frames.length - 1;
+        } else {
+          buttons.forEach((button, j) => {
+            button.setAttribute('aria-pressed', String(j === this.#k));
+            const radio = button.querySelector('.sketch-radio');
+            if (radio) radio.textContent = j === this.#k ? '(•)' : '( )';
+          });
+        }
+      };
+      buttons.forEach((button) => button.addEventListener('click', () => {
+        const go = button.dataset.go;
+        show(go === 'prev' ? this.#k - 1 : go === 'next' ? this.#k + 1 : Number(go));
+      }));
+      controls.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowRight') { show(this.#k + 1); event.preventDefault(); }
+        if (event.key === 'ArrowLeft') { show(this.#k - 1); event.preventDefault(); }
+      });
+      if (full) full.hidden = true;
+      controls.hidden = false;
+      show(steps ? 0 : Number(this.dataset.default ?? 0));
+    }
+  }
+  if (!customElements.get('sketch-figure')) customElements.define('sketch-figure', SketchFigure);
+</script>
+
+<style is:global>
+  /* Figure palette: the site's tokens, so figures follow the dark default and the light theme.
+     Meaning as in AGENTS.md: lime/green = current or flow, copper = energy, heat or attention, greys = structure. */
+  sketch-figure {
+    --fig-ink: var(--ff-ink);
+    --fig-muted: var(--ff-muted);
+    --fig-line: var(--ff-line);
+    --fig-paper: var(--sl-color-bg);
+    --fig-panel: var(--ff-visual);
+    --fig-soft: var(--ff-lime-soft);
+    --fig-current: var(--ff-lime);
+    --fig-energy: var(--ff-copper);
+    --fig-font: var(--sl-font);
+    display: block;
+    margin-block: 2rem;
+  }
+  :root[data-theme='light'] sketch-figure { --fig-current: var(--ff-green); }
+  sketch-figure .sketch-figure { margin: 0; }
+  sketch-figure .sketch-stage { max-width: min(100%, var(--fig-max)); margin-inline: auto; }
+  sketch-figure .sketch-svg { display: block; width: 100%; height: auto; }
+  sketch-figure [hidden] { display: none !important; }
+  sketch-figure figcaption {
+    margin-top: 0.75rem;
+    font-family: var(--sl-font);
+    font-size: var(--sl-text-sm);
+    line-height: 1.5;
+    color: var(--ff-muted);
+  }
+  sketch-figure .sketch-num { font-family: var(--sl-font-heading); color: var(--ff-ink); }
+  sketch-figure .sketch-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.75rem;
+    font-family: var(--ff-font-mono);
+    font-size: 0.78rem;
+  }
+  sketch-figure .sketch-controls button {
+    font: inherit;
+    color: var(--ff-ink);
+    background: transparent;
+    border: 1px solid var(--ff-line);
+    border-radius: 0;
+    padding: 0.3rem 0.7rem;
+    cursor: pointer;
+  }
+  sketch-figure .sketch-controls button[aria-pressed='true'] { background: var(--ff-ink); color: var(--sl-color-bg); }
+  sketch-figure .sketch-controls button:disabled { opacity: 0.4; cursor: default; }
+  sketch-figure .sketch-controls button:focus-visible { outline: 2px solid var(--sl-color-accent); outline-offset: 2px; }
+  sketch-figure .sketch-status { flex-basis: 100%; text-align: center; color: var(--ff-muted); }
+  sketch-figure[data-mode='toggle'] .sketch-status {
+    position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+  }
+</style>
