@@ -19,8 +19,8 @@ export const ledPresets: LedPreset[] = [
   { id: 'white', part: 'Kingbright WP7113QWC/D', forwardVoltageTyp: 3.3, forwardVoltageMax: 4.0, testCurrent: 0.02, ratedCurrent: 0.03, source: 'kingbrightWhite' },
 ];
 
-/** Power ratings (W at 70 °C) of the Stackpole CF carbon-film range: CF 1/8, 1/4, 1/2, 1, 2. */
-export const resistorRatings = { values: [0.125, 0.25, 0.5, 1, 2], source: 'stackpoleCf' as SourceId };
+/** Power ratings (W at 70 °C) of the Lumimax CF carbon-film range: CF-1/8W, 1/4W, 1/2W, 1W, 2W. */
+export const resistorRatings = { values: [0.125, 0.25, 0.5, 1, 2], source: 'lumimaxCf' as SourceId };
 
 /** Annealed copper at 20 °C. */
 export const copper = { resistivity: 1 / 58, temperatureCoefficient: 0.00393, referenceTemperature: 20, source: 'nbsCopper' as SourceId };
