@@ -17,6 +17,7 @@ This map gives every public page one primary search intent. Use the supporting c
 | `/tools/led-resistor-calculator/` | led resistor calculator | series resistor, forward voltage, E24 value, resistor wattage, voltage drop, internal resistance | Scenario workbench: size an LED's series resistor end to end (words, sketch, maths, meter check), with DC wire-run drop and battery sag as theory-only secondary scenarios. |
 | `/ac-impedance/` | what is impedance | resistance, reactance, phase angle, impedance triangle, frequency | Explain AC opposition; the calculator stays with `/tools/series-rlc/`. |
 | `/red-seal-electrician-exam-breakdown/` | red seal electrician exam breakdown | 100 questions, MWA weights, 2025 RSOS, pass mark, theory behind tasks | Official breakdown plus where the theory sits. |
+| `/309a-vs-442a/` | 309a vs 442a | construction and maintenance electrician, industrial electrician, C of Q, ESA licence, Red Seal titles | Side-by-side official comparison. |
 | `/publishing-method/` | electrical education publishing standards | source policy, technical review, code edition, jurisdiction, original practice questions | Establish trust and define what can be published. |
 | `/share/` | share electrical knowledge | electrical questions, source suggestions, corrections, community discussion | Help contributors provide context that can be checked and improved. |
 
