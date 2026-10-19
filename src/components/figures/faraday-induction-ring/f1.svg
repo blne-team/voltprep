@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" class="sketch-svg" role="img" aria-label="Hand-drawn iron ring with copper-coloured windings on the left labelled helix A to battery, and dark windings on the right labelled helix B to galvanometer." focusable="false">
+  <rect width="640" height="400" style="fill:var(--fig-soft)"/>
+  
+  <circle cx="280" cy="200" r="120" fill="none" stroke-width="28" style="stroke:var(--fig-ink)"/>
+  <circle cx="280" cy="200" r="120" fill="none" stroke-width="2" style="stroke:var(--fig-line)"/>
+  
+  <g stroke-width="3" fill="none" style="stroke:var(--fig-energy)">
+    <path d="M 160 120 Q 140 200 160 280"/>
+    <path d="M 175 115 Q 155 200 175 285"/>
+    <path d="M 190 112 Q 170 200 190 288"/>
+  </g>
+  <text x="100" y="200" font-size="16" style="font-family:var(--fig-font);fill:var(--fig-energy)">helix A</text>
+  <text x="95" y="220" font-size="13" style="font-family:var(--fig-font);fill:var(--fig-ink)">to battery</text>
+  
+  <g stroke-width="3" fill="none" style="stroke:var(--fig-ink)">
+    <path d="M 400 120 Q 420 200 400 280"/>
+    <path d="M 385 115 Q 405 200 385 285"/>
+    <path d="M 370 112 Q 390 200 370 288"/>
+  </g>
+  <text x="430" y="200" font-size="16" style="font-family:var(--fig-font);fill:var(--fig-ink)">helix B</text>
+  <text x="430" y="220" font-size="13" style="font-family:var(--fig-font);fill:var(--fig-ink)">to galvanometer</text>
+  <text x="280" y="380" text-anchor="middle" font-size="14" style="font-family:var(--fig-font);fill:var(--fig-ink)">soft-iron ring · two insulated coils · no wire between them</text>
+</svg>
