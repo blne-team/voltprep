@@ -1,7 +1,7 @@
 ---
 // LED resistor scenario workbench: three scenario tabs (LED resistor first), each solved end to end
 // and shown in four views. Fully rendered on the server; the script makes it live.
-import { getContentLocale, pick, siteConfig } from '../../config/site';
+import { getContentLocale, localePrefix, pick, siteConfig } from '../../config/site';
 import { createFormatter } from '../../lib/led-workbench/format';
 import { batteryFields, ledFields, wireFields, type FieldSpec } from '../../lib/led-workbench/fields';
 import { batteryPresets, ledPresets } from '../../lib/led-workbench/data';
@@ -31,6 +31,7 @@ const common = pick(commonCopy, locale);
 const led = pick(ledCopy, locale);
 const wire = pick(wireCopy, locale);
 const battery = pick(batteryCopy, locale);
+const meterGuideHref = `${localePrefix(locale)}/how-a-multimeter-works/`;
 
 // The defaults are valid by construction; a failure here is a bug in fields.ts and must stop the build.
 function initial<T>(read: { ok: true; input: T } | { ok: false; problem: { field: string } }): T {
@@ -115,7 +116,7 @@ const tabs = [
       </form>
       </div>
       <LedSketch labels={views.led.sketch} description={views.led.sketchLabel} title={common.views.sketch} />
-      <ViewPanels view={views.led} labels={led.readout} primary="resistance" common={common} />
+      <ViewPanels view={views.led} labels={led.readout} primary="resistance" common={common} meterGuideHref={meterGuideHref} />
     </div>
   </section>
 
@@ -134,7 +135,7 @@ const tabs = [
       </form>
       </div>
       <WireSketch labels={views.wire.sketch} description={views.wire.sketchLabel} title={common.views.sketch} />
-      <ViewPanels view={views.wire} labels={wire.readout} primary="drop" common={common} />
+      <ViewPanels view={views.wire} labels={wire.readout} primary="drop" common={common} meterGuideHref={meterGuideHref} />
     </div>
   </section>
 
@@ -161,7 +162,7 @@ const tabs = [
       </form>
       </div>
       <BatterySketch labels={views.battery.sketch} description={views.battery.sketchLabel} title={common.views.sketch} />
-      <ViewPanels view={views.battery} labels={battery.readout} primary="terminalVoltage" common={common} />
+      <ViewPanels view={views.battery} labels={battery.readout} primary="terminalVoltage" common={common} meterGuideHref={meterGuideHref} />
     </div>
   </section>
 

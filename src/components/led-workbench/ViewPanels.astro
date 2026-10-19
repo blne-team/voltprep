@@ -8,9 +8,11 @@ interface Props {
   labels: Record<string, string>;
   primary: string;
   common: CommonCopy;
+  /** The multimeter explainer in the page's content language. */
+  meterGuideHref: string;
 }
 
-const { view, labels, primary, common } = Astro.props;
+const { view, labels, primary, common, meterGuideHref } = Astro.props;
 ---
 
 <section class="readout" aria-live="polite">
@@ -41,4 +43,5 @@ const { view, labels, primary, common } = Astro.props;
 <div class="view meter">
   <h3>{common.views.meter}</h3>
   <p data-view="meter">{view.meter}</p>
+  <p class="meter-guide">{common.meterGuide.lead} <a href={meterGuideHref}>{common.meterGuide.link}</a>{common.meterGuide.after}</p>
 </div>
