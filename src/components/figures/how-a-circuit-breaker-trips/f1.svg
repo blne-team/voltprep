@@ -19,5 +19,5 @@
   <text x="340" y="85" text-anchor="middle" font-size="16" style="font-family:var(--fig-font);fill:var(--fig-ink)">shared trip bar</text>
   <line x1="200" y1="150" x2="220" y2="100" stroke-width="1.5" stroke-dasharray="4 3" style="stroke:var(--fig-energy)"/>
   <line x1="449" y1="175" x2="449" y2="100" stroke-width="1.5" stroke-dasharray="4 3" style="stroke:var(--fig-ink)"/>
-  <text x="340" y="370" text-anchor="middle" font-size="14" style="font-family:var(--fig-font);fill:var(--fig-ink)">Both paths act independently on the same latch [1][3]</text>
+  <text x="340" y="370" text-anchor="middle" font-size="14" style="font-family:var(--fig-font);fill:var(--fig-ink)">Both paths act independently on the same latch</text>
 </svg>

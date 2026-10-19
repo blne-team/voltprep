@@ -39,7 +39,7 @@ The magnetic element is an **electromagnet in series** with the load and a movab
 
 CBI describes the armature rotating the trip bar as its top is drawn to the electromagnet [[2]](#source-2). ABB's application guide shows an armature-and-plunger arrangement that pushes a hammer trip against the movable contact so the contacts open [[1]](#source-1). The mechanical details differ by product line; the physics is the same: enough ampere-turns, and the armature moves.
 
-That action is meant to be **near-instantaneous**. ABB's application guide puts the contact opening on a short circuit on the order of half a millisecond for the current-limiting example it describes [[1]](#source-1). ABB SACE's trip-curve note places a typical magnetic trip in some tens of milliseconds [[4]](#source-4). Those numbers are design examples, not a universal constant — see unverified notes. NEETS simply says the magnetic element trips as soon as the preset current is present, even when the thermal element has not had time to react [[3]](#source-3). On some breakers the gap between the trip bar and the magnet (and therefore the trip current) is adjustable [[3]](#source-3); this page does not cover how to set that.
+That action is meant to be **near-instantaneous**. ABB's application guide puts the contact opening on a short circuit on the order of half a millisecond for the current-limiting example it describes [[1]](#source-1). ABB SACE's trip-curve note places a typical magnetic trip in some tens of milliseconds [[4]](#source-4). Those numbers are design examples, not a universal constant. NEETS simply says the magnetic element trips as soon as the preset current is present, even when the thermal element has not had time to react [[3]](#source-3). On some breakers the gap between the trip bar and the magnet (and therefore the trip current) is adjustable [[3]](#source-3); this page does not cover how to set that.
 
 <Figure2 />
 A meter on the bench that reads branch current is sensing the same ampere quantity the series coil "sees" — see [how a multimeter measures current](/how-a-multimeter-works/) for the measurement side. This page does not describe clamping a live feeder.
@@ -54,10 +54,10 @@ A meter on the bench that reads branch current is sensing the same ampere quanti
 | Typical fault it catches | Overload that lasts long enough to heat the strip [[1]](#source-1) | Short circuit / very high current [[1]](#source-1)[[2]](#source-2) |
 | What it does not catch alone | An almost-instant short (strip has not heated) [[3]](#source-3) | A mild, long overload below the magnetic threshold [[1]](#source-1)[[3]](#source-3) |
 
-A **thermal-magnetic** breaker is the common combined unit: both elements on one latch, acting independently [[1]](#source-1)[[3]](#source-3). That is the residential and light-commercial pattern the outline targets. Magnetic-only and other variants exist (CBI notes magnetic-only units for some motor short-circuit roles [[2]](#source-2)); they are named here only so the comparison stays honest.
+A **thermal-magnetic** breaker is the common combined unit: both elements on one latch, acting independently [[1]](#source-1)[[3]](#source-3). Magnetic-only and other variants exist (CBI notes magnetic-only units for some motor short-circuit roles [[2]](#source-2)); they are named here only so the comparison stays honest.
 
 
-Together, the two paths cover the two overcurrent stories that matter for theory: heat that builds over time, and current that spikes at once [1][3]. A single handle hides which path fired; reading the time scale in a practice prompt is how you tell them apart (original tip).
+Together, the two paths cover the two overcurrent stories that matter for theory: heat that builds over time, and current that spikes at once [[1]](#source-1)[[3]](#source-3). A single handle hides which path fired; reading the time scale in a practice prompt is how you tell them apart (original tip).
 
 <Predict question="A branch carries a modest overload for several minutes, then the handle flips. Which path most likely released the latch, and why?">
 The thermal path. Minutes at modest overcurrent is the bimetal's inverse-time world: the strip had time to heat and bend [[1]](#source-1)[[2]](#source-2). The magnetic armature needs a much higher current and acts in milliseconds [[1]](#source-1)[[3]](#source-3). (Original practice prompt.)
@@ -65,11 +65,11 @@ The thermal path. Minutes at modest overcurrent is the bimetal's inverse-time wo
 
 ## Electronic trip units (named only)
 
-Larger low-voltage breakers may use an **electronic** trip unit: a microprocessor that processes the current signal and commands the opening, instead of a bimetal-plus-electromagnet pair [[4]](#source-4). ABB SACE contrasts the two families directly: thermomagnetic units use a bimetal for overload and an electromagnetic device for short circuit; electronic units process the current digitally and can offer long-time, short-time, instantaneous and ground-fault functions [[4]](#source-4). Naming that family keeps the thermal-versus-magnetic comparison from pretending it is the only technology in a panel. This page still stays on thermal-magnetic theory. No product picks, no setting guides, no coordination studies.
+Some low-voltage breakers may use an **electronic** trip unit: a microprocessor that processes the current signal and commands the opening, instead of a bimetal-plus-electromagnet pair [[4]](#source-4). ABB SACE contrasts the two families directly: thermomagnetic units use a bimetal for overload and an electromagnetic device for short circuit; electronic units process the current digitally and can offer long-time, short-time, instantaneous and ground-fault functions [[4]](#source-4). Naming that family keeps the thermal-versus-magnetic comparison from pretending it is the only technology in a panel. This page still stays on thermal-magnetic theory. No product picks, no setting guides, no coordination studies.
 
 ## Inrush is not the same as overload
 
-A motor or transformer can draw a large current for a cycle or two when it is first energised. That spike is short. The thermal strip barely warms; the magnetic element is the one that might see it, which is why magnetic thresholds on published curves sit well above rated current [[4]](#source-4). Inductive loads also oppose sudden current change — the idea behind [AC impedance](/ac-impedance/) — but the breaker still only "knows" the current through its own path. Selecting a trip curve for inrush is a design task; it is out of scope here.
+A motor or transformer can draw a large current for a cycle or two when it is first energised (inrush — original theory note). That spike is short. The thermal strip barely warms; the magnetic element is the one that might see it. On published curves the magnetic threshold is set as a multiple of rated current *I*<sub>n</sub> [[4]](#source-4). Keeping that multiple above ordinary inrush so starts do not nuisance-trip is original theory reasoning, not a claim from the SACE note. Inductive loads also oppose sudden current change — the idea behind [AC impedance](/ac-impedance/) — but the breaker still only "knows" the current through its own path. Selecting a trip curve for inrush is a design task; it is out of scope here.
 
 ## Original theory checks
 
@@ -81,13 +81,19 @@ No. NEETS states the magnetic element can trip even when the thermal element has
 
 - If a practice question says the breaker opened after "a few minutes" at modest overcurrent, reason toward the **thermal** path first (original tip).
 - If it opened essentially as soon as the fault appeared, reason toward the **magnetic** path (original tip).
-- Inrush on a motor or transformer can look large for a cycle or two; that is why magnetic thresholds sit well above rated current on many curves — but selecting those curves is out of scope here [[4]](#source-4).
+- Inrush on a motor or transformer can look large for a cycle or two (original theory note). Published magnetic thresholds are a multiple of *I*<sub>n</sub> [[4]](#source-4); keeping them above ordinary inrush is original theory reasoning. Selecting those curves is out of scope here.
 
 ## Scope, again
 
-Nothing on this page is a procedure for a live panel. It does not tell you how to reset a breaker, how to lock out a panel, how to measure a fault, or which ampere frame to buy. The comparison is the mechanism: heat bending a strip versus a field pulling an armature [[1]](#source-1)[[2]](#source-2)[[3]](#source-3). For the heating relationship itself, stay with [Ohm's law](/ohms-law/). For what a clamp meter is doing when it reads current on a bench setup, see [how a multimeter works](/how-a-multimeter-works/).
+Nothing on this page is a procedure for a live panel. It does not tell you how to reset a breaker, how to lock out a panel, how to measure a fault, or which ampere frame to buy. The comparison is the mechanism: heat bending a strip versus a field pulling an armature [[1]](#source-1)[[2]](#source-2)[[3]](#source-3). For the heating relationship itself, stay with [Ohm's law](/ohms-law/). For how a multimeter measures current on a bench setup, see [how a multimeter works](/how-a-multimeter-works/).
 
 ## In the series
 
 This page belongs to the [electrical equipment series](/series/electrical-equipment/), after [how a multimeter works](/how-a-multimeter-works/) and [how a transformer works](/how-a-transformer-works/). The heating idea ties back to [Ohm's law](/ohms-law/).
 
+## Sources
+
+- <span id="source-1"></span>[1] [Miniature Circuit Breakers Application Guide (1SXU400142M0201)](https://library.e.abb.com/public/ef5f3a6e43c99c288525758500534fe6/1SXU400142M0201.pdf), ABB, date unknown, accessed 2026-10-19.
+- <span id="source-2"></span>[2] [Thermal-Magnetic Principles](https://www.cbi-electric.com/content/thermal-magnetic-principles), CBI-electric, date unknown, accessed 2026-10-19.
+- <span id="source-3"></span>[3] [NEETS Module 3 — Magnetic / Thermal-Magnetic Trip Element](https://www.tpub.com/neets/book3/8j.htm), U.S. Navy via tpub, date unknown, accessed 2026-10-19.
+- <span id="source-4"></span>[4] [Working with the Trip Characteristic Curves of ABB SACE Low Voltage Circuit-Breakers (1SDC007400G0201)](https://library.e.abb.com/public/79d3bb96befa784cc1257ac5003a3882/1SDC007400G0201.pdf), ABB SACE, date unknown, accessed 2026-10-19.

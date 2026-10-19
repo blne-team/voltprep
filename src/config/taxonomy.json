@@ -5,13 +5,13 @@
       "id": "electrical",
       "name": {
         "root": "Electrical",
-        "fr": "\u00c9lectricit\u00e9",
-        "zh": "\u7535\u6c14"
+        "fr": "Électricité",
+        "zh": "电气"
       },
       "summary": {
         "root": "Electrical theory and calculators: impedance, AC power and three-phase circuits.",
-        "fr": "Th\u00e9orie \u00e9lectrique et calculateurs : imp\u00e9dance, puissance en CA et circuits triphas\u00e9s.",
-        "zh": "\u7535\u6c14\u7406\u8bba\u548c\u8ba1\u7b97\u5de5\u5177\uff1a\u963b\u6297\u3001\u4ea4\u6d41\u529f\u7387\u548c\u4e09\u76f8\u7535\u8def\u3002"
+        "fr": "Théorie électrique et calculateurs : impédance, puissance en CA et circuits triphasés.",
+        "zh": "电气理论和计算工具：阻抗、交流功率和三相电路。"
       }
     },
     {
@@ -19,12 +19,12 @@
       "name": {
         "root": "3D printing",
         "fr": "Impression 3D",
-        "zh": "3D \u6253\u5370"
+        "zh": "3D 打印"
       },
       "summary": {
         "root": "Notes on 3D printing: materials, slicing, calibration and designing parts that print well.",
-        "fr": "Des notes sur l\u2019impression 3D : mat\u00e9riaux, tranchage, calibrage et conception de pi\u00e8ces qui s\u2019impriment bien.",
-        "zh": "\u5173\u4e8e 3D \u6253\u5370\u7684\u7b14\u8bb0\uff1a\u6750\u6599\u3001\u5207\u7247\u3001\u6821\u51c6\uff0c\u4ee5\u53ca\u5982\u4f55\u8bbe\u8ba1\u5bb9\u6613\u6253\u5370\u7684\u96f6\u4ef6\u3002"
+        "fr": "Des notes sur l’impression 3D : matériaux, tranchage, calibrage et conception de pièces qui s’impriment bien.",
+        "zh": "关于 3D 打印的笔记：材料、切片、校准，以及如何设计容易打印的零件。"
       }
     },
     {
@@ -32,12 +32,12 @@
       "name": {
         "root": "Communications",
         "fr": "Communications",
-        "zh": "\u901a\u4fe1"
+        "zh": "通信"
       },
       "summary": {
         "root": "Notes on how information travels: signals, modulation, radio and networks.",
-        "fr": "Des notes sur la fa\u00e7on dont l\u2019information circule : signaux, modulation, radio et r\u00e9seaux.",
-        "zh": "\u5173\u4e8e\u4fe1\u606f\u5982\u4f55\u4f20\u9012\u7684\u7b14\u8bb0\uff1a\u4fe1\u53f7\u3001\u8c03\u5236\u3001\u65e0\u7ebf\u7535\u548c\u7f51\u7edc\u3002"
+        "fr": "Des notes sur la façon dont l’information circule : signaux, modulation, radio et réseaux.",
+        "zh": "关于信息如何传递的笔记：信号、调制、无线电和网络。"
       }
     },
     {
@@ -45,12 +45,12 @@
       "name": {
         "root": "Computer science",
         "fr": "Informatique",
-        "zh": "\u8ba1\u7b97\u673a\u79d1\u5b66"
+        "zh": "计算机科学"
       },
       "summary": {
         "root": "Notes on computer science: algorithms, data structures, systems and the maths behind them.",
-        "fr": "Des notes d\u2019informatique : algorithmes, structures de donn\u00e9es, syst\u00e8mes et les math\u00e9matiques qui les sous-tendent.",
-        "zh": "\u8ba1\u7b97\u673a\u79d1\u5b66\u7b14\u8bb0\uff1a\u7b97\u6cd5\u3001\u6570\u636e\u7ed3\u6784\u3001\u7cfb\u7edf\uff0c\u4ee5\u53ca\u5b83\u4eec\u80cc\u540e\u7684\u6570\u5b66\u3002"
+        "fr": "Des notes d’informatique : algorithmes, structures de données, systèmes et les mathématiques qui les sous-tendent.",
+        "zh": "计算机科学笔记：算法、数据结构、系统，以及它们背后的数学。"
       }
     }
   ],
@@ -76,23 +76,23 @@
       "name": {
         "root": "AC circuits",
         "fr": "Circuits CA",
-        "zh": "\u4ea4\u6d41\u7535\u8def"
+        "zh": "交流电路"
       }
     },
     {
       "id": "three-phase",
       "name": {
         "root": "Three-phase",
-        "fr": "Triphas\u00e9",
-        "zh": "\u4e09\u76f8\u7535"
+        "fr": "Triphasé",
+        "zh": "三相电"
       }
     },
     {
       "id": "ohms-law",
       "name": {
         "root": "Ohm's law",
-        "fr": "Loi d\u2019Ohm",
-        "zh": "\u6b27\u59c6\u5b9a\u5f8b"
+        "fr": "Loi d’Ohm",
+        "zh": "欧姆定律"
       }
     },
     {
