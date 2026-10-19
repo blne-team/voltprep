@@ -1,0 +1,93 @@
+---
+title: "How a circuit breaker trips: thermal vs magnetic"
+description: "How a thermal-magnetic circuit breaker trips: the bimetal strip for overload, the electromagnet for short circuit, and why the two paths are separate."
+editUrl: false
+pageType: "article"
+topic: "electrical"
+kind: "guide"
+tags: ["protection"]
+series: "electrical-equipment"
+seriesOrder: 3
+---
+
+import Figure1 from '../../components/figures/how-a-circuit-breaker-trips/Figure1.astro';
+import Figure2 from '../../components/figures/how-a-circuit-breaker-trips/Figure2.astro';
+import Predict from '../../components/explainers/Predict.astro';
+
+The handle has flipped. From outside the panel the story looks the same every time: the circuit is open. Inside a common thermal-magnetic breaker, though, two different mechanisms can release the same latch. One is a strip of two metals that bends when it warms. The other is a small electromagnet that yanks an armature when the current spikes. This page is the theory of those two paths — not a guide to working on live panels, resetting breakers, or choosing ratings.
+
+## Two paths, one latch
+
+ABB describes its electromechanical trip unit as a thermal part that is temperature-sensitive and a magnetic part that is current-sensitive, and states that **both act independently** on the breaker's trip mechanism [[1]](#source-1). NEETS draws the same combined element: a series electromagnet and a bimetal heated by load current, sharing one trip bar [[3]](#source-3). CBI's thermal-magnetic note puts the bimetal behind the trip bar in the current path and the electromagnet-and-armature pair on the short-circuit path [[2]](#source-2).
+
+<Figure1 />
+So the decision this page is built around is simple: **which path opened the contacts, and on what time scale?** Sustained overload warms the strip over seconds (or longer). A short circuit builds a field strong enough to pull the armature in a fraction of a cycle [[1]](#source-1)[[2]](#source-2)[[3]](#source-3).
+
+## Thermal path: overload and the bimetal
+
+The thermal element is a **bimetal** (two metals bonded together) that sits in the current-carrying path [[1]](#source-1)[[2]](#source-2). Current through the strip produces heat. That is the same *P* = *I*²*R* heating in [Ohm's law](/ohms-law/): more current means much more heat in the metal. Double the current and, for the same resistance, you get four times the heating power — which is why a modest rise above rated current can still warm the strip enough to matter if it lasts.
+
+The two metals expand differently as they warm, so the strip bends. As it bends it pushes or pulls the trip bar and releases the latch [[1]](#source-1)[[2]](#source-2)[[3]](#source-3). ABB places the bimetal behind the trip bar as part of the breaker's current-carrying path; when overload current heats it, the bend pulls the trip bar and opens the contacts [[1]](#source-1). CBI's description is the same mechanism in different words: the bimetal heats, bends, touches and rotates the trip bar [[2]](#source-2).
+
+ABB and CBI both state that the time needed for the bimetal to bend **varies inversely with the current**: a larger overload trips faster [[1]](#source-1)[[2]](#source-2). That inverse-time behaviour is why a mild overload can sit for a long time before the handle moves, while a heavier overload dumps the latch sooner — still on a thermal time scale, not a magnetic one. NEETS compares the thermal element to a delay fuse for the same reason: it protects against a small overload that continues for a long time, and the larger the overload, the faster it trips [[3]](#source-3).
+
+What the thermal path is for, in manufacturer language, is continuous or long-time overcurrent that would otherwise cook conductors and equipment [[1]](#source-1). ABB notes that low-magnitude, long-time overcurrents reduce the life of the installation and, if left unchecked, can lead to fire [[1]](#source-1). What the thermal path is *not* for is an almost-instantaneous short: the strip has not had time to heat [[3]](#source-3).
+
+## Magnetic path: short circuit and the electromagnet
+
+The magnetic element is an **electromagnet in series** with the load and a movable **armature** [[1]](#source-1)[[2]](#source-2)[[3]](#source-3). Current in the coil makes a magnetic field. Field strength rises with the current in the coil [[3]](#source-3). At ordinary load the field is too weak to pull the trip bar, and the contacts stay closed [[3]](#source-3). When the current jumps to short-circuit levels, the field rises with it, the armature is attracted toward the magnet, and the trip bar releases the latch [[1]](#source-1)[[2]](#source-2)[[3]](#source-3).
+
+CBI describes the armature rotating the trip bar as its top is drawn to the electromagnet [[2]](#source-2). ABB's application guide shows an armature-and-plunger arrangement that pushes a hammer trip against the movable contact so the contacts open [[1]](#source-1). The mechanical details differ by product line; the physics is the same: enough ampere-turns, and the armature moves.
+
+That action is meant to be **near-instantaneous**. ABB's application guide puts the contact opening on a short circuit on the order of half a millisecond for the current-limiting example it describes [[1]](#source-1). ABB SACE's trip-curve note places a typical magnetic trip in some tens of milliseconds [[4]](#source-4). Those numbers are design examples, not a universal constant — see unverified notes. NEETS simply says the magnetic element trips as soon as the preset current is present, even when the thermal element has not had time to react [[3]](#source-3). On some breakers the gap between the trip bar and the magnet (and therefore the trip current) is adjustable [[3]](#source-3); this page does not cover how to set that.
+
+<Figure2 />
+A meter on the bench that reads branch current is sensing the same ampere quantity the series coil "sees" — see [how a multimeter measures current](/how-a-multimeter-works/) for the measurement side. This page does not describe clamping a live feeder.
+
+## Comparison: which path, when
+
+| | Thermal path | Magnetic path |
+|---|---|---|
+| What it senses | Heating from sustained current in the bimetal [[1]](#source-1)[[2]](#source-2) | Magnetic field from high current in the series coil [[1]](#source-1)[[3]](#source-3) |
+| Time scale | Inverse-time: seconds (or more) at modest overload; faster as current rises [[1]](#source-1)[[2]](#source-2) | Near-instant (milliseconds) [[1]](#source-1)[[3]](#source-3)[[4]](#source-4) |
+| Physical part | Bimetal strip in the current path [[1]](#source-1)[[2]](#source-2) | Electromagnet + armature [[1]](#source-1)[[2]](#source-2)[[3]](#source-3) |
+| Typical fault it catches | Overload that lasts long enough to heat the strip [[1]](#source-1) | Short circuit / very high current [[1]](#source-1)[[2]](#source-2) |
+| What it does not catch alone | An almost-instant short (strip has not heated) [[3]](#source-3) | A mild, long overload below the magnetic threshold [[1]](#source-1)[[3]](#source-3) |
+
+A **thermal-magnetic** breaker is the common combined unit: both elements on one latch, acting independently [[1]](#source-1)[[3]](#source-3). That is the residential and light-commercial pattern the outline targets. Magnetic-only and other variants exist (CBI notes magnetic-only units for some motor short-circuit roles [[2]](#source-2)); they are named here only so the comparison stays honest.
+
+
+Together, the two paths cover the two overcurrent stories that matter for theory: heat that builds over time, and current that spikes at once [1][3]. A single handle hides which path fired; reading the time scale in a practice prompt is how you tell them apart (original tip).
+
+<Predict question="A branch carries a modest overload for several minutes, then the handle flips. Which path most likely released the latch, and why?">
+The thermal path. Minutes at modest overcurrent is the bimetal's inverse-time world: the strip had time to heat and bend [[1]](#source-1)[[2]](#source-2). The magnetic armature needs a much higher current and acts in milliseconds [[1]](#source-1)[[3]](#source-3). (Original practice prompt.)
+</Predict>
+
+## Electronic trip units (named only)
+
+Larger low-voltage breakers may use an **electronic** trip unit: a microprocessor that processes the current signal and commands the opening, instead of a bimetal-plus-electromagnet pair [[4]](#source-4). ABB SACE contrasts the two families directly: thermomagnetic units use a bimetal for overload and an electromagnetic device for short circuit; electronic units process the current digitally and can offer long-time, short-time, instantaneous and ground-fault functions [[4]](#source-4). Naming that family keeps the thermal-versus-magnetic comparison from pretending it is the only technology in a panel. This page still stays on thermal-magnetic theory. No product picks, no setting guides, no coordination studies.
+
+## Inrush is not the same as overload
+
+A motor or transformer can draw a large current for a cycle or two when it is first energised. That spike is short. The thermal strip barely warms; the magnetic element is the one that might see it, which is why magnetic thresholds on published curves sit well above rated current [[4]](#source-4). Inductive loads also oppose sudden current change — the idea behind [AC impedance](/ac-impedance/) — but the breaker still only "knows" the current through its own path. Selecting a trip curve for inrush is a design task; it is out of scope here.
+
+## Original theory checks
+
+Everything in this section is an original prompt, not a manufacturer quiz.
+
+<Predict question="A bolted short appears. The handle flips before anyone could count to one. Did the bimetal have to finish bending?">
+No. NEETS states the magnetic element can trip even when the thermal element has not had time to react [[3]](#source-3). ABB puts short-circuit opening on a millisecond scale for its current-limiting example [[1]](#source-1). (Original practice prompt.)
+</Predict>
+
+- If a practice question says the breaker opened after "a few minutes" at modest overcurrent, reason toward the **thermal** path first (original tip).
+- If it opened essentially as soon as the fault appeared, reason toward the **magnetic** path (original tip).
+- Inrush on a motor or transformer can look large for a cycle or two; that is why magnetic thresholds sit well above rated current on many curves — but selecting those curves is out of scope here [[4]](#source-4).
+
+## Scope, again
+
+Nothing on this page is a procedure for a live panel. It does not tell you how to reset a breaker, how to lock out a panel, how to measure a fault, or which ampere frame to buy. The comparison is the mechanism: heat bending a strip versus a field pulling an armature [[1]](#source-1)[[2]](#source-2)[[3]](#source-3). For the heating relationship itself, stay with [Ohm's law](/ohms-law/). For what a clamp meter is doing when it reads current on a bench setup, see [how a multimeter works](/how-a-multimeter-works/).
+
+## In the series
+
+This page belongs to the [electrical equipment series](/series/electrical-equipment/), after [how a multimeter works](/how-a-multimeter-works/) and [how a transformer works](/how-a-transformer-works/). The heating idea ties back to [Ohm's law](/ohms-law/).
+

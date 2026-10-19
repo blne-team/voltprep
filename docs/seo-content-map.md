@@ -21,6 +21,7 @@ This map gives every public page one primary search intent. Use the supporting c
 | `/red-seal-electrician-exam-breakdown/` | red seal electrician exam breakdown | 100 questions, MWA weights, 2025 RSOS, pass mark, theory behind tasks | Official breakdown plus where the theory sits. |
 | `/309a-vs-442a/` | 309a vs 442a | construction and maintenance electrician, industrial electrician, C of Q, ESA licence, Red Seal titles | Side-by-side official comparison. |
 | `/three-phase-power-explained/` | three phase power | single phase vs three phase, line and phase voltage, √3, wye and delta, three-phase power formula | Explain where √3 comes from and compare single- and three-phase supply; the calculator stays with `/tools/three-phase-power/`. |
+| `/how-a-circuit-breaker-trips/` | how a circuit breaker trips / thermal vs magnetic | bimetal overload, magnetic short-circuit, thermal-magnetic trip unit | Theory comparison of the two trip paths. |
 | `/publishing-method/` | electrical education publishing standards | source policy, technical review, code edition, jurisdiction, original practice questions | Establish trust and define what can be published. |
 | `/share/` | share electrical knowledge | electrical questions, source suggestions, corrections, community discussion | Help contributors provide context that can be checked and improved. |
 
