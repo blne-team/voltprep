@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 320" class="sketch-svg" role="img" aria-label="Three panels labelled Make contact, Steady current, and Break contact, showing a galvanometer needle kicking one way, resting, then kicking the other way." focusable="false">
+  <rect width="680" height="320" style="fill:var(--fig-soft)"/>
+  
+  <g style="font-family:var(--fig-font)">
+    <rect x="20" y="40" width="200" height="220" rx="8" fill="none" style="stroke:var(--fig-line)"/>
+    <text x="120" y="70" text-anchor="middle" font-size="16" style="fill:var(--fig-energy)">Make contact</text>
+    <line x1="70" y1="160" x2="170" y2="160" stroke-width="2" style="stroke:var(--fig-ink)"/>
+    <polygon points="150,150 175,160 150,170" style="fill:var(--fig-energy)"/>
+    <text x="120" y="210" text-anchor="middle" font-size="14" style="fill:var(--fig-ink)">needle kicks</text>
+    <text x="120" y="230" text-anchor="middle" font-size="13" style="fill:var(--fig-ink)">one way</text>
+
+    <rect x="240" y="40" width="200" height="220" rx="8" fill="none" style="stroke:var(--fig-line)"/>
+    <text x="340" y="70" text-anchor="middle" font-size="16" style="fill:var(--fig-ink)">Steady current</text>
+    <line x1="290" y1="160" x2="390" y2="160" stroke-width="2" style="stroke:var(--fig-ink)"/>
+    <circle cx="340" cy="160" r="6" style="fill:var(--fig-ink)"/>
+    <text x="340" y="210" text-anchor="middle" font-size="14" style="fill:var(--fig-ink)">needle at rest</text>
+    <text x="340" y="230" text-anchor="middle" font-size="13" style="fill:var(--fig-ink)">no lasting effect</text>
+
+    <rect x="460" y="40" width="200" height="220" rx="8" fill="none" style="stroke:var(--fig-line)"/>
+    <text x="560" y="70" text-anchor="middle" font-size="16" style="fill:var(--fig-energy)">Break contact</text>
+    <line x1="510" y1="160" x2="610" y2="160" stroke-width="2" style="stroke:var(--fig-ink)"/>
+    <polygon points="530,150 505,160 530,170" style="fill:var(--fig-energy)"/>
+    <text x="560" y="210" text-anchor="middle" font-size="14" style="fill:var(--fig-ink)">needle kicks</text>
+    <text x="560" y="230" text-anchor="middle" font-size="13" style="fill:var(--fig-ink)">the other way</text>
+  </g>
+</svg>

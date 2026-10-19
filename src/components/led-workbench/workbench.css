@@ -133,6 +133,7 @@ led-workbench .sketch .heat-label { fill: var(--lw-heat); }
 
 led-workbench .words p { margin: 0; font-family: var(--ff-font-quote); font-size: 1.05rem; line-height: 1.6; }
 led-workbench .meter p { margin: 0; line-height: 1.55; }
+led-workbench .meter .meter-guide { margin-top: 0.6rem; color: var(--sl-color-gray-3); font-size: 0.85rem; }
 led-workbench .maths ol { display: grid; gap: 0.7rem; margin: 0; padding-left: 1.25rem; }
 led-workbench .maths li span { display: block; color: var(--sl-color-gray-3); font-size: 0.78rem; }
 led-workbench .maths code { display: inline-block; margin-top: 0.15rem; padding: 0; background: none; color: var(--sl-color-text); font-family: var(--ff-font-quote); font-size: 0.95rem; overflow-wrap: anywhere; white-space: normal; }

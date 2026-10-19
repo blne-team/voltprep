@@ -1,0 +1,101 @@
+---
+title: "Faraday's induction ring: the 1831 transformer experiment"
+description: "Faraday's 1831 iron-ring experiment: two coils, make-and-break kicks, and why a changing flux — not a steady current — induces electricity."
+editUrl: false
+pageType: "article"
+topic: "electrical"
+kind: "guide"
+tags: ["transformers"]
+series: "electricity-experiments"
+seriesOrder: 1
+---
+
+import Figure1 from '../../components/figures/faraday-induction-ring/Figure1.astro';
+import Figure2 from '../../components/figures/faraday-induction-ring/Figure2.astro';
+import Predict from '../../components/explainers/Predict.astro';
+
+In August 1831, in the basement laboratory of the Royal Institution, Michael Faraday built a soft-iron ring wrapped with two cotton-insulated coils — the apparatus that still sits in the Faraday Museum [[2]](#source-2). On 29 August he made it work: one coil to a battery, the other to a galvanometer [[2]](#source-2). The needle kicked when he made the contact, kicked the other way when he broke it, and sat still while the battery current ran [[1]](#source-1). That make-and-break story is Faraday's laboratory demonstration that a *changing* magnetic condition induces electricity [[1]](#source-1) — and the Royal Institution calls the ring-coil apparatus the first electric transformer [[2]](#source-2).
+
+The Ri collection page dates the build to August 1831 and the successful induction run to 29 August [[2]](#source-2). Faraday's published memoir of the following year is where the dimensions and the galvanometer behaviour are written down for anyone to check [[1]](#source-1).
+
+
+## The apparatus
+
+Faraday's own description (§27 of *Experimental Researches in Electricity*, Series I) is exact enough to rebuild from [[1]](#source-1):
+
+- A welded ring of soft round bar-iron, seven-eighths of an inch thick, six inches in external diameter [[1]](#source-1).
+- On one part of the ring, three helices of copper wire (about twenty-four feet each, one twentieth of an inch thick), insulated from the iron and from each other, occupying about nine inches of the ring — group **A** [[1]](#source-1).
+- On the other part, about sixty feet of similar copper wire in two pieces, forming helix **B**, separated from A at each end by about half an inch of bare iron [[1]](#source-1).
+- Helix B went to a galvanometer three feet away; the helices of A were joined end to end and connected to a battery of ten pairs of four-inch plates [[1]](#source-1).
+
+The two circuits shared no wire. The only bridge between them was the iron [[1]](#source-1).
+
+Those dimensions are Faraday's, not a modern reconstruction. The Ri object on display measures about 32 mm high and 170 mm in diameter, which matches a ring on that scale [[2]](#source-2). What matters for the physics is not the millimetres; it is that A and B are separate circuits coupled only by the iron [[1]](#source-1).
+The Royal Institution notes that Faraday wound the coils with everyday materials such as bonnet wire and cotton insulation, and that winding them took on the order of ten working days [[2]](#source-2).
+
+<Figure1 />
+## What was measured
+
+Section 28 is the measurement [[1]](#source-1). When Faraday completed the battery contact on A, the galvanometer on B was "immediately affected," and more strongly than in earlier trials that used helices without iron [[1]](#source-1). **But the effect was not permanent:** with contact held, the needle soon came to rest in its natural position, "as if quite indifferent" to the arrangement [[1]](#source-1). When he broke the contact, the needle was powerfully deflected again, **in the contrary direction** to the first kick [[1]](#source-1).
+
+So three moments matter:
+
+1. **Make** — induced kick one way.
+2. **Steady** — no lasting deflection.
+3. **Break** — induced kick the other way.
+
+<Figure2 />
+Faraday pushed the same point further in §§30–32 [[1]](#source-1). Deflection on make always indicated an induced current opposite to the battery current; deflection on break indicated one in the same direction as the battery [[1]](#source-1). Continuing the battery current caused no galvanometer deflection [[1]](#source-1). A minute spark could appear at charcoal ends on B when contact on A was completed, and that spark could not be a diversion of battery current through the iron, because while contact continued the galvanometer still returned to indifference [[1]](#source-1). With a hundred-pair battery the kicks were violent enough to spin the needle several times [[1]](#source-1).
+
+He also varied the ring itself. In §29 he took helix B out of use, put the galvanometer on one of the three wires of A, and drove the other two from the trough — similar but rather more powerful effects [[1]](#source-1). In §33 he sent a feeble current through B so the needle sat 30° or 40° aside, then connected the hundred-pair battery to A: after the first kick, the needle went back exactly to the deflection due to that feeble current alone, whichever way the battery contacts were made [[1]](#source-1). No lasting influence of one current on the quantity or tension of the other [[1]](#source-1).
+
+## What it proved
+
+The ring does not say "current in A makes current in B." It says **a change in the magnetic condition of the iron** induces current in B, and a steady current in A does not [[1]](#source-1). While the primary current is constant, the magnetic state of the ring is (to Faraday's instruments) settled; the galvanometer sits still [[1]](#source-1). The make and the break are the changes.
+
+Faraday himself separates the transient from the steady state in plain experimental language: no continuance of the battery current caused any deflection [[1]](#source-1). That single negative result is as important as the kicks. Without it, you could still believe the iron was somehow leaking battery current into helix B. The spark test and the indifferent galvanometer while contact held close that door [[1]](#source-1).
+
+
+OpenStax states the modern law after that history: an emf appears in a closed loop when the magnetic flux through the loop changes, and there is no emf when the magnet (or field) is stationary relative to the coil [[3]](#source-3). In symbols,
+
+ε = −*N* dΦ<sub>B</sub> / d*t*
+
+[[3]](#source-3). On Faraday's ring, *N* is the turns on helix B, Φ<sub>B</sub> is the flux through those turns linked by the iron, and dΦ<sub>B</sub>/d*t* is large only while the field is rising or collapsing — exactly the make and break [[1]](#source-1)[[3]](#source-3). The minus sign is Lenz's law: the induced current opposes the change that produces it, which matches Faraday's observation that the make kick is opposite to the battery sense [[1]](#source-1)[[3]](#source-3).
+
+A modern learner meeting only the formula ε = −*N* dΦ<sub>B</sub>/d*t* can miss how hard that "d/dt" was to see in 1831 [[3]](#source-3). Faraday had no oscilloscope. He had a needle that moved when he closed a switch and moved again when he opened it [[1]](#source-1). The ring experiment is that derivative, written in galvanometer kicks.
+
+
+## Bridge: 1831 ring to today's transformer
+
+Put Faraday's ring next to a modern distribution transformer and the parts line up. Two windings. Shared iron flux. No conductive path between primary and secondary. What changed is the *drive*: Faraday's battery was DC, so dΦ/d*t* was nonzero only at make and break; the secondary saw kicks [[1]](#source-1). An AC primary reverses every half-cycle, so dΦ/d*t* never stays zero for long, and the secondary voltage is continuous [[3]](#source-3).
+
+That is why the Royal Institution can call the 1831 ring the first electric transformer [[2]](#source-2), and why [how a modern transformer steps voltage](/how-a-transformer-works/) still starts from shared flux and a turns ratio. The pole can on a Hydro-Québec feeder is Faraday's experiment run with alternating current instead of a hand on a battery switch. This page does not re-derive the turns-ratio arithmetic; that lives on the transformer explainer.
+
+Think of the comparison as a single decision for the reader: **is the flux through the secondary still changing?** On Faraday's August day the answer was "only at the switch" [[1]](#source-1)[[2]](#source-2). On an alternating primary the flux keeps reversing, so the secondary voltage is continuous rather than a kick [[3]](#source-3). Same ring physics; different waveform.
+
+
+<Predict question="If Faraday left the battery connected and never broke contact, what would the galvanometer on helix B show after the first moment?">
+After the opening kick, nothing lasting. Section 28 says that though contact continued, the needle soon came to rest as if indifferent [[1]](#source-1). Only a change in the magnetic condition induces; a steady primary current does not [[1]](#source-1)[[3]](#source-3). (Original practice prompt.)
+</Predict>
+
+## What came next (short)
+
+Faraday did not stop at the ring. In §§34–39 of the same Series I memoir he moves to a hollow helix on a pasteboard cylinder: without an iron core the galvanometer barely stirs; with a soft-iron cylinder inside, the make/break kicks return; a copper cylinder does not help [[1]](#source-1). Ordinary bar magnets making and breaking contact with that iron cylinder give the same pattern — deflection on make, indifference while contact holds, opposite deflection on break [[1]](#source-1). Relative change, not a static arrangement, produces the induced effect. OpenStax's bar-magnet-and-coil figure is the classroom descendant of those trials [[3]](#source-3). The ring remains the hero here because it is the first transformer-shaped apparatus: two coils, one core, induction across the gap of insulation [[1]](#source-1)[[2]](#source-2).
+
+The experiments series will pick up Ørsted separately.
+
+## Original theory check
+
+<Predict question="Replace Faraday's battery with a 60 Hz AC source on helix A, same iron ring. What changes about the galvanometer story?">
+The secondary no longer sees isolated kicks. Because the primary current (and flux) reverse every half-cycle, dΦ/d*t* stays nonzero and a continuous induced voltage appears — the step into a modern transformer [[3]](#source-3). See [how a transformer works](/how-a-transformer-works/). (Original practice prompt.)
+</Predict>
+
+## In the series
+
+This is the first post in the [electricity experiments series](/series/electricity-experiments/). For the continuous-AC version of the same physics, read [how a transformer works](/how-a-transformer-works/). Changing current in a coil is also why inductors have [reactance](/ac-impedance/).
+
+## Sources
+
+- <span id="source-1"></span>[1] [Experimental Researches in Electricity, Series I, §§27–39](https://www.gutenberg.org/cache/epub/14986/pg14986.txt), Michael Faraday (Project Gutenberg #14986; reprint of the 1832 *Philosophical Transactions* memoir), published 1832, accessed 2026-10-19. Same memoir as [doi:10.1098/rstl.1832.0006](https://royalsocietypublishing.org/doi/10.1098/rstl.1832.0006).
+- <span id="source-2"></span>[2] [Michael Faraday's ring-coil apparatus](https://www.rigb.org/explore-science/explore/collection/michael-faradays-ring-coil-apparatus), Royal Institution, date unknown, accessed 2026-10-19.
+- <span id="source-3"></span>[3] [University Physics Volume 2, 13.1 Faraday's Law (teaching reference)](https://openstax.org/books/university-physics-volume-2/pages/13-1-faradays-law), OpenStax, date unknown, accessed 2026-10-19.

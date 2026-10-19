@@ -7,6 +7,8 @@ const root = {
   flags: 'Checks',
   allClear: 'Nothing to flag with these values.',
   views: { words: 'In words', sketch: 'Sketch', maths: 'Maths', meter: 'Check it with a meter' },
+  // Under the meter check, a pointer to the multimeter explainer (the href is built in LedWorkbench.astro).
+  meterGuide: { lead: 'Not sure which range or where the probes go?', link: 'How a multimeter works', after: ' explains it.' },
   source: 'Source',
   custom: 'Custom (type your datasheet values)',
   optional: 'optional',
@@ -28,6 +30,7 @@ const fr: CommonCopy = {
   flags: 'Vérifications',
   allClear: 'Rien à signaler avec ces valeurs.',
   views: { words: 'En mots', sketch: 'Schéma', maths: 'Calculs', meter: 'Vérifier au multimètre' },
+  meterGuide: { lead: 'Quel calibre, et où placer les pointes ?', link: 'Comment fonctionne un multimètre', after: ' (en anglais) l’explique.' },
   source: 'Source',
   custom: 'Personnalisé (entrez les valeurs de votre fiche technique)',
   optional: 'facultatif',
