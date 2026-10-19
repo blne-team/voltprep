@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 360" class="sketch-svg" role="img" aria-label="Two panels: thermal path with a bent bimetal labelled I squared R; magnetic path with a coil attracting an armature, labelled milliseconds." focusable="false">
+  <rect width="680" height="360" style="fill:var(--fig-soft)"/>
+  
+  <rect x="30" y="40" width="290" height="280" rx="8" fill="none" style="stroke:var(--fig-line)"/>
+  <text x="175" y="70" text-anchor="middle" font-size="18" style="font-family:var(--fig-font);fill:var(--fig-energy)">Thermal path</text>
+  <path d="M 80 200 Q 140 110 200 200" fill="none" stroke-width="4" style="stroke:var(--fig-energy)"/>
+  <text x="175" y="230" text-anchor="middle" font-size="14" style="font-family:var(--fig-font);fill:var(--fig-ink)">I²R heats the strip</text>
+  <text x="175" y="252" text-anchor="middle" font-size="14" style="font-family:var(--fig-font);fill:var(--fig-ink)">strip bends → trip</text>
+  <text x="175" y="290" text-anchor="middle" font-size="13" style="font-family:var(--fig-font);fill:var(--fig-ink)">seconds · inverse-time</text>
+  
+  <rect x="360" y="40" width="290" height="280" rx="8" fill="none" style="stroke:var(--fig-line)"/>
+  <text x="505" y="70" text-anchor="middle" font-size="18" style="font-family:var(--fig-font);fill:var(--fig-ink)">Magnetic path</text>
+  <rect x="450" y="130" width="70" height="70" rx="4" fill="none" stroke-width="2.5" style="stroke:var(--fig-ink)"/>
+  <rect x="540" y="140" width="16" height="50" style="fill:var(--fig-ink)"/>
+  <path d="M 520 165 L 540 165" stroke-width="2" marker-end="url(#how-a-circuit-breaker-trips-f2-0-root-a)" style="stroke:var(--fig-ink)"/>
+  <defs><marker id="how-a-circuit-breaker-trips-f2-0-root-a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" style="fill:var(--fig-ink)"/></marker></defs>
+  <text x="505" y="230" text-anchor="middle" font-size="14" style="font-family:var(--fig-font);fill:var(--fig-ink)">high I → strong field</text>
+  <text x="505" y="252" text-anchor="middle" font-size="14" style="font-family:var(--fig-font);fill:var(--fig-ink)">armature pulls → trip</text>
+  <text x="505" y="290" text-anchor="middle" font-size="13" style="font-family:var(--fig-font);fill:var(--fig-ink)">milliseconds · near-instant</text>
+</svg>

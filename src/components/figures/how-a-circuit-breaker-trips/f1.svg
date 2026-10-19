@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 400" class="sketch-svg" role="img" aria-label="Hand-drawn current path with a copper-coloured bent bimetal and a square coil with armature, both linked by dashed lines to a shared trip bar above." focusable="false">
+  <rect width="680" height="400" style="fill:var(--fig-soft)"/>
+  
+  <line x1="40" y1="200" x2="640" y2="200" stroke-width="3" style="stroke:var(--fig-ink)"/>
+  <text x="40" y="185" font-size="14" style="font-family:var(--fig-font);fill:var(--fig-ink)">line</text>
+  <text x="600" y="185" font-size="14" style="font-family:var(--fig-font);fill:var(--fig-ink)">load</text>
+  
+  <path d="M 160 200 Q 200 140 240 200" fill="none" stroke-width="4" style="stroke:var(--fig-energy)"/>
+  <text x="200" y="120" text-anchor="middle" font-size="16" style="font-family:var(--fig-font);fill:var(--fig-energy)">bimetal</text>
+  <text x="200" y="140" text-anchor="middle" font-size="13" style="font-family:var(--fig-font);fill:var(--fig-ink)">heats · bends</text>
+  
+  <rect x="340" y="160" width="80" height="80" rx="6" fill="none" stroke-width="2.5" style="stroke:var(--fig-ink)"/>
+  <text x="380" y="145" text-anchor="middle" font-size="16" style="font-family:var(--fig-font);fill:var(--fig-ink)">coil</text>
+  
+  <rect x="440" y="175" width="18" height="50" style="fill:var(--fig-ink)"/>
+  <text x="449" y="250" text-anchor="middle" font-size="14" style="font-family:var(--fig-font);fill:var(--fig-ink)">armature</text>
+  
+  <line x1="220" y1="100" x2="460" y2="100" stroke-width="3" style="stroke:var(--fig-ink)"/>
+  <text x="340" y="85" text-anchor="middle" font-size="16" style="font-family:var(--fig-font);fill:var(--fig-ink)">shared trip bar</text>
+  <line x1="200" y1="150" x2="220" y2="100" stroke-width="1.5" stroke-dasharray="4 3" style="stroke:var(--fig-energy)"/>
+  <line x1="449" y1="175" x2="449" y2="100" stroke-width="1.5" stroke-dasharray="4 3" style="stroke:var(--fig-ink)"/>
+  <text x="340" y="370" text-anchor="middle" font-size="14" style="font-family:var(--fig-font);fill:var(--fig-ink)">Both paths act independently on the same latch</text>
+</svg>

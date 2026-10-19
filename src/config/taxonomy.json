@@ -56,6 +56,14 @@
   ],
   "tags": [
     {
+      "id": "protection",
+      "name": {
+        "root": "Protection",
+        "fr": "Protection",
+        "zh": "Protection"
+      }
+    },
+    {
       "id": "transformers",
       "name": {
         "root": "Transformers",
